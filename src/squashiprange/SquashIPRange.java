@@ -23,15 +23,35 @@ public class SquashIPRange {
     public static void main(String[] args) {
         
         //Testing
+        IPv4address splitTool = new IPv4address(0L) ;
+        String[] sectors = new String[4] ;
+        String stringipRange = "212.1.58-59.5" ;
+        IPv4range testRange = new IPv4range() ;
+        Integer sector3min ;
+        Integer sector3max ;
+        Integer i ;
         
-        String sipadd1 = "10.12.13.14/28" ;
-        IPv4range iprange1 = new IPv4range( sipadd1 ) ;
-        System.out.println( iprange1.getAddressFromRange(0).getIPAsString() ) ;
-        System.out.println( iprange1.getAddressFromRange(1).getIPAsString() ) ;
-        System.out.println( iprange1.getAddressFromRange(2).getIPAsString() ) ;
-        System.out.println( iprange1.getAddressFromRange(3).getIPAsString() ) ;
-        System.out.println( iprange1.getAddressFromRange(4).getIPAsString() ) ;
-        System.out.println( iprange1.getAddressFromRange(5).getIPAsString() ) ;
+        try {
+            stringipRange = stringipRange.replaceAll("\\*", "0-255") ;
+            sectors = splitTool.splitBySector( stringipRange ) ;
+            if ( sectors[3].contains( "/" ) ) {
+                testRange.parseAddSlashNotation( stringipRange ) ;
+            } else if ( sectors[2].contains( "-" ) ) {
+                    sector3min = new Integer( sectors[2].split( "-" )[0] ) ;
+                    sector3max = new Integer( sectors[2].split( "-" )[1] ) ;
+                    for(i=sector3min;i<=sector3max;i++) {
+                        testRange.parseAddDashNotation( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + sectors[3] ) ;
+                    }
+                } else if( sectors[3].contains( "-" ) ) {
+                    testRange.parseAddDashNotation( stringipRange ) ;
+                }
+            System.out.println( testRange.getAddressFromRange(0).getIPAsString() ) ;
+        }
+        catch ( Exception e ) {
+            System.out.println( "Failed to parse range" ) ;
+            System.out.println( e.toString() ) ;
+            e.printStackTrace() ;
+        }
         
     }
 }

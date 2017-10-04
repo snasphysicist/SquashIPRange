@@ -43,7 +43,11 @@ public class IPv4range {
         }
     }
     
-    public IPv4range( String rangeAsString ) {
+    public IPv4range() {
+        addressArray = new IPv4address[0] ;
+    }
+    
+    /*public IPv4range( String rangeAsString ) {
         if( rangeAsString.contains( "*" ) ) {
             this.parseAddStarNotation( rangeAsString );
         } else {
@@ -58,6 +62,7 @@ public class IPv4range {
             }
         }
     }
+    */
     
     //Returns all addresses in the range as an array of IPv4addresses
     public IPv4address[] getRangeAsAddresses() {
@@ -74,7 +79,7 @@ public class IPv4range {
         addressArray = this.appendToIPv4addressArray( addressArray , inipAddress ) ;
     }
     
-    private void parseAddStarNotation( String staripRange ) {
+    public void parseAddStarNotation( String staripRange ) {
         int i ;
         IPv4address intmipAddress = new IPv4address( staripRange.substring(0,staripRange.length()-1) + "0" ) ;
         for(i=0;i<256;i++) {
@@ -84,29 +89,62 @@ public class IPv4range {
         }
     }
     
-    private void parseAddDashNotation( String dashipRange ) {
-        int i ;
-        Integer firstip , lastip ;
-        IPv4address intmipAddress ;
-        //Double slash like \\. \\- needed because split uses regex
-        firstip = new Integer( dashipRange.split("\\.")[3].split("\\-")[0] ) ;
-        lastip = new Integer( dashipRange.split("\\.")[3].split("\\-")[1] ) ;
-        System.out.println( firstip.toString() + " " + lastip.toString() );
-        intmipAddress = new IPv4address( dashipRange.split("\\.")[0] + "." + dashipRange.split("\\.")[1] + "." + dashipRange.split("\\.")[2] + "." + firstip.toString()) ;
+    //Parses a range of ip addresses given in the form a.b.c[-d].e[-f]
+    //Adds each address in this range to the array in the IPv4range object
+    //Also validates the range (-1 < a,b,c,d,e < 256, d<e )
+    public void parseAddDashNotation( String dashipRange ) {
+        Integer i, j ;
+        Integer[] thirdSectorLimits = new Integer[2] ;
+        Integer[] fourthSectorLimits = new Integer[2] ;
+        String[] sectors ;
+        boolean rangeValidated = true ;
+        //We'll only use this for the split by sector functionality
+        IPv4address sectorsplitter = new IPv4address(0L) ;
         
-        for(i=0;i<=(lastip-firstip);i++) {
-            System.out.println( "#" + intmipAddress.getIPAsString() ) ;
-            addressArray = this.appendToIPv4addressArray( addressArray , intmipAddress ) ;
-            intmipAddress = intmipAddress.createCopy() ;
-            intmipAddress.incrementAddress() ;
+        //Use the IPv4address split by sector tool to get the four sectors
+        sectors = sectorsplitter.splitBySector( dashipRange ) ;
+        //Whether the third sector is a range or not the
+        //minimum value of this sector will always be this
+        thirdSectorLimits[0] = new Integer( sectors[2].split("-")[0] ) ;
+        //The maximum value can either come from the number after the dash
+        //or, if it is not a range, then it is simply the same as the minimum
+        if( sectors[2].contains("-") ) {
+            thirdSectorLimits[1] = new Integer( sectors[2].split("-")[1] ) ;
+        } else {
+            thirdSectorLimits[1] = thirdSectorLimits[0] ;
+        }
+        //Repeat this for the fourth sector, with the same logic
+        fourthSectorLimits[0] = new Integer( sectors[3].split("-")[0] ) ;
+        if( sectors[3].contains("-") ) {
+            fourthSectorLimits[1] = new Integer( sectors[3].split("-")[1] ) ;
+        } else {
+            fourthSectorLimits[1] = fourthSectorLimits[0] ;
+        }
+        
+        //Validate input
+        if( ( new Integer( sectors[0] ) < 0 ) || ( new Integer( sectors[0] ) > 255 )
+                || ( new Integer( sectors[1] ) < 0 ) || ( new Integer( sectors[1] ) > 255 )
+                || ( thirdSectorLimits[0] < 0 ) || ( thirdSectorLimits[1] > 255 )
+                || ( fourthSectorLimits[0] < 0 ) || ( fourthSectorLimits[1] > 255 )
+                || ( thirdSectorLimits[1] < thirdSectorLimits[0] )
+                || ( fourthSectorLimits[1] < fourthSectorLimits[0] ) ) {
+            rangeValidated = false ;
+        }
+        
+        //Add addresses
+        for(i=thirdSectorLimits[0];i<=thirdSectorLimits[1];i++) {
+            for(j=fourthSectorLimits[0];j<=fourthSectorLimits[1];j++) {
+                System.out.println( i.toString() + " " + j.toString() ) ;
+                addressArray = this.appendToIPv4addressArray( addressArray , new IPv4address( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + j.toString() ) ) ;
+            }
         }
         
         for(i=0;i<addressArray.length;i++) {
             System.out.println( "##" + addressArray[i].getIPAsString() ) ;
         }
     }
-    
-    private void parseAddSlashNotation( String slashipRange ) {
+  
+    public void parseAddSlashNotation( String slashipRange ) {
         Integer subnetmaskbits = new Integer( slashipRange.split("/")[1] ) ;
         subnetmaskbits = 32 - subnetmaskbits ;
         Integer numberips = new Integer( (int) Math.pow(2,subnetmaskbits) ) ;
