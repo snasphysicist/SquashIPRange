@@ -17,6 +17,19 @@ import java.util.Arrays;
  */
 public class SquashIPRange {
 
+
+    //Takes an array of IPv4address objects and another IPv4address 
+    //and appends the latter at the end of the former and returns the resulting array
+    public static IPv4range[] appendToIPv4rangeArray( IPv4range[] inarray , IPv4range inobject ) {
+        int i ;
+        IPv4range[] intmarray = new IPv4range[inarray.length+1] ;
+        for(i=0;i<inarray.length;i++) {
+            intmarray[i] = inarray[i] ;
+        }
+        intmarray[inarray.length] = inobject ;
+        return intmarray ;
+    }
+    
     /**
      * @param args none
      */
@@ -25,33 +38,65 @@ public class SquashIPRange {
         //Testing
         IPv4address splitTool = new IPv4address(0L) ;
         String[] sectors = new String[4] ;
-        String stringipRange = "212.1.58-59.5" ;
-        IPv4range testRange = new IPv4range() ;
+        String[] stringipRanges = new String[]{"212.1.120.100-200","212.1.120.150-200","212.1.120.110-120"} ;
+        IPv4range intmRange ;
+        IPv4range[] allRanges = new IPv4range[0] ;
         Integer sector3min ;
         Integer sector3max ;
-        Integer i ;
+        Integer i,j,k ;
+        Integer numberOfRanges = stringipRanges.length ;
+        IPv4range[] overlappingAddresses = new IPv4range[ (numberOfRanges*(numberOfRanges-1))/2 ] ;
         
-        try {
-            stringipRange = stringipRange.replaceAll("\\*", "0-255") ;
-            sectors = splitTool.splitBySector( stringipRange ) ;
-            if ( sectors[3].contains( "/" ) ) {
-                testRange.parseAddSlashNotation( stringipRange ) ;
-            } else if ( sectors[2].contains( "-" ) ) {
+        //Taking the string ranges
+        //and converting them to IPv4ranges
+        //In a robust, error handled way
+        for( j=0 ; j<stringipRanges.length ; j++ ) {
+            System.out.println( new Integer(j).toString() );
+            try {
+                intmRange = new IPv4range() ;
+                stringipRanges[j] = stringipRanges[j].replaceAll("\\*", "0-255") ;
+                sectors = splitTool.splitBySector( stringipRanges[j] ) ;
+                if ( sectors[3].contains( "/" ) ) {
+                    System.out.println( intmRange.parseAddSlashNotation( stringipRanges[j] ) ) ;
+                } else if ( sectors[2].contains( "-" ) ) {
                     sector3min = new Integer( sectors[2].split( "-" )[0] ) ;
                     sector3max = new Integer( sectors[2].split( "-" )[1] ) ;
                     for(i=sector3min;i<=sector3max;i++) {
-                        testRange.parseAddDashNotation( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + sectors[3] ) ;
+                        System.out.println( intmRange.parseAddDashNotation( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + sectors[3] ) ) ;
                     }
-                } else if( sectors[3].contains( "-" ) ) {
-                    testRange.parseAddDashNotation( stringipRange ) ;
+                } else {
+                    System.out.println( intmRange.parseAddDashNotation( stringipRanges[j] ) ) ;
                 }
-            System.out.println( testRange.getAddressFromRange(0).getIPAsString() ) ;
-        }
-        catch ( Exception e ) {
-            System.out.println( "Failed to parse range" ) ;
-            System.out.println( e.toString() ) ;
-            e.printStackTrace() ;
+                allRanges = appendToIPv4rangeArray( allRanges , intmRange ) ;
+            }
+            catch ( Exception e ) {
+                System.out.println( "Failed to parse range" ) ;
+                e.printStackTrace() ;
+            }
         }
         
-    }
-}
+        k = 0 ;
+        for( i=0 ; i<numberOfRanges ; i++ ) {
+            for( j=i+1 ; j<numberOfRanges;j++ ) {
+                overlappingAddresses[k] = allRanges[i].findOverlap(allRanges[j]) ;
+                k++ ;
+            }
+        }
+        
+        k = 0 ;
+        for( i=0 ; i<numberOfRanges ; i++ ) {
+            for( j=i+1 ; j<numberOfRanges;j++ ) {
+                if( allRanges[i].getSizeOfRange() < allRanges[j].getSizeOfRange() ) {
+                    allRanges[i].subtractRange(allRanges[j]) ;
+                }
+                k++ ;
+            }
+        }
+        
+        for( i=0 ; i<overlappingAddresses.length ; i++ ) {
+            System.out.println( overlappingAddresses[i].getAllAddressesAsString() ) ;
+        }
+        
+    } // Closing main
+    
+} // Closing class

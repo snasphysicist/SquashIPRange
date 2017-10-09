@@ -102,19 +102,21 @@ public class IPv4address {
     }
     
     //Increases the ip address by one
-    public void incrementAddress() {
+    public IPv4address incrementAddress() {
         ipNumerical++ ;
         //After we update the numerical ip address
         //we must remember to update the human readable form
         ipString = this.ipToString(ipNumerical) ;
+        return this ;
     }
     
     //Decreases the ip address by one
-    public void decrementAddress() {
+    public IPv4address decrementAddress() {
         ipNumerical-- ;
         //After we update the numerical ip address
         //we must remember to update the human readable form
         ipString = this.ipToString(ipNumerical) ;
+        return this ;
     }
     
     //Splits a human readable ip address into its four sectors
@@ -147,16 +149,19 @@ public class IPv4address {
     //Returns a single sector of the ip address as a string
     //We'll assume people will refer to a.b.c.d as sectors
     //1.2.3.4, so we need to subtract 1
-    public String getSectorAsString( int i ) {
-        return this.splitBySector( ipString )[i-1] ;
+    public String getSectorAsString( int sectorNumber ) {
+        return this.splitBySector( ipString )[sectorNumber-1] ;
     }
     
+    //Commented out for now
+    //I'm not sure if it's needed
+    //
     //Method to decide if the ip address as the argument
     //is "adjacent" to this ip address
     //Adjacency means in this context that the numerical
     //values for the address differ by +-1
     //and the third sector has the same value
-    public Boolean isAdjacent( IPv4address inipAddress ) {
+    /*public Boolean isAdjacent( IPv4address inipAddress ) {
         Boolean adjacent = false ;
         if( Math.abs(inipAddress.getIPAsNumber()-this.ipNumerical) == 1 ) {
             adjacent = true ;
@@ -167,10 +172,21 @@ public class IPv4address {
         }
         return adjacent ;
     }
+    */
     
+    //Returns a new copy of the current IPv4address object
     public IPv4address createCopy() {
         IPv4address intmipAddress = new IPv4address( this.ipNumerical ) ;
         return intmipAddress ;
     }
+    
+    //== operator for IPv4addresses
+    //If the numerical value of the ip address of the input IPv4address
+    //equals that of this IPv4address, this returns true
+    //otherwise it returns false
+    public boolean equals( IPv4address inipAddress ) {
+        return ( inipAddress.getIPAsNumber().equals( this.ipNumerical ) ) ;
+    }
+    
     
 }
