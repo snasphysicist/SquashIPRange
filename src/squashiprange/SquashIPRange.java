@@ -5,8 +5,6 @@
  */
 package squashiprange;
 
-import java.util.Arrays;
-
 /**
  *
  * A tool to take a set of ip addresses and ip ranges 
@@ -17,7 +15,8 @@ import java.util.Arrays;
  */
 public class SquashIPRange {
 
-
+    
+    //Need to find a better way to share this between this class & IPv4range class...
     //Takes an array of IPv4address objects and another IPv4address 
     //and appends the latter at the end of the former and returns the resulting array
     public static IPv4range[] appendToIPv4rangeArray( IPv4range[] inarray , IPv4range inobject ) {

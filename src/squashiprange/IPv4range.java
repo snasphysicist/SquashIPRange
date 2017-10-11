@@ -20,14 +20,14 @@ public class IPv4range {
     
     //Constructor starting from a single IPv4address
     public IPv4range( IPv4address inipAddress ) {
-        this.addAddressToRange( inipAddress ) ;
+        this.addAddressToRange( inipAddress , false ) ;
     }
     
     //Constructor starting from an array of IPv4addresses
     public IPv4range( IPv4address[] inipAddresses ) {
         int i ;
         for(i=0;i<inipAddresses.length;i++){
-            this.addAddressToRange( inipAddresses[i] ) ;
+            this.addAddressToRange( inipAddresses[i] , false ) ;
         }
     }
     
@@ -52,15 +52,38 @@ public class IPv4range {
     }
     */
     
+    //Creates a new copy of this IPv4range
+    //with a different pointer
+    public IPv4range createCopy() {
+        int i ;
+        IPv4range intmRange = new IPv4range() ;
+        for( i=0 ; i<this.addressArray.length ; i++ ) {
+            intmRange.addAddressToRange( addressArray[i].createCopy() , false ) ;
+        }
+        return intmRange ;
+    }
+    
     //Takes an array of IPv4address objects and another IPv4address 
     //and appends the latter at the end of the former and returns the resulting array
-    public IPv4address[] appendToIPv4addressArray( IPv4address[] inarray , IPv4address inobject ) {
+    public IPv4address[] appendToIPv4addressArrayEnd( IPv4address[] inarray , IPv4address inobject ) {
         int i ;
         IPv4address[] intmarray = new IPv4address[inarray.length+1] ;
         for(i=0;i<inarray.length;i++) {
             intmarray[i] = inarray[i] ;
         }
         intmarray[inarray.length] = inobject ;
+        return intmarray ;
+    }
+    
+    //Takes an array of IPv4address objects and another IPv4address 
+    //and inserts the latter at the start of the former and returns the resulting array
+    public IPv4address[] appendToIPv4addressArrayStart( IPv4address[] inarray , IPv4address inobject ) {
+        int i ;
+        IPv4address[] intmarray = new IPv4address[inarray.length+1] ;
+        intmarray[0] = inobject ;
+        for(i=0;i<inarray.length;i++) {
+            intmarray[i+1] = inarray[i] ;
+        }
         return intmarray ;
     }
     
@@ -78,19 +101,69 @@ public class IPv4range {
         return intmArray ;
     }
     
+    public IPv4range[] appendToIPv4rangeArray( IPv4range[] inarray , IPv4range inobject ) {
+        int i ;
+        IPv4range[] intmarray = new IPv4range[inarray.length+1] ;
+        for(i=0;i<inarray.length;i++) {
+            intmarray[i] = inarray[i] ;
+        }
+        intmarray[inarray.length] = inobject ;
+        return intmarray ;
+    }
+    
+    public IPv4range[] popFromIPv4rangeArray( IPv4range[] inArray , int toPop ) {
+        int i ;
+        IPv4range[] intmArray = new IPv4range[inArray.length-1] ;
+        for( i=0 ; i<toPop ; i++ ) {
+            intmArray[i] = inArray[i] ;
+        }
+        for( i=toPop ; i<intmArray.length ; i++ ) {
+            intmArray[i] = inArray[i+1] ;
+        }
+        return intmArray ;
+    } 
+    
+    //Concatenates the current range with an input range
+    //If atStart is true, result ~ [ inipRange , this ]
+    //If atStart is false, result ~ [ this , inipRange ] 
+    public void concatenateWithRange( IPv4range inipRange , boolean atStart ) {
+        int i ;
+        IPv4range intmRange = this.createCopy() ;
+        addressArray = new IPv4address[ intmRange.getSizeOfRange() + inipRange.getSizeOfRange() ] ;
+        if( atStart ) {
+            for( i=0 ; i<inipRange.getSizeOfRange() ; i++ ) {
+                addressArray[i] = inipRange.getAddressFromRange(i) ;
+            }
+            for( i=0 ; i<intmRange.getSizeOfRange() ; i++ ) {
+                addressArray[ i + inipRange.getSizeOfRange() ] = intmRange.getAddressFromRange(i) ;
+            }
+        } else {
+            for( i=0 ; i<intmRange.getSizeOfRange() ; i++ ) {
+                addressArray[i] = intmRange.getAddressFromRange(i) ;
+            }
+            for( i=0 ; i<inipRange.getSizeOfRange() ; i++ ) {
+                addressArray[ i + intmRange.getSizeOfRange() ] = inipRange.getAddressFromRange(i) ;
+            }
+        }
+    }
+    
     //Returns all addresses in the range as an array of IPv4addresses
     public IPv4address[] getRangeAsAddresses() {
-        return addressArray ;
+        return this.addressArray ;
     }
     
     //Returns a single IPv4address from the range based on the index input
     public IPv4address getAddressFromRange( int i ) {
-        return addressArray[i] ;
+        return this.addressArray[i] ;
     }
     
     //Adds an IPv4address to the range
-    public void addAddressToRange( IPv4address inipAddress ) {
-        addressArray = this.appendToIPv4addressArray( addressArray , inipAddress ) ;
+    public void addAddressToRange( IPv4address inipAddress , boolean atStart ) {
+        if( !atStart ) {
+            addressArray = this.appendToIPv4addressArrayEnd( addressArray , inipAddress ) ;
+        } else {
+            addressArray = this.appendToIPv4addressArrayStart( addressArray , inipAddress ) ;
+        }
     }
     
     //Takes an ip address range written in string format with star notation
@@ -102,7 +175,7 @@ public class IPv4range {
         int i ;
         IPv4address intmipAddress = new IPv4address( staripRange.substring(0,staripRange.length()-1) + "0" ) ;
         for(i=0;i<256;i++) {
-            addressArray = this.appendToIPv4addressArray( addressArray , intmipAddress ) ;
+            addressArray = this.appendToIPv4addressArrayEnd( addressArray , intmipAddress ) ;
             intmipAddress = intmipAddress.createCopy() ;
             intmipAddress.incrementAddress() ;
         }
@@ -156,7 +229,7 @@ public class IPv4range {
             //Add addresses
             for(i=thirdSectorLimits[0];i<=thirdSectorLimits[1];i++) {
                 for(j=fourthSectorLimits[0];j<=fourthSectorLimits[1];j++) {
-                    addressArray = this.appendToIPv4addressArray( addressArray , new IPv4address( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + j.toString() ) ) ;
+                    addressArray = this.appendToIPv4addressArrayEnd( addressArray , new IPv4address( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + j.toString() ) ) ;
                 }
             }
 
@@ -209,7 +282,7 @@ public class IPv4range {
         if ( rangeValidated ) {
             try {
                 for(i=0;i<numberips;i++) {
-                    addressArray = this.appendToIPv4addressArray( addressArray , intmipAddress ) ;
+                    addressArray = this.appendToIPv4addressArrayEnd( addressArray , intmipAddress ) ;
                     intmipAddress = intmipAddress.createCopy() ;
                     intmipAddress.incrementAddress() ;
                 }
@@ -249,7 +322,8 @@ public class IPv4range {
     //This method assumes that the first address in this range
     //is numerically the smallest; similarly that the last address
     //in this range is numerically the largest
-    public boolean isAdjacentToRange( IPv4address inipAddress ) {
+    public boolean isAdjacentAddress( IPv4address inipAddress ) {
+        
         boolean isAdjacentToRange = false ;
         //Creating a copy of the input because we are 
         //going to increment/decrement the address and
@@ -276,6 +350,52 @@ public class IPv4range {
         return isAdjacentToRange ;
     }
     
+    //Checks if the input range is "adjacent" to this one
+    //We count a range as adjacent if:
+    //  The set of fourth octets in the two ranges matches
+    //  And either:
+    //      The smallest third octet of the input range is one larger
+    //      than the largest third octet in this range
+    //  Or:
+    //      The largest third octet of the input range is one smaller
+    //      than the smallest third octet in this range
+    //This method will assume that the ranges are ordered from
+    //smallest numerical ip address to largest and that both 
+    //ranges are of the form a.b.c-d.e-f
+    //THESE CONDITIONS ARE NOT CURRENTLY CHECKED BY THE METHOD
+    //USE WITH CARE
+    //Returns 0 if the ranges are not adjacent
+    //Returns 1 if the input range is "above" this range
+    //Returns -1 if the input range is "below" this range
+    public int isAdjacentRange( IPv4range inipRange ) {
+        
+        int isAdjacent = 0 ;
+        
+        Integer[] thisBoundingThirdOctet = new Integer[2] ;
+        Integer[] inBoundingThirdOctet = new Integer[2] ;
+        
+        thisBoundingThirdOctet[0] = new Integer( this.addressArray[0].getSectorAsString(3) ) ;
+        thisBoundingThirdOctet[1] = new Integer( this.addressArray[this.addressArray.length-1].getSectorAsString(3) ) ;
+        
+        inBoundingThirdOctet[0] = new Integer( inipRange.getAddressFromRange(0).getSectorAsString(3) ) ;
+        inBoundingThirdOctet[1] = new Integer( inipRange.getAddressFromRange(this.addressArray.length-1).getSectorAsString(3) ) ;
+                
+        if( this.addressArray[0].equalsFourthOctet(inipRange.getAddressFromRange(0))
+                && this.addressArray[this.addressArray.length-1].equals( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1) ) ) {
+            if( thisBoundingThirdOctet[0].equals( inBoundingThirdOctet[1] + 1L ) ) {
+                //Input range third octets < this range third octets
+                isAdjacent = -1 ;
+            }
+            if( inBoundingThirdOctet[0].equals( thisBoundingThirdOctet[1] + 1L ) ) {
+                //Input range third octets > this range third octets
+                isAdjacent = 1 ;
+            }
+        }
+        
+        return isAdjacent ;
+        
+    }
+    
     //Takes another IPv4range as an input and returns an IPv4range
     //containing all of the ip addresses shared by the input range
     //and this range
@@ -285,7 +405,7 @@ public class IPv4range {
         IPv4range overlappingAddresses = new IPv4range() ;
         for( i=0 ; i<addressArray.length ; i++ ) {
             if( inRange.isInRange( addressArray[i] ) ) {
-                overlappingAddresses.addAddressToRange( addressArray[i] ) ;
+                overlappingAddresses.addAddressToRange( addressArray[i] , false ) ;
             }
         }
         return overlappingAddresses ;
@@ -321,6 +441,115 @@ public class IPv4range {
             intmString += addressArray[i].getIPAsString() + " " ;
         }
         return intmString ;
+    }
+    
+    //This method assumes that the input range contains a set
+    //of ip addresses that satisfy:
+    //For all i in {m,n}, a.b.c.i is in the range
+    //For all i in {p,q}, a.b.i.d is in the range
+    //For all a.b.c.i in the range, i is in {m,n}
+    //For all a.b.i.d in the range, i in is {p,q}
+    //It then prints out this range as a string
+    //In the format a.b.p-q.m-n
+    //It currently DOES NOT check if the range is in this form!
+    //Use with care!
+    //It also does not assume that the range is in any way ordered
+    //and searches through each address to find the lowest and
+    //highest in the range
+    public String convertRangeHumanReadable( IPv4range inipRange ) {
+        
+        int i ;
+        IPv4address[] boundingipAddresses = new IPv4address[]{inipRange.getAddressFromRange(0),inipRange.getAddressFromRange(0)} ;
+        
+        for( i=0 ; i<inipRange.getSizeOfRange() ; i++ ) {
+            
+            if( boundingipAddresses[0].getIPAsNumber() > inipRange.getAddressFromRange(i).getIPAsNumber() ) {
+                boundingipAddresses[0] = inipRange.getAddressFromRange(i) ;
+            }
+            
+            if( boundingipAddresses[1].getIPAsNumber() < inipRange.getAddressFromRange(i).getIPAsNumber() ) {
+                boundingipAddresses[1] = inipRange.getAddressFromRange(i) ;
+            }
+            
+        }
+        
+        return inipRange.getAddressFromRange(0).getSectorAsString(1) + "."
+                + inipRange.getAddressFromRange(0).getSectorAsString(2) + "."
+                + boundingipAddresses[0].getSectorAsString(3) + "-" 
+                + boundingipAddresses[1].getSectorAsString(3) + "."
+                + boundingipAddresses[0].getSectorAsString(4) + "-"
+                + boundingipAddresses[1].getSectorAsString(4) ;
+        
+    }
+    
+    public String[] getWholeRangeHumanReadable() {
+        
+        IPv4range[] minimalSetOfRanges = new IPv4range[0] ;
+        int i,j ;
+        boolean wasAddedToRange ;
+                
+        //Search through list of IP addresses
+        
+        for( i=0 ; i<addressArray.length ; i++ ) {
+            
+            wasAddedToRange = false ;
+            
+            //If an ip address has first, second, third octets
+            //that match those of a range and is adjacent to that range
+            //then add it to that range
+            for( j=0 ; j<minimalSetOfRanges.length ; j++ ) {
+                if( addressArray[i].equalsFirstOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
+                        && addressArray[i].equalsSecondOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
+                        && addressArray[i].equalsThirdOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
+                        && minimalSetOfRanges[j].isAdjacentAddress(addressArray[i]) ) {
+                    
+                    if( addressArray[i].getIPAsNumber() < minimalSetOfRanges[j].getAddressFromRange(0).getIPAsNumber() ) {
+                        minimalSetOfRanges[j].addAddressToRange( addressArray[i] , true);
+                    } else {
+                        minimalSetOfRanges[j].addAddressToRange( addressArray[i] , false);
+                    }
+                    
+                    wasAddedToRange = true ;
+                    
+                } 
+            }
+            //Otherwise, start a new range in the set with this ip address
+            //as the first member
+            if( !wasAddedToRange ) {
+                 minimalSetOfRanges = this.appendToIPv4rangeArray( minimalSetOfRanges , new IPv4range( addressArray[i] ) ) ;
+            }
+            
+        }
+        
+        //For each range
+        for( i=0 ; i<minimalSetOfRanges.length ; i++ ) {
+            //Check ranges after it
+            for( j=i+1 ; j<minimalSetOfRanges.length ; j++ ) {
+                //If they are adjacent
+                switch( minimalSetOfRanges[i].isAdjacentRange( minimalSetOfRanges[j] ) ) {
+                    //Concatenate later member in array into earlier member in array
+                    case 1  : minimalSetOfRanges[i].concatenateWithRange( minimalSetOfRanges[j] , false );
+                    minimalSetOfRanges = this.popFromIPv4rangeArray( minimalSetOfRanges , j ) ;
+                    break ;
+                    case -1 : minimalSetOfRanges[i].concatenateWithRange( minimalSetOfRanges[j] , true );
+                    minimalSetOfRanges = this.popFromIPv4rangeArray( minimalSetOfRanges , j ) ;
+                    break ;
+                    //Only other option should be zero
+                    //In which case the ranges are not adjacent
+                    //Hence no action is required
+                    default : break ;
+                }
+            }
+        }
+        
+        //Finally, convert each of the minimal set to a human readable string
+        String[] minimalSetOfRangesStrings = new String[ minimalSetOfRanges.length ] ;
+
+        for( i=0 ; i<minimalSetOfRanges.length ; i++ ) {
+            minimalSetOfRangesStrings[i] = this.convertRangeHumanReadable( minimalSetOfRanges[i] ) ;
+        }
+        
+        return minimalSetOfRangesStrings ;
     }
     
 }

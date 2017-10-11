@@ -188,5 +188,22 @@ public class IPv4address {
         return ( inipAddress.getIPAsNumber().equals( this.ipNumerical ) ) ;
     }
     
+    //Additional "equality" operators that only
+    //apply to each octet
+    public boolean equalsFirstOctet( IPv4address inipAddress ) {
+        return ( this.getSectorAsString(1).equals( inipAddress.getSectorAsString(1) ) ) ;
+    }
+    
+    public boolean equalsSecondOctet( IPv4address inipAddress ) {
+        return ( this.getSectorAsString(2).equals( inipAddress.getSectorAsString(2) ) ) ;
+    }
+    
+    public boolean equalsThirdOctet( IPv4address inipAddress ) {
+        return ( this.getSectorAsString(3).equals( inipAddress.getSectorAsString(3) ) ) ;
+    }
+    
+    public boolean equalsFourthOctet( IPv4address inipAddress ) {
+        return ( this.getSectorAsString(4).equals( inipAddress.getSectorAsString(4) ) ) ;
+    }
     
 }
