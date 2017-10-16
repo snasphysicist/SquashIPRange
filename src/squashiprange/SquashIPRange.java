@@ -37,7 +37,7 @@ public class SquashIPRange {
         //Testing
         IPv4address splitTool = new IPv4address(0L) ;
         String[] sectors = new String[4] ;
-        String[] stringipRanges = new String[]{"212.1.120.100-200","212.1.120.150-200","212.1.120.110-120"} ;
+        String[] stringipRanges = new String[]{"10.13.16.*","10.13.16.19","10.13.17.20"} ;
         IPv4range intmRange ;
         IPv4range[] allRanges = new IPv4range[0] ;
         Integer sector3min ;
@@ -74,6 +74,7 @@ public class SquashIPRange {
             }
         }
         
+        /*
         k = 0 ;
         for( i=0 ; i<numberOfRanges ; i++ ) {
             for( j=i+1 ; j<numberOfRanges;j++ ) {
@@ -81,6 +82,7 @@ public class SquashIPRange {
                 k++ ;
             }
         }
+        */
         
         k = 0 ;
         for( i=0 ; i<numberOfRanges ; i++ ) {
@@ -92,8 +94,8 @@ public class SquashIPRange {
             }
         }
         
-        for( i=0 ; i<overlappingAddresses.length ; i++ ) {
-            System.out.println( overlappingAddresses[i].getAllAddressesAsString() ) ;
+        for( i=0 ; i<allRanges.length ; i++ ) {
+            System.out.println( allRanges[i].convertRangeHumanReadable(allRanges[i]) ) ;
         }
         
     } // Closing main

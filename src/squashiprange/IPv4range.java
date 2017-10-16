@@ -460,6 +460,7 @@ public class IPv4range {
         
         int i ;
         IPv4address[] boundingipAddresses = new IPv4address[]{inipRange.getAddressFromRange(0),inipRange.getAddressFromRange(0)} ;
+        String rangeString ;
         
         for( i=0 ; i<inipRange.getSizeOfRange() ; i++ ) {
             
@@ -473,12 +474,21 @@ public class IPv4range {
             
         }
         
-        return inipRange.getAddressFromRange(0).getSectorAsString(1) + "."
-                + inipRange.getAddressFromRange(0).getSectorAsString(2) + "."
-                + boundingipAddresses[0].getSectorAsString(3) + "-" 
-                + boundingipAddresses[1].getSectorAsString(3) + "."
-                + boundingipAddresses[0].getSectorAsString(4) + "-"
-                + boundingipAddresses[1].getSectorAsString(4) ;
+        rangeString = inipRange.getAddressFromRange(0).getSectorAsString(1) + "."
+                        + inipRange.getAddressFromRange(0).getSectorAsString(2) + "."
+                        + boundingipAddresses[0].getSectorAsString(3) ;
+        
+        if( !boundingipAddresses[0].getSectorAsString(3).equals( boundingipAddresses[1].getSectorAsString(3) ) ) {
+            rangeString += "-" + boundingipAddresses[1].getSectorAsString(3) ;
+        }
+        
+        rangeString += "." + boundingipAddresses[0].getSectorAsString(4) ;
+        
+        if( !boundingipAddresses[0].getSectorAsString(4).equals( boundingipAddresses[1].getSectorAsString(4) ) ) {
+            rangeString += "-" + boundingipAddresses[1].getSectorAsString(4) ;
+        }
+        
+        return rangeString ;
         
     }
     
