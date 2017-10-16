@@ -378,7 +378,7 @@ public class IPv4range {
         thisBoundingThirdOctet[1] = new Integer( this.addressArray[this.addressArray.length-1].getSectorAsString(3) ) ;
         
         inBoundingThirdOctet[0] = new Integer( inipRange.getAddressFromRange(0).getSectorAsString(3) ) ;
-        inBoundingThirdOctet[1] = new Integer( inipRange.getAddressFromRange(this.addressArray.length-1).getSectorAsString(3) ) ;
+        inBoundingThirdOctet[1] = new Integer( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1).getSectorAsString(3) ) ;
                 
         if( this.addressArray[0].equalsFourthOctet(inipRange.getAddressFromRange(0))
                 && this.addressArray[this.addressArray.length-1].equals( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1) ) ) {
@@ -507,7 +507,9 @@ public class IPv4range {
             //If an ip address has first, second, third octets
             //that match those of a range and is adjacent to that range
             //then add it to that range
+            System.out.println( i + " " + addressArray[i].getIPAsString() ) ;
             for( j=0 ; j<minimalSetOfRanges.length ; j++ ) {
+                System.out.println( minimalSetOfRanges[j].isAdjacentAddress(addressArray[i]) ) ;
                 if( addressArray[i].equalsFirstOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
                         && addressArray[i].equalsSecondOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
                         && addressArray[i].equalsThirdOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
