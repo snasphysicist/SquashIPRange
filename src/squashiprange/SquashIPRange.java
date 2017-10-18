@@ -181,6 +181,7 @@ public class SquashIPRange {
         for( i=0 ; i<ipRanges.length ; i++ ) {
             System.out.println( "Text for range " + i + " :" + ipRanges[i].convertRangeHumanReadable( ipRanges[i] ) ) ;
         }
+        System.out.println( "" ) ;
     }
     
     //Demonstration of functionality 10

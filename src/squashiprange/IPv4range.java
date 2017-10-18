@@ -551,6 +551,20 @@ public class IPv4range {
         
     }
     
+    //Going to approach this in a different way by splitting it
+    //into subtasks, each of which will have their own method
+    //in this class.
+    //Basic overview:
+    //Ensure that the array is sorted (toSort, done)
+    //Split the range into contiguous sections
+    //of equal first, second and third octets (needs new method)
+    //Recombine resulting ranges if:
+    //  first & second octets equal (can use equals***Octet in IPv4address)
+    //  third octets adjacent       (new method or modification of isAdjacentRange above)
+    //  ranges in fourth octets equal (new method or modification of isAdjacentRange above)
+    //Some of the recombination may enter in logic in SquashIPRange
+    //instead of contained within this class
+    /*
     public String[] getWholeRangeHumanReadable() {
         
         IPv4range[] minimalSetOfRanges = new IPv4range[0] ;
@@ -641,5 +655,6 @@ public class IPv4range {
         
         return minimalSetOfRangesStrings ;
     }
+    */
     
 }
