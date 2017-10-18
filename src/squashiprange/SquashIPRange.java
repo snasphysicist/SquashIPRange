@@ -29,6 +29,150 @@ public class SquashIPRange {
         return intmarray ;
     }
     
+    //Demonstration of functionality 1
+    //Reading in a single IP address
+    public static void demo1() {
+        String singleipAddress = "10.13.16.25" ;
+        IPv4range ipRange = new IPv4range() ;
+        ipRange.parseAddDashNotation( singleipAddress ) ;
+        System.out.println( "Text in: " + singleipAddress ) ;
+        System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
+    }
+    
+    //Demonstration of functionality 2
+    //Reading in a range of IPs, dash notation in fourth octet
+    public static void demo2() {
+        String dashipRange = "10.13.16.24-26" ;
+        IPv4range ipRange = new IPv4range() ;
+        ipRange.parseAddDashNotation( dashipRange ) ;
+        System.out.println( "Text in: " + dashipRange ) ;
+        System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
+    }
+    
+    //Demonstration of functionality 3
+    //Reading in a range of IPs, dash notation in third octet
+    public static void demo3() {
+        String dashipRange = "10.13.16-18.25" ;
+        IPv4range ipRange = new IPv4range() ;
+        ipRange.parseAddDashNotation( dashipRange ) ;
+        System.out.println( "Text in: " + dashipRange ) ;
+        System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
+    }
+    
+    //Demonstration of functionality 4
+    //Reading in a range of IPs, dash notation in third and fourth octet
+    public static void demo4() {
+        String dashipRange = "10.13.16-17.25-26";
+        IPv4range ipRange = new IPv4range() ;
+        ipRange.parseAddDashNotation( dashipRange ) ;
+        System.out.println( "Text in: " + dashipRange ) ;
+        System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
+    }
+    
+    //Demonstration of functionality 5
+    //Reading in a range of IPs, star notation in fourth octet
+    public static void demo5() {
+        String staripRange = "10.13.16.*" ;
+        IPv4range ipRange = new IPv4range() ;
+        ipRange.parseAddStarNotation( staripRange ) ;
+        System.out.println( "Text in: " + staripRange ) ;
+        System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
+    }
+    
+    //Demonstration of functionality 6
+    //Reading in a range of IPs, CIDR slash notation
+    public static void demo6() {
+        String slashipRange = "10.13.16.0/30" ;
+        IPv4range ipRange = new IPv4range() ;
+        ipRange.parseAddSlashNotation( slashipRange ) ;
+        System.out.println( "Text in: " + slashipRange ) ;
+        System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
+    }
+    
+    //Demonstration of functionality 7
+    //Finding overlap between ranges
+    public static void demo7() {
+        int i, j ;
+        String[] dashipRanges = new String[]{"10.13.16.17-18","10.13.16.18-21","10.13.16.20-26"} ;
+        IPv4range[] ipRanges = new IPv4range[3] ;
+        IPv4range overlappingAddresses ;
+        for( i=0 ; i<dashipRanges.length ; i++ ) {
+            ipRanges[i] = new IPv4range() ;
+            ipRanges[i].parseAddDashNotation( dashipRanges[i] ) ;
+            System.out.println( "Text in range " + i + ": " + dashipRanges[i] ) ;
+            System.out.println( "IPs in range " + ipRanges[i].getAllAddressesAsString() ) ;
+        }
+        for( i=0 ; i<ipRanges.length ; i++ ) {
+            for( j=i+1 ; j<ipRanges.length ; j++ ) {
+                overlappingAddresses = ipRanges[i].findOverlap( ipRanges[j] ) ;
+                if( overlappingAddresses.getSizeOfRange() > 0 ) {
+                    System.out.println( "Ranges " + i + " and " + j + " overlap" ) ;
+                    System.out.println( "Matching addresses: " + overlappingAddresses.getAllAddressesAsString() ) ;
+                } else {
+                    System.out.println( "Ranges " + i + " and " + j + " do not overlap" ) ;
+                }
+            }
+        }
+        System.out.println( "" );
+    }
+    
+    //Demonstration of functionality 8
+    //Removing overlapping parts of ranges
+    public static void demo8() {
+        int i ;
+        String[] dashipRanges = new String[]{"10.13.16-17.25-26","10.13.17.25-30"} ;
+        IPv4range[] ipRanges = new IPv4range[2] ;
+        for( i=0 ; i<dashipRanges.length ; i++ ) {
+            ipRanges[i] = new IPv4range() ;
+            ipRanges[i].parseAddDashNotation( dashipRanges[i] ) ;
+            System.out.println( "Text in range " + i + ": " + dashipRanges[i] ) ;
+            System.out.println( "IPs in range " + ipRanges[i].getAllAddressesAsString() ) ;
+        }
+        if( ipRanges[0].getSizeOfRange() <= ipRanges[1].getSizeOfRange() ) {
+            ipRanges[0].subtractRange( ipRanges[1] ) ;
+        } else {
+            ipRanges[1].subtractRange( ipRanges[0] ) ;
+        }
+        System.out.println( "After eliminating overlap" ) ;
+        System.out.println( "IPs in range " + ipRanges[0].getAllAddressesAsString() ) ;
+        System.out.println( "IPs in range " + ipRanges[1].getAllAddressesAsString() + "\n" ) ;
+    }
+    
+    //Demonstration of functionality 9
+    //Conversion of ranges back to human readable notation
+    public static void demo9() {
+        int i, j ;
+        String[] dashipRanges = new String[]{"10.13.16.24-26","10.13.16-18.23-25","10.13.17.21-23"} ;
+        IPv4range[] ipRanges = new IPv4range[3] ;
+        
+        for( i=0 ; i<dashipRanges.length ; i++ ) {
+            ipRanges[i] = new IPv4range() ;
+            ipRanges[i].parseAddDashNotation( dashipRanges[i] ) ;
+            System.out.println( "Text in range " + i + ": " + dashipRanges[i] ) ;
+            System.out.println( "IPs in range " + ipRanges[i].getAllAddressesAsString() ) ;
+        }
+        
+        for( i=0 ; i<ipRanges.length ; i++ ) {
+            for( j=i+1 ; j<ipRanges.length ; j++ ) {
+                if( ipRanges[i].getSizeOfRange() <= ipRanges[j].getSizeOfRange() ) {
+                    ipRanges[i].subtractRange( ipRanges[j] ) ;
+                } else {
+                    ipRanges[j].subtractRange( ipRanges[i] ) ;
+                }
+            }
+        }
+        
+        System.out.println( "After eliminating overlap" ) ;
+        for( i=0 ; i<ipRanges.length ; i++ ) {
+            System.out.println( "IPs in range " + i + " " + ipRanges[i].getAllAddressesAsString() ) ;
+        }
+        
+        System.out.println( "Converted to human readable formats" ) ;
+        for( i=0 ; i<ipRanges.length ; i++ ) {
+            System.out.println( "Text for range " + i + " :" + ipRanges[i].convertRangeHumanReadable( ipRanges[i] ) ) ;
+        }
+    }
+    
     /**
      * @param args none
      */
@@ -62,7 +206,7 @@ public class SquashIPRange {
         //IPv4range[] overlappingAddresses = new IPv4range[ (numberOfRanges*(numberOfRanges-1))/2 ] ;
         
         //Input human readable IP ranges
-        String[] stringipRanges = new String[]{"10.13.17.100-102","10.13.17.99-101"} ;
+        String[] stringipRanges = new String[]{"10.13.17.100-105","10.13.17.98-101"} ;
         
         //Number of input address ranges
         Integer numberOfRanges = stringipRanges.length ;
@@ -72,6 +216,18 @@ public class SquashIPRange {
         
         //Track if an IPv4range is created successfully
         boolean parsedRange ;
+
+        demo1() ;
+        demo2() ;
+        demo3() ;
+        demo4() ;
+        demo5() ;
+        demo6() ;
+        demo7() ;
+        demo8() ;
+        demo9() ;
+        
+        System.out.println( "STOP" ) ;
         
         //Taking the string ranges
         //and converting them to IPv4ranges
@@ -128,6 +284,10 @@ public class SquashIPRange {
         
         for( i=0 ; i<numberOfRanges ; i++ ) {
             allAddresses.concatenateWithRange( allRanges[i] ,  false );
+        }
+        
+        for( i=0 ; i<allAddresses.getSizeOfRange() ; i++ ) {
+            System.out.println( allAddresses.getAddressFromRange(i).getIPAsString() ) ;
         }
         
         stringipRangesOut = allAddresses.getWholeRangeHumanReadable() ;

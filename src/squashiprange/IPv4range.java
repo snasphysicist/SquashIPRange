@@ -16,7 +16,7 @@ package squashiprange;
 public class IPv4range {
     
     private IPv4address[] addressArray = new IPv4address[0];
-    private String humanreadableRange ;
+    //private String humanreadableRange ;
     
     //Constructor starting from a single IPv4address
     public IPv4range( IPv4address inipAddress ) {
@@ -31,6 +31,7 @@ public class IPv4range {
         }
     }
     
+    //Trivial constructor with no inputs
     public IPv4range() {
         addressArray = new IPv4address[0] ;
     }
@@ -495,40 +496,59 @@ public class IPv4range {
     public String[] getWholeRangeHumanReadable() {
         
         IPv4range[] minimalSetOfRanges = new IPv4range[0] ;
-        int i,j ;
-        boolean wasAddedToRange ;
-                
-        //Search through list of IP addresses
+        int i, j, k ;
+        boolean wasAddedToRange = true ;
+        IPv4address[] addressArrayCopy = new IPv4address[ addressArray.length ] ;
         
         for( i=0 ; i<addressArray.length ; i++ ) {
+            addressArrayCopy[i] = this.addressArray[i] ;
+        }
+        
+        k = 0 ;
+        
+        while( !( k == addressArrayCopy.length ) ) {
+                    
+            while( wasAddedToRange ) {
+                
+                wasAddedToRange = false ;
+                
+                //Search through list of IP addresses
+                i = 0 ;
+                while( i<addressArrayCopy.length ) {
+                    //If an ip address has first, second, third octets
+                    //that match those of a range and is adjacent to that range
+                    //then add it to that range
+                    //System.out.println( i + " " + addressArrayCopy[i].getIPAsString() ) ;
+                    for( j=0 ; j<minimalSetOfRanges.length ; j++ ) {
+                        //System.out.println( minimalSetOfRanges[j].isAdjacentAddress(addressArrayCopy[i]) ) ;
+                        if( addressArrayCopy[i].equalsFirstOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
+                                && addressArrayCopy[i].equalsSecondOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
+                                && addressArrayCopy[i].equalsThirdOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
+                                && minimalSetOfRanges[j].isAdjacentAddress(addressArrayCopy[i]) ) {
+
+                            if( addressArrayCopy[i].getIPAsNumber() < minimalSetOfRanges[j].getAddressFromRange(0).getIPAsNumber() ) {
+                                minimalSetOfRanges[j].addAddressToRange( addressArrayCopy[i] , true);
+                            } else {
+                                minimalSetOfRanges[j].addAddressToRange( addressArrayCopy[i] , false);
+                                addressArrayCopy = this.popFromIPv4addressArray( addressArrayCopy , i ) ;
+                            }
+                            addressArrayCopy = this.popFromIPv4addressArray( addressArrayCopy , i ) ;
+                            k++ ;
+                            wasAddedToRange = true ;
+
+                        } //Close outer if
+                    } //Close for(j)
+                    i++ ;
+                } //Close while(i)
+            }//Close while(addedToRange)
             
-            wasAddedToRange = false ;
-            
-            //If an ip address has first, second, third octets
-            //that match those of a range and is adjacent to that range
-            //then add it to that range
-            System.out.println( i + " " + addressArray[i].getIPAsString() ) ;
-            for( j=0 ; j<minimalSetOfRanges.length ; j++ ) {
-                System.out.println( minimalSetOfRanges[j].isAdjacentAddress(addressArray[i]) ) ;
-                if( addressArray[i].equalsFirstOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
-                        && addressArray[i].equalsSecondOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
-                        && addressArray[i].equalsThirdOctet( minimalSetOfRanges[j].getAddressFromRange(0) )
-                        && minimalSetOfRanges[j].isAdjacentAddress(addressArray[i]) ) {
-                    
-                    if( addressArray[i].getIPAsNumber() < minimalSetOfRanges[j].getAddressFromRange(0).getIPAsNumber() ) {
-                        minimalSetOfRanges[j].addAddressToRange( addressArray[i] , true);
-                    } else {
-                        minimalSetOfRanges[j].addAddressToRange( addressArray[i] , false);
-                    }
-                    
-                    wasAddedToRange = true ;
-                    
-                } 
-            }
             //Otherwise, start a new range in the set with this ip address
             //as the first member
             if( !wasAddedToRange ) {
-                 minimalSetOfRanges = this.appendToIPv4rangeArray( minimalSetOfRanges , new IPv4range( addressArray[i] ) ) ;
+                 minimalSetOfRanges = this.appendToIPv4rangeArray( minimalSetOfRanges , new IPv4range( addressArrayCopy[0] ) ) ;
+                 addressArrayCopy = this.popFromIPv4addressArray( addressArrayCopy , 0 ) ;
+                 wasAddedToRange = true ;
+                 k++ ;
             }
             
         }
