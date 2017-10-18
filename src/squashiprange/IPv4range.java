@@ -64,6 +64,60 @@ public class IPv4range {
         return intmRange ;
     }
     
+    //Ensures that a range's addresses are in the correct numerical order
+    //Uses an bubble sort approach
+    public void sortRange() {
+        int i ;
+        boolean didSwap = true ;
+        while( didSwap ) {
+            didSwap = false ;
+            for( i=0 ; i<this.addressArray.length-1 ; i++ ) {
+                if( this.addressArray[i].getIPAsNumber() > this.addressArray[i+1].getIPAsNumber() ) {
+                    this.swapAddresses( i , i+1 );
+                    didSwap = true ;
+                }
+            }
+        }
+    }
+    
+    //Helper method for sort method, above
+    //Swaps the two addresses at indices 
+    //index1 and index2 in addressArray
+    private void swapAddresses( int index1 , int index2 ) {
+        
+        int i ;
+        int lindex ;
+        int uindex ;
+        IPv4address[] intmAddressArray = new IPv4address[ this.addressArray.length ] ;
+        
+        if( index1 < index2 ) {
+            lindex = index1 ;
+            uindex = index2 ;
+        } else {
+            lindex = index2 ;
+            uindex = index1 ;
+        }
+        
+        for( i=0 ; i<lindex ; i++ ) {
+            intmAddressArray[i] = this.addressArray[i] ;
+        }
+        
+        intmAddressArray[lindex] = this.addressArray[uindex] ;
+        
+        for( i=lindex+1 ; i<uindex ; i++ ) {
+            intmAddressArray[i] = this.addressArray[i] ;
+        }
+        
+        intmAddressArray[uindex] = this.addressArray[lindex] ;
+        
+        for( i=uindex+1 ; i<intmAddressArray.length ; i++ ) {
+            intmAddressArray[i] = this.addressArray[i] ;
+        }
+        
+        this.addressArray = intmAddressArray ;
+        
+    }
+    
     //Takes an array of IPv4address objects and another IPv4address 
     //and appends the latter at the end of the former and returns the resulting array
     public IPv4address[] appendToIPv4addressArrayEnd( IPv4address[] inarray , IPv4address inobject ) {

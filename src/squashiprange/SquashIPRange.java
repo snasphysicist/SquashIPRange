@@ -34,6 +34,7 @@ public class SquashIPRange {
     public static void demo1() {
         String singleipAddress = "10.13.16.25" ;
         IPv4range ipRange = new IPv4range() ;
+        System.out.println( " DEMONSTRATION 1 " ) ;
         ipRange.parseAddDashNotation( singleipAddress ) ;
         System.out.println( "Text in: " + singleipAddress ) ;
         System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
@@ -44,6 +45,7 @@ public class SquashIPRange {
     public static void demo2() {
         String dashipRange = "10.13.16.24-26" ;
         IPv4range ipRange = new IPv4range() ;
+        System.out.println( " DEMONSTRATION 2 " ) ;
         ipRange.parseAddDashNotation( dashipRange ) ;
         System.out.println( "Text in: " + dashipRange ) ;
         System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
@@ -54,6 +56,7 @@ public class SquashIPRange {
     public static void demo3() {
         String dashipRange = "10.13.16-18.25" ;
         IPv4range ipRange = new IPv4range() ;
+        System.out.println( " DEMONSTRATION 3 " ) ;
         ipRange.parseAddDashNotation( dashipRange ) ;
         System.out.println( "Text in: " + dashipRange ) ;
         System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
@@ -64,6 +67,7 @@ public class SquashIPRange {
     public static void demo4() {
         String dashipRange = "10.13.16-17.25-26";
         IPv4range ipRange = new IPv4range() ;
+        System.out.println( " DEMONSTRATION 4 " ) ;
         ipRange.parseAddDashNotation( dashipRange ) ;
         System.out.println( "Text in: " + dashipRange ) ;
         System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
@@ -74,6 +78,7 @@ public class SquashIPRange {
     public static void demo5() {
         String staripRange = "10.13.16.*" ;
         IPv4range ipRange = new IPv4range() ;
+        System.out.println( " DEMONSTRATION 5 " ) ;
         ipRange.parseAddStarNotation( staripRange ) ;
         System.out.println( "Text in: " + staripRange ) ;
         System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
@@ -84,6 +89,7 @@ public class SquashIPRange {
     public static void demo6() {
         String slashipRange = "10.13.16.0/30" ;
         IPv4range ipRange = new IPv4range() ;
+        System.out.println( " DEMONSTRATION 6 " ) ;
         ipRange.parseAddSlashNotation( slashipRange ) ;
         System.out.println( "Text in: " + slashipRange ) ;
         System.out.println( "IPs in range " + ipRange.getAllAddressesAsString() + "\n" ) ;
@@ -96,6 +102,7 @@ public class SquashIPRange {
         String[] dashipRanges = new String[]{"10.13.16.17-18","10.13.16.18-21","10.13.16.20-26"} ;
         IPv4range[] ipRanges = new IPv4range[3] ;
         IPv4range overlappingAddresses ;
+        System.out.println( " DEMONSTRATION 7 " ) ;
         for( i=0 ; i<dashipRanges.length ; i++ ) {
             ipRanges[i] = new IPv4range() ;
             ipRanges[i].parseAddDashNotation( dashipRanges[i] ) ;
@@ -122,6 +129,7 @@ public class SquashIPRange {
         int i ;
         String[] dashipRanges = new String[]{"10.13.16-17.25-26","10.13.17.25-30"} ;
         IPv4range[] ipRanges = new IPv4range[2] ;
+        System.out.println( " DEMONSTRATION 8 " ) ;
         for( i=0 ; i<dashipRanges.length ; i++ ) {
             ipRanges[i] = new IPv4range() ;
             ipRanges[i].parseAddDashNotation( dashipRanges[i] ) ;
@@ -144,6 +152,8 @@ public class SquashIPRange {
         int i, j ;
         String[] dashipRanges = new String[]{"10.13.16.24-26","10.13.16-18.23-25","10.13.17.21-23"} ;
         IPv4range[] ipRanges = new IPv4range[3] ;
+        
+        System.out.println( " DEMONSTRATION 9 " ) ;
         
         for( i=0 ; i<dashipRanges.length ; i++ ) {
             ipRanges[i] = new IPv4range() ;
@@ -171,6 +181,26 @@ public class SquashIPRange {
         for( i=0 ; i<ipRanges.length ; i++ ) {
             System.out.println( "Text for range " + i + " :" + ipRanges[i].convertRangeHumanReadable( ipRanges[i] ) ) ;
         }
+    }
+    
+    //Demonstration of functionality 10
+    //Concatenation & ordering of ranges
+    public static void demo10() {
+        int i ;
+        String[] dashipRanges = new String[]{"10.13.16.24-26","10.13.16.20-23"} ;
+        IPv4range[] ipRanges = new IPv4range[2] ;
+        System.out.println( " DEMONSTRATION 10 " ) ;
+        for( i=0 ; i<dashipRanges.length ; i++ ) {
+            ipRanges[i] = new IPv4range() ;
+            ipRanges[i].parseAddDashNotation( dashipRanges[i] ) ;
+            System.out.println( "Text in range " + i + ": " + dashipRanges[i] ) ;
+            System.out.println( "IPs in range " + ipRanges[i].getAllAddressesAsString() ) ;
+        }
+        ipRanges[0].concatenateWithRange(ipRanges[1], false) ;
+        ipRanges[0].sortRange();
+        System.out.println( "After concatenation" ) ;
+        System.out.println( "IPs in range " + ipRanges[0].getAllAddressesAsString() ) ;
+        System.out.println( "Range 0 as text: " + ipRanges[0].convertRangeHumanReadable( ipRanges[0] ) + "\n" ) ;
     }
     
     /**
@@ -226,6 +256,7 @@ public class SquashIPRange {
         demo7() ;
         demo8() ;
         demo9() ;
+        demo10() ;
         
         System.out.println( "STOP" ) ;
         
