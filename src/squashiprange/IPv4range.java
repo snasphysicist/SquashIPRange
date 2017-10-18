@@ -213,11 +213,16 @@ public class IPv4range {
     }
     
     //Adds an IPv4address to the range
+    //Second argument atStart = True -> adds address at the start of the range
+    //Second argument atStart = False -> adds address at the end of the range
+    //If the address is already in the range, it takes no action
     public void addAddressToRange( IPv4address inipAddress , boolean atStart ) {
-        if( !atStart ) {
-            addressArray = this.appendToIPv4addressArrayEnd( addressArray , inipAddress ) ;
-        } else {
-            addressArray = this.appendToIPv4addressArrayStart( addressArray , inipAddress ) ;
+        if( !this.isInRange( inipAddress ) ) {
+            if( !atStart ) {
+                addressArray = this.appendToIPv4addressArrayEnd( addressArray , inipAddress ) ;
+            } else {
+                addressArray = this.appendToIPv4addressArrayStart( addressArray , inipAddress ) ;
+            }
         }
     }
     
@@ -230,7 +235,7 @@ public class IPv4range {
         int i ;
         IPv4address intmipAddress = new IPv4address( staripRange.substring(0,staripRange.length()-1) + "0" ) ;
         for(i=0;i<256;i++) {
-            addressArray = this.appendToIPv4addressArrayEnd( addressArray , intmipAddress ) ;
+            this.addAddressToRange( intmipAddress , false );
             intmipAddress = intmipAddress.createCopy() ;
             intmipAddress.incrementAddress() ;
         }
@@ -284,14 +289,13 @@ public class IPv4range {
             //Add addresses
             for(i=thirdSectorLimits[0];i<=thirdSectorLimits[1];i++) {
                 for(j=fourthSectorLimits[0];j<=fourthSectorLimits[1];j++) {
-                    addressArray = this.appendToIPv4addressArrayEnd( addressArray , new IPv4address( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + j.toString() ) ) ;
+                    this.addAddressToRange( new IPv4address( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + j.toString() ) , false );
                 }
             }
-
-
         }
         
         return rangeValidated ;
+        
     }
   
     //Takes an ip range in string format written with the CIDR slash notation
@@ -337,7 +341,7 @@ public class IPv4range {
         if ( rangeValidated ) {
             try {
                 for(i=0;i<numberips;i++) {
-                    addressArray = this.appendToIPv4addressArrayEnd( addressArray , intmipAddress ) ;
+                    this.addAddressToRange( intmipAddress , false );
                     intmipAddress = intmipAddress.createCopy() ;
                     intmipAddress.incrementAddress() ;
                 }
