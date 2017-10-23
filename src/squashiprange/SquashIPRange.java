@@ -204,6 +204,33 @@ public class SquashIPRange {
         System.out.println( "Range 0 as text: " + ipRanges[0].convertRangeHumanReadable( ipRanges[0] ) + "\n" ) ;
     }
     
+    //Demonstration of functionality 11
+    //Taking multiple overlapping and non overlapping ranges
+    //Adding those all into a range without duplicates
+    //Splitting this non-contiguous range into multiple
+    //contiguous subranges
+    public static void demo11() {
+        int i ;
+        String[] dashipRanges = new String[]{"10.13.16.20-26","10.13.16.25-30","10.13.16.50-52","10.13.17.20-22"} ;
+        IPv4range[] ipRanges = new IPv4range[4] ;
+        IPv4range concatenatedRange = new IPv4range() ;
+        IPv4range[] ipRangesOut ;
+        System.out.println( " DEMONSTRATION 11 " ) ;
+        for( i=0 ; i<dashipRanges.length ; i++ ) {
+            ipRanges[i] = new IPv4range() ;
+            ipRanges[i].parseAddDashNotation( dashipRanges[i] ) ;
+            System.out.println( "Text in range " + i + ": " + dashipRanges[i] ) ;
+            System.out.println( "IPs in range " + ipRanges[i].getAllAddressesAsString() ) ;
+            concatenatedRange.concatenateWithRange( ipRanges[i] , true );
+        }
+        ipRangesOut = concatenatedRange.getContiguousSubranges() ;
+        System.out.println( "AFTER CONCATENATION AND SPLITTING" ) ;
+        for( i=0 ; i<ipRangesOut.length ; i++ ) {
+            System.out.println( "IPs in range " + ipRangesOut[i].getAllAddressesAsString() ) ;
+            System.out.println( "Range " + i + " as text : " + ipRangesOut[i].convertRangeHumanReadable( ipRangesOut[i] ) ) ;
+        }
+    }
+    
     /**
      * @param args none
      */
@@ -258,6 +285,7 @@ public class SquashIPRange {
         demo8() ;
         demo9() ;
         demo10() ;
+        demo11() ;
         
         System.out.println( "STOP" ) ;
         
