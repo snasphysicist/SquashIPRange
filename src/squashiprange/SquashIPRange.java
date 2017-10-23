@@ -317,7 +317,7 @@ public class SquashIPRange {
         for( i=0 ; i<numberOfRanges ; i++ ) {
             allAddresses.concatenateWithRange( allRanges[i] ,  false );
         }
-        
+        /*
         for( i=0 ; i<allAddresses.getSizeOfRange() ; i++ ) {
             System.out.println( allAddresses.getAddressFromRange(i).getIPAsString() ) ;
         }
@@ -327,6 +327,7 @@ public class SquashIPRange {
         for( i=0 ; i<stringipRangesOut.length ; i++ ) {
             System.out.println( stringipRangesOut[i] ) ;
         }
+        */
         
     } // Closing main
     

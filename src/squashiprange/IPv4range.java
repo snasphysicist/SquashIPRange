@@ -551,6 +551,17 @@ public class IPv4range {
         
     }
     
+    public IPv4range[] getContiguousSubranges() {
+        int i ;
+        IPv4range[] intmRanges ;
+        this.sortRange();
+        intmRanges = new IPv4range[]{new IPv4range( this.addressArray[0] ) } ;
+        for( i=1 ; i<this.addressArray.length ; i++ ) {
+            
+        }
+        return ;
+    }
+    
     //Going to approach this in a different way by splitting it
     //into subtasks, each of which will have their own method
     //in this class.

@@ -153,26 +153,22 @@ public class IPv4address {
         return this.splitBySector( ipString )[sectorNumber-1] ;
     }
     
-    //Commented out for now
-    //I'm not sure if it's needed
-    //
     //Method to decide if the ip address as the argument
     //is "adjacent" to this ip address
     //Adjacency means in this context that the numerical
     //values for the address differ by +-1
     //and the third sector has the same value
-    /*public Boolean isAdjacent( IPv4address inipAddress ) {
+    public Boolean isAdjacentAddress( IPv4address inipAddress ) {
         Boolean adjacent = false ;
         if( Math.abs(inipAddress.getIPAsNumber()-this.ipNumerical) == 1 ) {
             adjacent = true ;
         }
         //Check they have the same third sector here
-        if( 1 == 0 ) {
+        if( !this.getSectorAsString( 3 ).equals( inipAddress.getSectorAsString(3) ) ) {
             adjacent = false ;
         }
         return adjacent ;
     }
-    */
     
     //Returns a new copy of the current IPv4address object
     public IPv4address createCopy() {
