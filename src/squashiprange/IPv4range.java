@@ -551,15 +551,25 @@ public class IPv4range {
         
     }
     
+    //Method to split the current IPv4range into a subset of IPv4ranges
+    //which are "contiguous" ranges of ip addresses
+    //By contiguous we mean that each member in the range has the same
+    //first, second and third octets, and that the fourth octets are in
+    //[a,b] where all c in [a,b] are in the range.
     public IPv4range[] getContiguousSubranges() {
         int i ;
         IPv4range[] intmRanges ;
         this.sortRange();
         intmRanges = new IPv4range[]{new IPv4range( this.addressArray[0] ) } ;
         for( i=1 ; i<this.addressArray.length ; i++ ) {
+            if( this.addressArray[i].isAdjacentAddress( intmRanges[ intmRanges.length-1 ].getAddressFromRange( intmRanges[ intmRanges.length-1 ].getSizeOfRange()-1 ) ) ) {
+                intmRanges[ intmRanges.length-1 ].addAddressToRange( this.addressArray[i] , false );
+            } else {
+                intmRanges = this.appendToIPv4rangeArray( intmRanges , new IPv4range( this.addressArray[i] ) ) ;
+            }
             
         }
-        return ;
+        return intmRanges ;
     }
     
     //Going to approach this in a different way by splitting it
