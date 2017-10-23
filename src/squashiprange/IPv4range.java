@@ -302,21 +302,33 @@ public class IPv4range {
     //then parses the string and adds all addresses from the range
     //to this IPv4range object
     public boolean parseAddSlashNotation( String slashipRange ) {
+        
+        int i ;
+        
+        //CIDR bitmask
+        Long bitmask = new Long(0) ;
+        
         //Will turn to false if invalid data is entered
         boolean rangeValidated = true ;
+        
         //Everything after the slash is the number of mask bits
         Integer subnetmaskbits = new Integer( slashipRange.split("/")[1] ) ;
+        
+        //Use this number to set up the bitmask
+        for( i=0 ; i<subnetmaskbits ; i++ ) {
+            bitmask += (1L << (31-i)) ;
+        }
+        
         //Number of addresses in the range is 2^(32-number of mask bits)
         //This is because the number of mask bits cover the bits that
         //**aren't** part of the range
         subnetmaskbits = 32 - subnetmaskbits ;
         Integer numberips = new Integer( (int) Math.pow(2,subnetmaskbits) ) ;
-        //We start at the first ip address in the range, which is everything
-        //to the left of the slash
-        IPv4address intmipAddress = new IPv4address( slashipRange.split("/")[0] ) ;
         
-        //Loop counter
-        int i ;
+        //We start at the first ip address in the range
+        //This is given by the number found when keeping only the masked bits
+        IPv4address intmipAddress = new IPv4address( slashipRange.split("/")[0] ) ;
+        intmipAddress = new IPv4address( intmipAddress.getIPAsNumber() & bitmask ) ;
         
         //Validation
         //Suppose the range is in the format a.b.c.d/e

@@ -31,7 +31,7 @@ public class SquashIPRange {
     
     //Demonstration of functionality 1
     //Reading in a single IP address
-    public static void demo1() {
+    private static void demo1() {
         String singleipAddress = "10.13.16.25" ;
         IPv4range ipRange = new IPv4range() ;
         System.out.println( " DEMONSTRATION 1 " ) ;
@@ -42,7 +42,7 @@ public class SquashIPRange {
     
     //Demonstration of functionality 2
     //Reading in a range of IPs, dash notation in fourth octet
-    public static void demo2() {
+    private static void demo2() {
         String dashipRange = "10.13.16.24-26" ;
         IPv4range ipRange = new IPv4range() ;
         System.out.println( " DEMONSTRATION 2 " ) ;
@@ -53,7 +53,7 @@ public class SquashIPRange {
     
     //Demonstration of functionality 3
     //Reading in a range of IPs, dash notation in third octet
-    public static void demo3() {
+    private static void demo3() {
         String dashipRange = "10.13.16-18.25" ;
         IPv4range ipRange = new IPv4range() ;
         System.out.println( " DEMONSTRATION 3 " ) ;
@@ -64,7 +64,7 @@ public class SquashIPRange {
     
     //Demonstration of functionality 4
     //Reading in a range of IPs, dash notation in third and fourth octet
-    public static void demo4() {
+    private static void demo4() {
         String dashipRange = "10.13.16-17.25-26";
         IPv4range ipRange = new IPv4range() ;
         System.out.println( " DEMONSTRATION 4 " ) ;
@@ -75,7 +75,7 @@ public class SquashIPRange {
     
     //Demonstration of functionality 5
     //Reading in a range of IPs, star notation in fourth octet
-    public static void demo5() {
+    private static void demo5() {
         String staripRange = "10.13.16.*" ;
         IPv4range ipRange = new IPv4range() ;
         System.out.println( " DEMONSTRATION 5 " ) ;
@@ -86,8 +86,8 @@ public class SquashIPRange {
     
     //Demonstration of functionality 6
     //Reading in a range of IPs, CIDR slash notation
-    public static void demo6() {
-        String slashipRange = "10.13.16.0/30" ;
+    private static void demo6() {
+        String slashipRange = "10.13.16.30/29" ;
         IPv4range ipRange = new IPv4range() ;
         System.out.println( " DEMONSTRATION 6 " ) ;
         ipRange.parseAddSlashNotation( slashipRange ) ;
@@ -97,7 +97,7 @@ public class SquashIPRange {
     
     //Demonstration of functionality 7
     //Finding overlap between ranges
-    public static void demo7() {
+    private static void demo7() {
         int i, j ;
         String[] dashipRanges = new String[]{"10.13.16.17-18","10.13.16.18-21","10.13.16.20-26"} ;
         IPv4range[] ipRanges = new IPv4range[3] ;
@@ -125,7 +125,7 @@ public class SquashIPRange {
     
     //Demonstration of functionality 8
     //Removing overlapping parts of ranges
-    public static void demo8() {
+    private static void demo8() {
         int i ;
         String[] dashipRanges = new String[]{"10.13.16-17.25-26","10.13.17.25-30"} ;
         IPv4range[] ipRanges = new IPv4range[2] ;
@@ -141,14 +141,14 @@ public class SquashIPRange {
         } else {
             ipRanges[1].subtractRange( ipRanges[0] ) ;
         }
-        System.out.println( "After eliminating overlap" ) ;
+        System.out.println( "AFTER ELIMINATING OVERLAP" ) ;
         System.out.println( "IPs in range " + ipRanges[0].getAllAddressesAsString() ) ;
         System.out.println( "IPs in range " + ipRanges[1].getAllAddressesAsString() + "\n" ) ;
     }
     
     //Demonstration of functionality 9
     //Conversion of ranges back to human readable notation
-    public static void demo9() {
+    private static void demo9() {
         int i, j ;
         String[] dashipRanges = new String[]{"10.13.16.24-26","10.13.16-18.23-25","10.13.17.21-23"} ;
         IPv4range[] ipRanges = new IPv4range[3] ;
@@ -172,12 +172,12 @@ public class SquashIPRange {
             }
         }
         
-        System.out.println( "After eliminating overlap" ) ;
+        System.out.println( "AFTER ELIMINATING OVERLAP" ) ;
         for( i=0 ; i<ipRanges.length ; i++ ) {
             System.out.println( "IPs in range " + i + " " + ipRanges[i].getAllAddressesAsString() ) ;
         }
         
-        System.out.println( "Converted to human readable formats" ) ;
+        System.out.println( "CONVERTED TO HUMAN READABLE FORMAT" ) ;
         for( i=0 ; i<ipRanges.length ; i++ ) {
             System.out.println( "Text for range " + i + " :" + ipRanges[i].convertRangeHumanReadable( ipRanges[i] ) ) ;
         }
@@ -186,7 +186,7 @@ public class SquashIPRange {
     
     //Demonstration of functionality 10
     //Concatenation & ordering of ranges
-    public static void demo10() {
+    private static void demo10() {
         int i ;
         String[] dashipRanges = new String[]{"10.13.16.24-26","10.13.16.20-23"} ;
         IPv4range[] ipRanges = new IPv4range[2] ;
@@ -199,7 +199,7 @@ public class SquashIPRange {
         }
         ipRanges[0].concatenateWithRange(ipRanges[1], false) ;
         ipRanges[0].sortRange();
-        System.out.println( "After concatenation" ) ;
+        System.out.println( "AFTER CONCATENATION" ) ;
         System.out.println( "IPs in range " + ipRanges[0].getAllAddressesAsString() ) ;
         System.out.println( "Range 0 as text: " + ipRanges[0].convertRangeHumanReadable( ipRanges[0] ) + "\n" ) ;
     }
@@ -209,7 +209,7 @@ public class SquashIPRange {
     //Adding those all into a range without duplicates
     //Splitting this non-contiguous range into multiple
     //contiguous subranges
-    public static void demo11() {
+    private static void demo11() {
         int i ;
         String[] dashipRanges = new String[]{"10.13.16.20-26","10.13.16.25-30","10.13.16.50-52","10.13.17.20-22"} ;
         IPv4range[] ipRanges = new IPv4range[4] ;
