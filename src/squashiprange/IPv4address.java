@@ -59,10 +59,6 @@ public class IPv4address {
         sector2 = (mask2 & ipAsNumerical) >> 16 ;
         sector3 = (mask3 & ipAsNumerical) >> 8 ;
         sector4 = mask4 & ipAsNumerical ;
-        //TESTING
-        //System.out.println( Integer.toBinaryString(ipAsNumerical) ) ;
-        //System.out.println( sector1.toBinaryString(sector1) + "." + sector2.toBinaryString(sector2) + "." + sector3.toBinaryString(sector3) + "." + sector4.toBinaryString(sector4) ) ;
-        //TESTING
         //Add in the full stops here
         return sector1.toString() + "." + sector2.toString() + "." + sector3.toString() + "." + sector4.toString() ;
     }

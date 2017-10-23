@@ -452,12 +452,12 @@ public class IPv4range {
         inBoundingThirdOctet[1] = new Integer( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1).getSectorAsString(3) ) ;
                 
         if( this.addressArray[0].equalsFourthOctet(inipRange.getAddressFromRange(0))
-                && this.addressArray[this.addressArray.length-1].equals( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1) ) ) {
-            if( thisBoundingThirdOctet[0].equals( inBoundingThirdOctet[1] + 1L ) ) {
+                && this.addressArray[this.addressArray.length-1].equalsFourthOctet( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1) ) ) {
+            if( thisBoundingThirdOctet[0].equals( inBoundingThirdOctet[1] + 1 ) ) {
                 //Input range third octets < this range third octets
                 isAdjacent = -1 ;
             }
-            if( inBoundingThirdOctet[0].equals( thisBoundingThirdOctet[1] + 1L ) ) {
+            if( inBoundingThirdOctet[0].equals( thisBoundingThirdOctet[1] + 1 ) ) {
                 //Input range third octets > this range third octets
                 isAdjacent = 1 ;
             }

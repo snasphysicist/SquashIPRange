@@ -229,6 +229,60 @@ public class SquashIPRange {
             System.out.println( "IPs in range " + ipRangesOut[i].getAllAddressesAsString() ) ;
             System.out.println( "Range " + i + " as text : " + ipRangesOut[i].convertRangeHumanReadable( ipRangesOut[i] ) ) ;
         }
+        System.out.println() ;
+    }
+    
+    //Demonstration of functionality 12
+    //Combining two "adjacent" ranges of addresses into a single range
+    private static void demo12() {
+        int i,j ;
+        String[] dashipRanges = new String[]{"10.13.16.24-26","10.13.17.24-26","10.13.18.67-69","10.13.19.67-70"} ;
+        IPv4range[] ipRanges = new IPv4range[4] ;
+        System.out.println( " DEMONSTRATION 12 " ) ;
+        for( i=0 ; i<dashipRanges.length ; i++ ) {
+            ipRanges[i] = new IPv4range() ;
+            ipRanges[i].parseAddDashNotation( dashipRanges[i] ) ;
+            System.out.println( "Text in range " + i + ": " + dashipRanges[i] ) ;
+            System.out.println( "IPs in range " + ipRanges[i].getAllAddressesAsString() ) ;
+        }
+        //First we detect adjacent ranges and concatenate them
+        for( i=0 ; i<ipRanges.length ; i++ ) {
+            for( j=i+1 ; j<ipRanges.length ; j++ ) {
+                System.out.println( "Ranges " + i + " and " + j + " \"adjacent\"? " + ipRanges[i].isAdjacentRange( ipRanges[j] ) );
+                if( ipRanges[i].isAdjacentRange( ipRanges[j] ) == 1 ) {
+                    ipRanges[i].concatenateWithRange( ipRanges[j] , false );
+                    System.out.println( "Added range " + j + " to end of range " + i ) ;
+                } else if ( ipRanges[i].isAdjacentRange( ipRanges[j] ) == -1 ) {
+                    ipRanges[i].concatenateWithRange( ipRanges[j] , true );
+                    System.out.println( "Added range " + j + " to start of range " + i ) ;
+                }
+            }
+        }
+        //Then we remove overlapping IP addresses from ranges
+        for( i=0 ; i<ipRanges.length ; i++ ) {
+            for( j=i+1 ; j<ipRanges.length ; j++ ) {
+                if( ipRanges[i].getSizeOfRange() >= ipRanges[j].getSizeOfRange() ) {
+                    ipRanges[j].subtractRange( ipRanges[i] ) ;
+                } else {
+                    ipRanges[i].subtractRange( ipRanges[j] ) ;                
+                }
+            }
+        }
+        //Remove any empty ranges
+        i = 0 ;
+        while( i<ipRanges.length ) {
+            if( ipRanges[i].getSizeOfRange() == 0 ) {
+                ipRanges = ipRanges[0].popFromIPv4rangeArray( ipRanges , i ) ;
+                i-- ;
+            }
+            i++ ;
+        }
+        System.out.println( "AFTER CONCATENATION" ) ;
+        for( i=0 ; i<ipRanges.length ; i++ ) {
+            System.out.println( "IPs in range " + ipRanges[i].getAllAddressesAsString() ) ;
+            System.out.println( "Range " + i + " as text : " + ipRanges[i].convertRangeHumanReadable( ipRanges[i] ) ) ;
+        }
+        
     }
     
     /**
@@ -286,8 +340,7 @@ public class SquashIPRange {
         demo9() ;
         demo10() ;
         demo11() ;
-        
-        System.out.println( "STOP" ) ;
+        demo12() ;
         
         //Taking the string ranges
         //and converting them to IPv4ranges
