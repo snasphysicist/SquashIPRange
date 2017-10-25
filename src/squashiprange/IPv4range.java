@@ -182,22 +182,33 @@ public class IPv4range {
     //If atStart is true, result ~ [ inipRange , this ]
     //If atStart is false, result ~ [ this , inipRange ] 
     public void concatenateWithRange( IPv4range inipRange , boolean atStart ) {
+        
         int i ;
+        
+        //Create a copy of this range so we don't lose its addresses
         IPv4range intmRange = this.createCopy() ;
-        addressArray = new IPv4address[ intmRange.getSizeOfRange() + inipRange.getSizeOfRange() ] ;
+        
+        //Remove the overlap between these two ranges
+        //We prefer to keep this one intact (doesn't matter too much)
+        inipRange.subtractRange( this ) ;
+        
+        //The new addressArray will be the length of the current one
+        //plus the extra elements
+        this.addressArray = new IPv4address[ intmRange.getSizeOfRange() + inipRange.getSizeOfRange() ] ;
+        
         if( atStart ) {
             for( i=0 ; i<inipRange.getSizeOfRange() ; i++ ) {
-                addressArray[i] = inipRange.getAddressFromRange(i) ;
+                this.addressArray[i] = inipRange.getAddressFromRange(i) ;
             }
             for( i=0 ; i<intmRange.getSizeOfRange() ; i++ ) {
-                addressArray[ i + inipRange.getSizeOfRange() ] = intmRange.getAddressFromRange(i) ;
+                this.addressArray[ i + inipRange.getSizeOfRange() ] = intmRange.getAddressFromRange(i) ;
             }
         } else {
             for( i=0 ; i<intmRange.getSizeOfRange() ; i++ ) {
-                addressArray[i] = intmRange.getAddressFromRange(i) ;
+                this.addressArray[i] = intmRange.getAddressFromRange(i) ;
             }
             for( i=0 ; i<inipRange.getSizeOfRange() ; i++ ) {
-                addressArray[ i + intmRange.getSizeOfRange() ] = inipRange.getAddressFromRange(i) ;
+                this.addressArray[ i + intmRange.getSizeOfRange() ] = inipRange.getAddressFromRange(i) ;
             }
         }
     }
