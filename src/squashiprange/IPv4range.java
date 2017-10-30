@@ -36,6 +36,16 @@ public class IPv4range {
         addressArray = new IPv4address[0] ;
     }
     
+    //Constructor that takes two IPv4 addresses and adds every address between them
+    public IPv4range( IPv4address lowerInAddress , IPv4address upperInAddress ) {
+        IPv4address intmAddress = lowerInAddress ;
+        while( intmAddress.getIPAsNumber() <= upperInAddress.getIPAsNumber() ) {
+            this.addAddressToRange( intmAddress , false );
+            intmAddress = intmAddress.createCopy() ;
+            intmAddress.incrementAddress() ;
+        }
+    }
+    
     /*public IPv4range( String rangeAsString ) {
         if( rangeAsString.contains( "*" ) ) {
             this.parseAddStarNotation( rangeAsString );
