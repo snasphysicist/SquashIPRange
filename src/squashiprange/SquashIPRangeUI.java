@@ -30,6 +30,11 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         String[] delimiters = new String[]{"\\|",";"," ","\t","\n","\r"} ;
         String[] separatedRanges ;
         
+        //This accounts for the case where
+        //someone uses tildes instead of dashes
+        //to denote a range of IP addresses
+        ranges = ranges.replace( "~" , "-" ) ;
+        
         for( i=0 ; i<delimiters.length ; i++ ) {
             ranges = ranges.replace( delimiters[i] , "," ) ;
         }
