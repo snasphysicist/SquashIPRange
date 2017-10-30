@@ -33,7 +33,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         //This accounts for the case where
         //someone uses tildes instead of dashes
         //to denote a range of IP addresses
-        ranges = ranges.replace( "~" , "-" ) ;
+        ranges =    ranges.replace( "~" , "-" ) ;
         
         for( i=0 ; i<delimiters.length ; i++ ) {
             ranges = ranges.replace( delimiters[i] , "," ) ;
@@ -98,6 +98,32 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
     }
     
+    //Takes an array of ranges as an input
+    //and returns the total number of addresses
+    //in all of the ranges
+    public static Integer countAddresses( IPv4range[] inRanges ) {
+        int i ;
+        Integer j = 0 ;
+        for( i=0 ; i<inRanges.length ; i++ ) {
+            j = j + inRanges[i].getSizeOfRange() ;
+        }
+        return j ;
+    }
+    
+    //Writes text to the form which tells the user
+    //how many ranges/addresses were parsed from the input
+    private void setInputNumbers( Integer numberOfRanges , Integer numberOfAddresses ) {
+        jLabel3.setText( "Ranges in: " + numberOfRanges.toString() );
+        jLabel4.setText( "Addresses in: " + numberOfAddresses.toString() );
+    }
+    
+    //Writes text to the form which tells the user
+    //how many ranges/addresses appear in the output
+    private void setOutputNumbers( Integer numberOfRanges , Integer numberOfAddresses ) {
+        jLabel5.setText( "Ranges out: " + numberOfRanges.toString() );
+        jLabel6.setText( "Addresses out: " + numberOfAddresses.toString() );
+    }
+    
     /**
      * Creates new form SquashIPRangeUI
      */
@@ -124,6 +150,10 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
@@ -178,6 +208,15 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
 
+        jLabel3.setText("Ranges in:");
+        jLabel3.setToolTipText("");
+
+        jLabel4.setText("Addresses in:");
+
+        jLabel5.setText("Ranges out:");
+
+        jLabel6.setText("Addresses out:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -188,24 +227,37 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(60, 60, 60)
+                                .addComponent(jLabel5)
+                                .addGap(60, 60, 60)
+                                .addComponent(jLabel6))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(60, 60, 60)
+                                .addComponent(jLabel3)
+                                .addGap(60, 60, 60)
+                                .addComponent(jLabel4)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 154, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -214,7 +266,10 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                 .addContainerGap())
@@ -297,6 +352,8 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
         jTextArea2.setText( outputText ) ;
         
+        setInputNumbers( inputRanges.length , countAddresses( inputRanges ) ) ;
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     //Close button
@@ -317,6 +374,8 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         IPv4range[] inputRanges = parseStringRanges( splitStringRanges( jTextArea1.getText() ) ) ;
         IPv4range concatenatedRange = new IPv4range() ;
         IPv4range[] ipRangesOut ;
+        
+        setInputNumbers( inputRanges.length , countAddresses( inputRanges ) ) ;
         
         //Combine all input ranges into one range
         for( i=0 ; i<inputRanges.length ; i++ ) {
@@ -370,7 +429,8 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         //Write this to the lower area
         jTextArea2.setText( outputText ) ;
 
-// TODO add your handling code here:
+        setOutputNumbers( ipRangesOut.length , countAddresses( ipRangesOut ) ) ;
+        
     }//GEN-LAST:event_jButton2ActionPerformed
     
     //About button
@@ -421,6 +481,10 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
