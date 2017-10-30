@@ -14,7 +14,7 @@ public class AboutSquashIPRange extends javax.swing.JDialog {
     String authorText = "Written by Scott Nicholas Allan Smith (snasphysicist)" ;
     String versionText = "SquashIPRange Version 1.0" ;
     String releaseText = "Released 30/10/2017" ;
-    String gitText = "Git repo at https://github.com/snasphysicist/SquashIPRange" ;
+    String gitText = "Source code at https://github.com/snasphysicist/SquashIPRange" ;
     String bugText = "Bug reports and feature requests to snas@physics.org" ;
     
     /**
@@ -90,8 +90,8 @@ public class AboutSquashIPRange extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        jTextArea1.setText( authorText + "\n" + versionText + "\n" 
-                            + releaseText + "\n" + gitText + "\n"
+        jTextArea1.setText( authorText + "\n\n" + versionText + "\n\n" 
+                            + releaseText + "\n\n" + gitText + "\n\n"
                             + bugText ) ;
     }//GEN-LAST:event_formWindowOpened
 
