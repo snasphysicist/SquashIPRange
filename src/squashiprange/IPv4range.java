@@ -46,23 +46,6 @@ public class IPv4range {
         }
     }
     
-    /*public IPv4range( String rangeAsString ) {
-        if( rangeAsString.contains( "*" ) ) {
-            this.parseAddStarNotation( rangeAsString );
-        } else {
-            if( rangeAsString.contains( "-" ) ) {
-                this.parseAddDashNotation( rangeAsString ) ;
-            } else {
-                if ( rangeAsString.contains( "/" ) ) {
-                    this.parseAddSlashNotation( rangeAsString );
-                } else {
-                    this.addAddressToRange( new IPv4address( rangeAsString ) ) ;
-                }
-            }
-        }
-    }
-    */
-    
     //Creates a new copy of this IPv4range
     //with a different pointer
     public IPv4range createCopy() {

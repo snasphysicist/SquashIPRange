@@ -53,7 +53,6 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         //and converting them to IPv4ranges
         //In a robust, error handled way
         for( i=0 ; i<ranges.length ; i++ ) {
-            //System.out.println( new Integer(j).toString() );
             try {
                 parsedRange = false ;
                 intmRange = new IPv4range() ;
