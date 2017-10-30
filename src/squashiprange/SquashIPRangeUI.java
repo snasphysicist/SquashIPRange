@@ -54,21 +54,30 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         //In a robust, error handled way
         for( i=0 ; i<ranges.length ; i++ ) {
             try {
-                parsedRange = false ;
                 intmRange = new IPv4range() ;
                 ranges[i] = ranges[i].replaceAll("\\*", "0-255") ;
-                sectors = splitTool.splitBySector( ranges[i] ) ;
-                if ( sectors[3].contains( "/" ) ) {
-                    parsedRange = intmRange.parseAddSlashNotation( ranges[i] ) ;
-                } else if ( sectors[2].contains( "-" ) ) {
-                    sector3min = new Integer( sectors[2].split( "-" )[0] ) ;
-                    sector3max = new Integer( sectors[2].split( "-" )[1] ) ;
+                if( substringOccurrences( ranges[i] , "." ) > 3 ) {
+                    //Constuctor call split over three lines to
+                    //restrict width of line
+                    //range( address( string ) , address( string ) )
+                    intmRange = new IPv4range( 
+                                new IPv4address( ranges[i].split("-")[0] ) ,
+                                new IPv4address( ranges[i].split("-")[1] ) ) ;
                     parsedRange = true ;
-                    for(j=sector3min;j<=sector3max;j++) {
-                        parsedRange = parsedRange && intmRange.parseAddDashNotation( sectors[0] + "." + sectors[1] + "." + j.toString() + "." + sectors[3] ) ;
-                    }
                 } else {
-                    parsedRange = intmRange.parseAddDashNotation( ranges[i] ) ;
+                    sectors = splitTool.splitBySector( ranges[i] ) ;
+                    if ( sectors[3].contains( "/" ) ) {
+                        parsedRange = intmRange.parseAddSlashNotation( ranges[i] ) ;
+                    } else if ( sectors[2].contains( "-" ) ) {
+                        sector3min = new Integer( sectors[2].split( "-" )[0] ) ;
+                        sector3max = new Integer( sectors[2].split( "-" )[1] ) ;
+                        parsedRange = true ;
+                        for(j=sector3min;j<=sector3max;j++) {
+                            parsedRange = parsedRange && intmRange.parseAddDashNotation( sectors[0] + "." + sectors[1] + "." + j.toString() + "." + sectors[3] ) ;
+                        }
+                    } else {
+                        parsedRange = intmRange.parseAddDashNotation( ranges[i] ) ;
+                    }
                 }
                 if( parsedRange ) {
                     allRanges = appendToIPv4rangeArray( allRanges , intmRange ) ;
