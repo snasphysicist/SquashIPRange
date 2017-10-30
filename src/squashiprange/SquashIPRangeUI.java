@@ -12,7 +12,18 @@ import static squashiprange.SquashIPRange.appendToIPv4rangeArray;
  * @author snasphysicist
  */
 public class SquashIPRangeUI extends javax.swing.JFrame {
-
+    
+    public static int substringOccurrences( String searchin , String searchfor ) {
+        int i ;
+        int numberOfOccurrences = 0 ;
+        for( i=0 ; i<=(searchin.length()-searchfor.length()) ; i++ ) {
+            if( searchfor.equals( searchin.substring( i , i+searchfor.length() ) ) ) {
+                numberOfOccurrences++ ;
+            }
+        }
+        return numberOfOccurrences ;
+    }
+    
     public static String[] splitStringRanges( String ranges ) {
         
         int i ;
