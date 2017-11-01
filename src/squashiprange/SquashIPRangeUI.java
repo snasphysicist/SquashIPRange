@@ -158,9 +158,8 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(600, 508));
-        setPreferredSize(new java.awt.Dimension(600, 508));
-        setResizable(false);
+        setMaximumSize(new java.awt.Dimension(700, 600));
+        setPreferredSize(new java.awt.Dimension(600, 550));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Squash IP Ranges v 1.0"));
 
