@@ -65,6 +65,7 @@ public class IPv4range {
         while( didSwap ) {
             didSwap = false ;
             for( i=0 ; i<this.addressArray.length-1 ; i++ ) {
+                //System.out.println( this.addressArray[i].getIPAsString() + " " + this.addressArray[i+1].getIPAsString() ) ;
                 if( this.addressArray[i].getIPAsNumber() > this.addressArray[i+1].getIPAsNumber() ) {
                     this.swapAddresses( i , i+1 );
                     didSwap = true ;

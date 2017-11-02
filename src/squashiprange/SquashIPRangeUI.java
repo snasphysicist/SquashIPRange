@@ -13,6 +13,57 @@ import static squashiprange.SquashIPRange.appendToIPv4rangeArray;
  */
 public class SquashIPRangeUI extends javax.swing.JFrame {
     
+    private static IPv4range[] swapRanges( IPv4range[] toSwap , int index1 , int index2 ) {
+        
+        int i ;
+        int lindex ;
+        int uindex ;
+        IPv4range[] intmRangeArray = new IPv4range[ toSwap.length ] ;
+        
+        if( index1 < index2 ) {
+            lindex = index1 ;
+            uindex = index2 ;
+        } else {
+            lindex = index2 ;
+            uindex = index1 ;
+        }
+        
+        for( i=0 ; i<lindex ; i++ ) {
+            intmRangeArray[i] = toSwap[i] ;
+        }
+        
+        intmRangeArray[lindex] = toSwap[uindex] ;
+        
+        for( i=lindex+1 ; i<uindex ; i++ ) {
+            intmRangeArray[i] = toSwap[i] ;
+        }
+        
+        intmRangeArray[uindex] = toSwap[lindex] ;
+        
+        for( i=uindex+1 ; i<intmRangeArray.length ; i++ ) {
+            intmRangeArray[i] = toSwap[i] ;
+        }
+        
+        return intmRangeArray ;
+        
+    }
+    
+    private static IPv4range[] sortRangeArray( IPv4range[] toSort ) {
+        int i ;
+        boolean didSwap = true ;
+        while( didSwap ) {
+            didSwap = false ;
+            for( i=0 ; i<toSort.length-1 ; i++ ) {
+                //System.out.println( this.addressArray[i].getIPAsString() + " " + this.addressArray[i+1].getIPAsString() ) ;
+                if( toSort[i].getAddressFromRange(0).getIPAsNumber() > toSort[i+1].getAddressFromRange(0).getIPAsNumber() ) {
+                    toSort = swapRanges( toSort , i , i+1 );
+                    didSwap = true ;
+                }
+            }
+        }
+        return toSort ;
+    }
+    
     public static int substringOccurrences( String searchin , String searchfor ) {
         int i ;
         int numberOfOccurrences = 0 ;
@@ -368,35 +419,66 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     //Squash button
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
+        java.time.Instant time1 = java.time.Instant.now() ;
+        
         int i , j ;
         String outputText = "" ;
         IPv4range[] inputRanges = parseStringRanges( splitStringRanges( jTextArea1.getText() ) ) ;
         IPv4range concatenatedRange = new IPv4range() ;
         IPv4range[] ipRangesOut ;
         
+        inputRanges = sortRangeArray( inputRanges ) ;
+        
+        java.time.Instant time2 = java.time.Instant.now() ;
+        System.out.println( "Initial parsing " + (time2.toEpochMilli() - time1.toEpochMilli()) );
+        
         setInputNumbers( inputRanges.length , countAddresses( inputRanges ) ) ;
         
         //Combine all input ranges into one range
-        for( i=0 ; i<inputRanges.length ; i++ ) {
-            concatenatedRange.concatenateWithRange( inputRanges[i] , true );
+        concatenatedRange.concatenateWithRange( inputRanges[0] , false ) ;
+        for( i=1 ; i<inputRanges.length ; i++ ) {
+            if( concatenatedRange.getAddressFromRange( 0 ).getIPAsNumber() > inputRanges[i].getAddressFromRange( inputRanges[i].getSizeOfRange()-1 ).getIPAsNumber() ) {
+                concatenatedRange.concatenateWithRange( inputRanges[i] , true ) ;
+            } else {
+                concatenatedRange.concatenateWithRange( inputRanges[i] , false ) ;
+            }
         }
+        
+        java.time.Instant time3 = java.time.Instant.now() ;
+        System.out.println( "Create whole range " + (time3.toEpochMilli() - time2.toEpochMilli()) );
         
         //Sort this range
         concatenatedRange.sortRange() ;
         
+        java.time.Instant time4 = java.time.Instant.now() ;
+        System.out.println( "Sort range " + (time4.toEpochMilli() - time3.toEpochMilli()) );
+        
         //Split into contiguous subranges
         ipRangesOut = concatenatedRange.getContiguousSubranges() ;
         
+        java.time.Instant time5 = java.time.Instant.now() ;
+        System.out.println( "Split ranges " + (time5.toEpochMilli() - time4.toEpochMilli()) );
+        
+        //Concat and remove in one step
         //Check for & concatenate adjacent ranges
         for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            for( j=i+1 ; j<ipRangesOut.length ; j++ ) {
+            j = i + 1 ;
+            while( j < ipRangesOut.length ) {
                 if( ipRangesOut[i].isAdjacentRange( ipRangesOut[j] ) == 1 ) {
                     ipRangesOut[i].concatenateWithRange( ipRangesOut[j] , false );
+                    ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , j ) ;
+                    j-- ;
                 } else if ( ipRangesOut[i].isAdjacentRange( ipRangesOut[j] ) == -1 ) {
                     ipRangesOut[i].concatenateWithRange( ipRangesOut[j] , true );
+                    ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , j ) ;
+                    j-- ;
                 }
+                j++ ;
             }
         }
+        
+        java.time.Instant time6 = java.time.Instant.now() ;
+        System.out.println( "Concat adjacent ranges " + (time6.toEpochMilli() - time5.toEpochMilli()) );
         
         //Remove overlapping IP addresses from ranges
         for( i=0 ; i<ipRangesOut.length ; i++ ) {
@@ -409,6 +491,9 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
             }
         }
         
+        java.time.Instant time7 = java.time.Instant.now() ;
+        System.out.println( "Remove overlap " + (time7.toEpochMilli() - time6.toEpochMilli()) );
+        
         //Remove any ranges which have been emptied by the above operation
         i = 0 ;
         while( i<ipRangesOut.length ) {
@@ -418,6 +503,9 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
             }
             i++ ;
         }
+        
+        java.time.Instant time8 = java.time.Instant.now() ;
+        System.out.println( "Remove empty ranges " + (time8.toEpochMilli() - time7.toEpochMilli()) );
         
         //Get the resulting ranges in human readable format
         //and write them to a string to output
