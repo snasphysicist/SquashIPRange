@@ -180,7 +180,8 @@ public class IPv4range {
         int i ;
         
         //Create a copy of this range so we don't lose its addresses
-        IPv4range intmRange = this.createCopy() ;
+        //IPv4range intmRange = this.createCopy() ;
+        IPv4address[] intmRange = new IPv4address[ this.addressArray.length + inipRange.getSizeOfRange() ] ;
         
         //Remove the overlap between these two ranges
         //We prefer to keep this one intact (doesn't matter too much)
@@ -188,22 +189,27 @@ public class IPv4range {
         
         //The new addressArray will be the length of the current one
         //plus the extra elements
-        this.addressArray = new IPv4address[ intmRange.getSizeOfRange() + inipRange.getSizeOfRange() ] ;
+        //this.addressArray = new IPv4address[ intmRange.getSizeOfRange() + inipRange.getSizeOfRange() ] ;
         
         if( atStart ) {
             for( i=0 ; i<inipRange.getSizeOfRange() ; i++ ) {
-                this.addressArray[i] = inipRange.getAddressFromRange(i) ;
+                intmRange[i] = inipRange.getAddressFromRange(i) ;
+                //this.addressArray[i] = inipRange.getAddressFromRange(i) ;
             }
-            for( i=0 ; i<intmRange.getSizeOfRange() ; i++ ) {
-                this.addressArray[ i + inipRange.getSizeOfRange() ] = intmRange.getAddressFromRange(i) ;
+            for( i=0 ; i<this.addressArray.length ; i++ ) {
+                intmRange[ i + inipRange.getSizeOfRange() ] = this.addressArray[i] ;
+                //this.addressArray[ i + inipRange.getSizeOfRange() ] = intmRange.getAddressFromRange(i) ;
             }
         } else {
-            for( i=0 ; i<intmRange.getSizeOfRange() ; i++ ) {
-                this.addressArray[i] = intmRange.getAddressFromRange(i) ;
+            for( i=0 ; i<this.addressArray.length ; i++ ) {
+                //this.addressArray[i] = intmRange.getAddressFromRange(i) ;
+                intmRange[i] = this.addressArray[i] ;
             }
             for( i=0 ; i<inipRange.getSizeOfRange() ; i++ ) {
-                this.addressArray[ i + intmRange.getSizeOfRange() ] = inipRange.getAddressFromRange(i) ;
+                //this.addressArray[ i + intmRange.getSizeOfRange() ] = inipRange.getAddressFromRange(i) ;
+                intmRange[ i + this.addressArray.length ] = inipRange.getAddressFromRange( i ) ;
             }
+            this.addressArray = intmRange ;
         }
     }
     
@@ -222,12 +228,10 @@ public class IPv4range {
     //Second argument atStart = False -> adds address at the end of the range
     //If the address is already in the range, it takes no action
     public void addAddressToRange( IPv4address inipAddress , boolean atStart ) {
-        if( !this.isInRange( inipAddress ) ) {
-            if( !atStart ) {
-                addressArray = this.appendToIPv4addressArrayEnd( addressArray , inipAddress ) ;
-            } else {
-                addressArray = this.appendToIPv4addressArrayStart( addressArray , inipAddress ) ;
-            }
+        if( !atStart ) {
+            addressArray = this.appendToIPv4addressArrayEnd( addressArray , inipAddress ) ;
+        } else {
+            addressArray = this.appendToIPv4addressArrayStart( addressArray , inipAddress ) ;
         }
     }
     
