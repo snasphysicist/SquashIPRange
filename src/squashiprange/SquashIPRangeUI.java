@@ -78,18 +78,34 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     public static String[] splitStringRanges( String ranges ) {
         
         int i ;
+        
+        //Accepted delimiters between IP address ranges
+        //which will be replaced by commas
         String[] delimiters = new String[]{"\\|",";"," ","\t","\n","\r"} ;
+        
+        //Possible characters that look like dashes (in unicode)
+        //These will be replaced by dashes
+        String[] allDashes = new String[]{"~","\u002D","\u005F","\u007E","\u00AD",
+                                            "\u00AF","\u02C9","\u02CD","\u02D7","\u02DC",
+                                            "\u2010","\u2011","\u2012","\u203E","\u2043",
+                                            "\u207B","\u208B","\u2212","\u223C","\u23AF",
+                                            "\u23E4","\u2500","\u2796","\u2E3A","\u2E3B" } ;
+        
+        //This will contain the split set of
+        //ip address ranges as strings
         String[] separatedRanges ;
         
-        //This accounts for the case where
-        //someone uses tildes instead of dashes
-        //to denote a range of IP addresses
-        ranges =    ranges.replace( "~" , "-" ) ;
+        //Replacing dash like characters with the standard dash character
+        for( i=0 ; i<allDashes.length ; i++ ) {
+            ranges = ranges.replace( allDashes[i] , "-" ) ;
+        }
         
+        //Replacing accepted delimiters with commas
         for( i=0 ; i<delimiters.length ; i++ ) {
             ranges = ranges.replace( delimiters[i] , "," ) ;
         }
         
+        //Then split by comma (representing all delimiters)
         separatedRanges = ranges.split( "," ) ;
         
         return separatedRanges ;
