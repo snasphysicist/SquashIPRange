@@ -1,8 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/******************************************************************
+*Squash IP Range is offered under the lesser GPL licence version 3
+*Please refer to the LICENSE file included at the top level
+*of the git repo for full information on this licence
+*Written by snasphysicist (Scott N A Smith)
+*******************************************************************/
 package squashiprange;
 
 /**
