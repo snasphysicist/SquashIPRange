@@ -380,6 +380,12 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     //Find Overlap button
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
+        //Reset outputs to blank at the start
+        //to ensure that incorrect information
+        //isn't reported, even if there is a crash
+        setOutputNumbers( 0 , 0 ) ;
+        jTextArea2.setText( "" ) ;
+        
         int i , j ;
         String outputText = "" ;
         IPv4range[] inputRanges = parseStringRanges( splitStringRanges( jTextArea1.getText() ) ) ;
@@ -425,7 +431,15 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     //Squash button
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
+        //Debug
         java.time.Instant time1 = java.time.Instant.now() ;
+        //
+        
+        //Reset outputs to blank at the start
+        //to ensure that incorrect information
+        //isn't reported, even if there is a crash
+        setOutputNumbers( 0 , 0 ) ;
+        jTextArea2.setText( "" ) ;
         
         int i , j ;
         String outputText = "" ;
@@ -435,7 +449,10 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
        
         inputRanges = sortRangeArray( inputRanges ) ;
         
+        //Debug
         java.time.Instant time2 = java.time.Instant.now() ;
+        //
+        
         System.out.println( "Initial parsing " + (time2.toEpochMilli() - time1.toEpochMilli()) );
         
         setInputNumbers( inputRanges.length , countAddresses( inputRanges ) ) ;
