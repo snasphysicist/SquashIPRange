@@ -105,6 +105,16 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
             ranges = ranges.replace( delimiters[i] , "," ) ;
         }
         
+        //Removing repeated dash characters
+        while( ranges.contains( "--" ) ) {
+            ranges = ranges.replace( "--" , "-" ) ;
+        }
+        
+        //Removing repeated comma characters
+        while( ranges.contains( ",," ) ) {
+            ranges = ranges.replace( ",," , "," ) ;
+        }
+        
         //Then split by comma (representing all delimiters)
         separatedRanges = ranges.split( "," ) ;
         
