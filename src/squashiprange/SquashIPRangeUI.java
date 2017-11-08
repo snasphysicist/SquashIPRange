@@ -400,6 +400,12 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
             }
         }
         
+        //If no overlap is found between any of the ranges
+        //report this in the output text box
+        if ( outputText.equals( "" ) ) {
+            outputText = "No overlap found" ;
+        }
+        
         jTextArea2.setText( outputText ) ;
         
         setInputNumbers( inputRanges.length , countAddresses( inputRanges ) ) ;
@@ -426,7 +432,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         IPv4range[] inputRanges = parseStringRanges( splitStringRanges( jTextArea1.getText() ) ) ;
         IPv4range concatenatedRange = new IPv4range() ;
         IPv4range[] ipRangesOut ;
-        
+       
         inputRanges = sortRangeArray( inputRanges ) ;
         
         java.time.Instant time2 = java.time.Instant.now() ;

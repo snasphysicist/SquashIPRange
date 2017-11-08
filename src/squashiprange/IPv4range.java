@@ -65,7 +65,6 @@ public class IPv4range {
         while( didSwap ) {
             didSwap = false ;
             for( i=0 ; i<this.addressArray.length-1 ; i++ ) {
-                //System.out.println( this.addressArray[i].getIPAsString() + " " + this.addressArray[i+1].getIPAsString() ) ;
                 if( this.addressArray[i].getIPAsNumber() > this.addressArray[i+1].getIPAsNumber() ) {
                     this.swapAddresses( i , i+1 );
                     didSwap = true ;
@@ -178,17 +177,19 @@ public class IPv4range {
     public void concatenateWithRange( IPv4range inipRange , boolean atStart ) {
         
         int i ;
-        
-        //Create a copy of this range so we don't lose its addresses
-        //IPv4range intmRange = this.createCopy() ;
-        IPv4address[] intmRange = new IPv4address[ this.addressArray.length + inipRange.getSizeOfRange() ] ;
-        
+
         //Remove the overlap between these two ranges
-        //We prefer to keep this one intact (doesn't matter too much)
-        inipRange.subtractRange( this ) ;
+        //We shouldn't make any changes to the input range
+        //so we subtract from this range (slightly inefficient)
+        this.subtractRange( inipRange ) ;
         
+        //Create intermediate address array that we'll populate
+        IPv4address[] intmRange = new IPv4address[ this.addressArray.length + inipRange.getSizeOfRange() ] ;
         //The new addressArray will be the length of the current one
         //plus the extra elements
+        //It's crucial this is one after the subtraction above
+        //Otherwise the new array could be too large
+        
         //this.addressArray = new IPv4address[ intmRange.getSizeOfRange() + inipRange.getSizeOfRange() ] ;
         
         if( atStart ) {
