@@ -435,6 +435,7 @@ public class IPv4range {
     //Checks if the input range is "adjacent" to this one
     //We count a range as adjacent if:
     //  The set of fourth octets in the two ranges matches
+    //  The first and second octets in the two ranges match
     //  And either:
     //      The smallest third octet of the input range is one larger
     //      than the largest third octet in this range
@@ -462,8 +463,11 @@ public class IPv4range {
         inBoundingThirdOctet[0] = new Integer( inipRange.getAddressFromRange(0).getSectorAsString(3) ) ;
         inBoundingThirdOctet[1] = new Integer( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1).getSectorAsString(3) ) ;
                 
-        if( this.addressArray[0].equalsFourthOctet(inipRange.getAddressFromRange(0))
+        if(     this.addressArray[0].equalsFirstOctet( inipRange.getAddressFromRange(0) )
+                && this.addressArray[0].equalsSecondOctet( inipRange.getAddressFromRange(0) )
+                && this.addressArray[0].equalsFourthOctet(inipRange.getAddressFromRange(0))
                 && this.addressArray[this.addressArray.length-1].equalsFourthOctet( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1) ) ) {
+            
             if( thisBoundingThirdOctet[0].equals( inBoundingThirdOctet[1] + 1 ) ) {
                 //Input range third octets < this range third octets
                 isAdjacent = -1 ;
