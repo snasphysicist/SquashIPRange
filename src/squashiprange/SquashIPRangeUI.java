@@ -6,187 +6,13 @@
 *******************************************************************/
 package squashiprange;
 
-import static squashiprange.SquashIPRange.appendToIPv4rangeArray;
+//import static squashiprange.SquashIPRange.appendToIPv4rangeArray;
 
 /**
  *
  * @author snasphysicist
  */
 public class SquashIPRangeUI extends javax.swing.JFrame {
-    
-    private static IPv4range[] swapRanges( IPv4range[] toSwap , int index1 , int index2 ) {
-        
-        int i ;
-        int lindex ;
-        int uindex ;
-        IPv4range[] intmRangeArray = new IPv4range[ toSwap.length ] ;
-        
-        if( index1 < index2 ) {
-            lindex = index1 ;
-            uindex = index2 ;
-        } else {
-            lindex = index2 ;
-            uindex = index1 ;
-        }
-        
-        for( i=0 ; i<lindex ; i++ ) {
-            intmRangeArray[i] = toSwap[i] ;
-        }
-        
-        intmRangeArray[lindex] = toSwap[uindex] ;
-        
-        for( i=lindex+1 ; i<uindex ; i++ ) {
-            intmRangeArray[i] = toSwap[i] ;
-        }
-        
-        intmRangeArray[uindex] = toSwap[lindex] ;
-        
-        for( i=uindex+1 ; i<intmRangeArray.length ; i++ ) {
-            intmRangeArray[i] = toSwap[i] ;
-        }
-        
-        return intmRangeArray ;
-        
-    }
-    
-    private static IPv4range[] sortRangeArray( IPv4range[] toSort ) {
-        int i ;
-        boolean didSwap = true ;
-        while( didSwap ) {
-            didSwap = false ;
-            for( i=0 ; i<toSort.length-1 ; i++ ) {
-                //System.out.println( this.addressArray[i].getIPAsString() + " " + this.addressArray[i+1].getIPAsString() ) ;
-                if( toSort[i].getAddressFromRange(0).getIPAsNumber() > toSort[i+1].getAddressFromRange(0).getIPAsNumber() ) {
-                    toSort = swapRanges( toSort , i , i+1 );
-                    didSwap = true ;
-                }
-            }
-        }
-        return toSort ;
-    }
-    
-    public static int substringOccurrences( String searchin , String searchfor ) {
-        int i ;
-        int numberOfOccurrences = 0 ;
-        for( i=0 ; i<=(searchin.length()-searchfor.length()) ; i++ ) {
-            if( searchfor.equals( searchin.substring( i , i+searchfor.length() ) ) ) {
-                numberOfOccurrences++ ;
-            }
-        }
-        return numberOfOccurrences ;
-    }
-    
-    public static String[] splitStringRanges( String ranges ) {
-        
-        int i ;
-        
-        //Accepted delimiters between IP address ranges
-        //which will be replaced by commas
-        String[] delimiters = new String[]{"\\|",";"," ","\t","\n","\r"} ;
-        
-        //Possible characters that look like dashes (in unicode)
-        //These will be replaced by dashes
-        String[] allDashes = new String[]{"~","\u002D","\u005F","\u007E","\u00AD",
-                                            "\u00AF","\u02C9","\u02CD","\u02D7","\u02DC",
-                                            "\u2010","\u2011","\u2012","\u203E","\u2043",
-                                            "\u207B","\u208B","\u2212","\u223C","\u23AF",
-                                            "\u23E4","\u2500","\u2796","\u2E3A","\u2E3B" } ;
-        
-        //This will contain the split set of
-        //ip address ranges as strings
-        String[] separatedRanges ;
-        
-        //Replacing dash like characters with the standard dash character
-        for( i=0 ; i<allDashes.length ; i++ ) {
-            ranges = ranges.replace( allDashes[i] , "-" ) ;
-        }
-        
-        //Replacing accepted delimiters with commas
-        for( i=0 ; i<delimiters.length ; i++ ) {
-            ranges = ranges.replace( delimiters[i] , "," ) ;
-        }
-        
-        //Removing repeated dash characters
-        while( ranges.contains( "--" ) ) {
-            ranges = ranges.replace( "--" , "-" ) ;
-        }
-        
-        //Removing repeated comma characters
-        while( ranges.contains( ",," ) ) {
-            ranges = ranges.replace( ",," , "," ) ;
-        }
-        
-        //Then split by comma (representing all delimiters)
-        separatedRanges = ranges.split( "," ) ;
-        
-        return separatedRanges ;
-    }
-    
-    public static IPv4range[] parseStringRanges( String[] ranges ) {
-        
-        Integer i,j ;
-        boolean parsedRange ;
-        IPv4range intmRange ;
-        String[] sectors ;
-        IPv4address splitTool = new IPv4address(0L) ;
-        int sector3min , sector3max ;
-        IPv4range[] allRanges = new IPv4range[0] ;
-        
-        //Taking the string ranges
-        //and converting them to IPv4ranges
-        //In a robust, error handled way
-        for( i=0 ; i<ranges.length ; i++ ) {
-            try {
-                intmRange = new IPv4range() ;
-                ranges[i] = ranges[i].replaceAll("\\*", "0-255") ;
-                if( substringOccurrences( ranges[i] , "." ) > 3 ) {
-                    //Constuctor call split over three lines to
-                    //restrict width of line
-                    //range( address( string ) , address( string ) )
-                    intmRange = new IPv4range( 
-                                new IPv4address( ranges[i].split("-")[0] ) ,
-                                new IPv4address( ranges[i].split("-")[1] ) ) ;
-                    parsedRange = true ;
-                } else {
-                    sectors = splitTool.splitBySector( ranges[i] ) ;
-                    if ( sectors[3].contains( "/" ) ) {
-                        parsedRange = intmRange.parseAddSlashNotation( ranges[i] ) ;
-                    } else if ( sectors[2].contains( "-" ) ) {
-                        sector3min = new Integer( sectors[2].split( "-" )[0] ) ;
-                        sector3max = new Integer( sectors[2].split( "-" )[1] ) ;
-                        parsedRange = true ;
-                        for(j=sector3min;j<=sector3max;j++) {
-                            parsedRange = parsedRange && intmRange.parseAddDashNotation( sectors[0] + "." + sectors[1] + "." + j.toString() + "." + sectors[3] ) ;
-                        }
-                    } else {
-                        parsedRange = intmRange.parseAddDashNotation( ranges[i] ) ;
-                    }
-                }
-                if( parsedRange ) {
-                    allRanges = appendToIPv4rangeArray( allRanges , intmRange ) ;
-                }
-            } 
-            catch ( Exception e ) {
-                System.out.println( "Failed to parse range" ) ;
-                //e.printStackTrace() ;
-            }
-        }
-        
-        return allRanges ;
-        
-    }
-    
-    //Takes an array of ranges as an input
-    //and returns the total number of addresses
-    //in all of the ranges
-    public static Integer countAddresses( IPv4range[] inRanges ) {
-        int i ;
-        Integer j = 0 ;
-        for( i=0 ; i<inRanges.length ; i++ ) {
-            j = j + inRanges[i].getSizeOfRange() ;
-        }
-        return j ;
-    }
     
     //Writes text to the form which tells the user
     //how many ranges/addresses were parsed from the input
@@ -415,7 +241,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
         int i , j ;
         String outputText = "" ;
-        IPv4range[] inputRanges = parseStringRanges( splitStringRanges( jTextArea1.getText() ) ) ;
+        IPv4range[] inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
         IPv4range overlappingAddresses ;
         
         for( i=0 ; i<inputRanges.length ; i++ ) {
@@ -441,7 +267,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
         jTextArea2.setText( outputText ) ;
         
-        setInputNumbers( inputRanges.length , countAddresses( inputRanges ) ) ;
+        setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -470,11 +296,11 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
         int i , j ;
         String outputText = "" ;
-        IPv4range[] inputRanges = parseStringRanges( splitStringRanges( jTextArea1.getText() ) ) ;
+        IPv4range[] inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
         IPv4range concatenatedRange = new IPv4range() ;
         IPv4range[] ipRangesOut ;
        
-        inputRanges = sortRangeArray( inputRanges ) ;
+        inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
         
         //Debug
         for( i=0 ; i<inputRanges.length ; i++ ) {
@@ -485,11 +311,10 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
         //Debug
         java.time.Instant time2 = java.time.Instant.now() ;
+        System.out.println( "Initial parsing " + (time2.toEpochMilli() - time1.toEpochMilli()) );
         //
         
-        System.out.println( "Initial parsing " + (time2.toEpochMilli() - time1.toEpochMilli()) );
-        
-        setInputNumbers( inputRanges.length , countAddresses( inputRanges ) ) ;
+        setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
         
         //Combine all input ranges into one range
         concatenatedRange.concatenateWithRange( inputRanges[0] , false ) ;
@@ -584,7 +409,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         //Write this to the lower area
         jTextArea2.setText( outputText ) ;
 
-        setOutputNumbers( ipRangesOut.length , countAddresses( ipRangesOut ) ) ;
+        setOutputNumbers( ipRangesOut.length , SquashIPRange.countAddresses( ipRangesOut ) ) ;
         
     }//GEN-LAST:event_jButton2ActionPerformed
     
