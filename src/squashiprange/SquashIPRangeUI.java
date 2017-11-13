@@ -429,7 +429,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     
     //About button
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        new AboutSquashIPRange( this , false ).setVisible(true) ;
+        new AboutSquashIPRangeUI( this , false ).setVisible(true) ;
     }//GEN-LAST:event_jButton5ActionPerformed
     
     //Reformat button
