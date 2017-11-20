@@ -165,4 +165,41 @@ public class IPv4rangeTest {
         
     }
     
+    /**
+     * Test of method concatenateWithRange, from class IPv4range.
+     */
+    @Test
+    public void testConcatenateWithRange() {
+        System.out.println( "Basic Test --- IPv4range --- concatenateWithRange" ) ;
+        int i ;
+        IPv4address ipAddress0 = new IPv4address( "3.15.24.189" ) ;
+        IPv4address ipAddress1 = new IPv4address( "112.32.14.134" ) ;
+        IPv4address ipAddress2 = new IPv4address( "32.76.192.10" ) ;
+        IPv4address ipAddress3 = new IPv4address( "125.245.132.125" ) ;
+        IPv4address ipAddress4 = new IPv4address( "127.111.60.35" ) ;
+        IPv4address ipAddress5 = new IPv4address( "208.88.137.214" ) ;
+        IPv4address ipAddress6 = new IPv4address( "164.240.169.115" ) ;
+        IPv4address ipAddress7 = new IPv4address( "235.172.250.53" ) ;
+        IPv4address ipAddress8 = new IPv4address( "188.43.16.110" ) ;
+        IPv4address ipAddress9 = new IPv4address( "179.16.245.101" ) ;
+        IPv4address[] addresses = new IPv4address[]{ ipAddress0 , ipAddress1 , 
+                                                     ipAddress2 , ipAddress3 , 
+                                                     ipAddress4 , ipAddress5 ,
+                                                     ipAddress6 , ipAddress7 ,
+                                                     ipAddress8 , ipAddress9 } ;
+        IPv4range range1 = new IPv4range() ;
+        IPv4range range2 = new IPv4range() ;
+        for( i=0 ; i<5 ; i++ ) {
+            range1.addAddressToRange( addresses[i] , false ) ;
+        }
+        for( i=5 ; i<10 ; i++ ) {
+            range2.addAddressToRange( addresses[i] , false ) ;
+        }
+        range1.concatenateWithRange( range2 , false ) ;
+        for( i=0 ; i<10 ; i++ ) {
+            assertEquals( true , addresses[i].equals( range1.getAddressFromRange( i ) ) ) ;
+        }
+    }
+    
+    
 }
