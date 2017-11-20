@@ -363,5 +363,5 @@ public class IPv4addressTest {
         assertEquals( false , ipAddress1.equalsFourthOctet( ipAddress16 ) ) ;
         assertEquals( false , ipAddress1.equalsFourthOctet( ipAddress17 ) ) ;
     }
-    
+        
 }

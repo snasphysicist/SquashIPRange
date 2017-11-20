@@ -125,6 +125,44 @@ public class IPv4rangeTest {
         assertEquals( true , inArray[3].equals( result[1] ) ) ;
     }
     
-    
+    /**
+     * Test of isInRange method, from class IPv4range.
+     */
+    @Test
+    public void testIsInRange() {
+        System.out.println( "Basic Test --- IPv4range --- isInRange" ) ;
+        int i ;
+        IPv4address ipAddress0 = new IPv4address( "180.129.104.80" ) ;
+        IPv4address ipAddress1 = new IPv4address( "248.145.252.88" ) ;
+        IPv4address ipAddress2 = new IPv4address( "39.44.11.73" ) ;
+        IPv4address ipAddress3 = new IPv4address( "83.184.243.85" ) ;
+        IPv4address ipAddress4 = new IPv4address( "58.176.153.35" ) ;
+        IPv4address ipAddress5 = new IPv4address( "245.176.108.148" ) ;
+        IPv4address ipAddress6 = new IPv4address( "98.88.52.247" ) ;
+        IPv4address ipAddress7 = new IPv4address( "212.42.87.94" ) ;
+        IPv4address ipAddress8 = new IPv4address( "234.126.171.34" ) ;
+        IPv4address ipAddress9 = new IPv4address( "36.189.215.28" ) ;
+        IPv4address[] addresses = new IPv4address[]{ ipAddress0 , ipAddress1 , 
+                                                     ipAddress2 , ipAddress3 , 
+                                                     ipAddress4 , ipAddress5 ,
+                                                     ipAddress6 , ipAddress7 ,
+                                                     ipAddress8 , ipAddress9 } ;
+        IPv4range instance = new IPv4range() ;
+        //Add first five addresses to range
+        for( i=0 ; i<5 ; i++ ) {
+            instance.addAddressToRange( addresses[i] , false ) ;
+        }
+        //Check that the first five addresses show
+        //as in the range
+        for( i=0 ; i<5 ; i++ ) {
+            assertEquals( true , instance.isInRange( addresses[i] ) ) ;
+        }
+        //Check that the latter five addresses
+        //do not show as in the range
+        for( i=5 ; i<addresses.length ; i++ ) {
+            assertEquals( false , instance.isInRange( addresses[i] ) ) ;
+        }
+        
+    }
     
 }
