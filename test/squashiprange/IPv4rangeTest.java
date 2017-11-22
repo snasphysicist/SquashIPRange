@@ -275,10 +275,36 @@ public class IPv4rangeTest {
         }
     }
     
+    /**
+     * Test of method getRangeAsAddresses, in class IPv4range.
+     */
+    @Test
+    public void testGetRangeAsAddresses() {
+        System.out.println( "Basic Test --- IPv4range --- getRangeAsAddresses" ) ;
+        int i ;
+        IPv4address ipAddress0 = new IPv4address( "151.53.247.138" ) ;
+        IPv4address ipAddress1 = new IPv4address( "107.223.207.247" ) ;
+        IPv4address ipAddress2 = new IPv4address( "204.240.2.186" ) ;
+        IPv4address ipAddress3 = new IPv4address( "248.125.138.145" ) ;
+        IPv4address ipAddress4 = new IPv4address( "66.11.20.200" ) ;
+        IPv4address[] addresses = new IPv4address[]{ ipAddress0 , ipAddress1 , 
+                                                     ipAddress2 , ipAddress3 , 
+                                                     ipAddress4 } ;
+        IPv4range range = new IPv4range() ;
+        IPv4address[] addressesFromRange ;
+        for( i=0 ; i<addresses.length ; i++ ) {
+            range.addAddressToRange( addresses[i] , false ) ;
+        }
+        addressesFromRange = range.getRangeAsAddresses() ;
+        for( i=0 ; i<addresses.length ; i++ ) {
+            assertEquals( true , addresses[i].equals( addressesFromRange[i] ) ) ;
+        }
+    }
+    
     //Template
     /*
     /**
-     * Test of method getAddressFromRange, in class IPv4range.
+     * Test of method methodName, in class IPv4range.
      */
     /*
     @Test
