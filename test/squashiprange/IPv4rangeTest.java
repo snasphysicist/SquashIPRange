@@ -301,6 +301,28 @@ public class IPv4rangeTest {
         }
     }
     
+    /**
+     * Test of method methodName, in class IPv4range.
+     */
+    @Test
+    public void testGetSizeOfRange() {
+        System.out.println( "Basic Test --- IPv4range --- getSizeOfRange" ) ;
+        int i ;
+        IPv4address ipAddress0 = new IPv4address( "67.47.218.141" ) ;
+        IPv4address ipAddress1 = new IPv4address( "134.95.155.93" ) ;
+        IPv4address ipAddress2 = new IPv4address( "233.21.7.167" ) ;
+        IPv4address ipAddress3 = new IPv4address( "209.191.83.237" ) ;
+        IPv4address ipAddress4 = new IPv4address( "64.162.43.69" ) ;
+        IPv4address[] addresses = new IPv4address[]{ ipAddress0 , ipAddress1 ,
+                                                     ipAddress2 , ipAddress3 ,
+                                                     ipAddress4 } ;
+        IPv4range range = new IPv4range() ;
+        for( i=0 ; i<addresses.length ; i++ ) {
+            range.addAddressToRange( addresses[i] , false ) ;
+            assertEquals( true, i+1 == range.getSizeOfRange() ) ;
+        }
+    }
+    
     //Template
     /*
     /**
