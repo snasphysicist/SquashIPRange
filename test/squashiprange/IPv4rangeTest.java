@@ -230,6 +230,7 @@ public class IPv4rangeTest {
      */
     @Test
     public void testIsAdjacentAddress() {
+        System.out.println( "Basic Test --- IPv4range --- isAdjacentAddress" ) ;
         IPv4address ipAddress0 = new IPv4address( "4.60.112.109" ) ;
         IPv4address ipAddress1 = new IPv4address( "4.60.112.110" ) ;
         IPv4address ipAddress2 = new IPv4address( "4.60.112.111" ) ;
@@ -250,4 +251,39 @@ public class IPv4rangeTest {
         assertEquals( false , range0.isAdjacentAddress( ipAddress6 ) ) ;
     }
     
+    /**
+     * Test of method getAddressFromRange, in class IPv4range.
+     */
+    @Test
+    public void testGetAddressFromRange() {
+        System.out.println( "Basic Test --- IPv4range --- getAddressFromRange" ) ;
+        int i ;
+        IPv4address ipAddress0 = new IPv4address( "83.135.162.246" ) ;
+        IPv4address ipAddress1 = new IPv4address( "73.235.176.82" ) ;
+        IPv4address ipAddress2 = new IPv4address( "189.74.43.181" ) ;
+        IPv4address ipAddress3 = new IPv4address( "64.195.94.139" ) ;
+        IPv4address ipAddress4 = new IPv4address( "16.130.238.75" ) ;
+        IPv4address[] addresses = new IPv4address[]{ ipAddress0 , ipAddress1 ,
+                                                     ipAddress2 , ipAddress3 ,
+                                                     ipAddress4 } ;
+        IPv4range range = new IPv4range() ;
+        for( i=0 ; i<addresses.length ; i++ ) {
+            range.addAddressToRange( addresses[i] , false ) ;
+        }
+        for( i=0 ; i<addresses.length ; i++ ) {
+            assertEquals( true , addresses[i].equals( range.getAddressFromRange( i ) ) ) ;
+        }
+    }
+    
+    //Template
+    /*
+    /**
+     * Test of method getAddressFromRange, in class IPv4range.
+     */
+    /*
+    @Test
+    public void testMethodName() {
+        System.out.println( "Basic Test --- IPv4range --- methodName" ) ;
+    }
+    */
 }
