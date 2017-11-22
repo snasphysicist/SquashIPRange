@@ -201,5 +201,31 @@ public class IPv4rangeTest {
         }
     }
     
+    /**
+     * Test of method addAddressToRange, in class IPv4range.
+     */
+    @Test
+    public void testAddAddressToRange() {
+        System.out.println( "Basic Test --- IPv4range --- addAddressToRange" ) ;
+        IPv4address ipAddress0 = new IPv4address( "248.53.164.25" ) ;
+        IPv4address ipAddress1 = new IPv4address( "50.40.40.250" ) ;
+        IPv4address ipAddress2 = new IPv4address( "138.85.41.85" ) ;  
+        IPv4range range = new IPv4range() ;
+        //Test that we can add to an empty range
+        range.addAddressToRange( ipAddress0 , false ) ;
+        assertEquals( true , range.getAddressFromRange(0).equals( ipAddress0 ) ) ;
+        //Test that we can add to the start of a range
+        range.addAddressToRange( ipAddress1 ,  true ) ;
+        assertEquals( true , range.getAddressFromRange(0).equals( ipAddress1 ) ) ;
+        assertEquals( true , range.getAddressFromRange(1).equals( ipAddress0 ) ) ;
+        //Test that we can add to the end of a range
+        range.addAddressToRange( ipAddress2 ,  false ) ;
+        assertEquals( true , range.getAddressFromRange(0).equals( ipAddress1 ) ) ;
+        assertEquals( true , range.getAddressFromRange(1).equals( ipAddress0 ) ) ;
+        assertEquals( true , range.getAddressFromRange(2).equals( ipAddress2 ) ) ;
+    }
+    
+    //        IPv4address ipAddress3 = new IPv4address( "4.60.112.110" ) ;
+    //    IPv4address ipAddress4 = new IPv4address( "91.139.16.11" ) ; 
     
 }
