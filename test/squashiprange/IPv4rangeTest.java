@@ -225,7 +225,29 @@ public class IPv4rangeTest {
         assertEquals( true , range.getAddressFromRange(2).equals( ipAddress2 ) ) ;
     }
     
-    //        IPv4address ipAddress3 = new IPv4address( "4.60.112.110" ) ;
-    //    IPv4address ipAddress4 = new IPv4address( "91.139.16.11" ) ; 
+    /**
+     * Test of method isAdjacentAddress, in class IPv4range.
+     */
+    @Test
+    public void testIsAdjacentAddress() {
+        IPv4address ipAddress0 = new IPv4address( "4.60.112.109" ) ;
+        IPv4address ipAddress1 = new IPv4address( "4.60.112.110" ) ;
+        IPv4address ipAddress2 = new IPv4address( "4.60.112.111" ) ;
+        IPv4address ipAddress3 = new IPv4address( "4.60.112.112" ) ;
+        IPv4address ipAddress4 = new IPv4address( "4.60.112.113" ) ;
+        IPv4address ipAddress5 = new IPv4address( "91.139.16.11" ) ;
+        IPv4address ipAddress6 = new IPv4address( "1.236.77.61" ) ;
+        IPv4range range0 = new IPv4range( ipAddress1 , ipAddress3 ) ;
+        //Only for those IP addresses which are next to the ends of the
+        //range but not in the range should the method return true
+        //These are ipAddress0 and ipAddress4
+        assertEquals( true , range0.isAdjacentAddress( ipAddress0 ) ) ;
+        assertEquals( false , range0.isAdjacentAddress( ipAddress1 ) ) ;
+        assertEquals( false , range0.isAdjacentAddress( ipAddress2 ) ) ;
+        assertEquals( false , range0.isAdjacentAddress( ipAddress3 ) ) ;
+        assertEquals( true , range0.isAdjacentAddress( ipAddress4 ) ) ;
+        assertEquals( false , range0.isAdjacentAddress( ipAddress5 ) ) ;
+        assertEquals( false , range0.isAdjacentAddress( ipAddress6 ) ) ;
+    }
     
 }
