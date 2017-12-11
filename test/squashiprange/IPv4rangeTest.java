@@ -381,6 +381,36 @@ public class IPv4rangeTest {
         }
     }
     
+    /**
+     * Test of method parseAddDashNotation, in class IPv4range.
+     */
+    @Test
+    public void testParseAddDashNotation() {
+        System.out.println( "Basic Test --- IPv4range --- parseAddDashNotation" ) ;
+        Integer i , j;
+        IPv4range parseRange = new IPv4range() ;
+        parseRange.parseAddDashNotation( "143.157.53-223.39-223" ) ;
+        //Manually build the range represented by the notation above
+        //By adding in the IP addresses one by one
+        IPv4range controlRange = new IPv4range() ;
+        for( i=53 ; i<224 ; i++ ) {
+            for( j=39 ; j<224 ; j++ ) {
+                controlRange.addAddressToRange( new IPv4address( "143.157." + i.toString() + "." + j.toString() ) , false ) ;
+            }
+        }
+        //Ranges are the same if each address from both ranges
+        //can be found in the other range
+        //First check that all ranges from the control range
+        //can be found in the parsed range
+        for( i=0 ; i<controlRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , parseRange.isInRange( controlRange.getAddressFromRange(i) ) ) ;
+        }
+        //Then check that each address in the parsed range
+        //can be found in the control range
+        for( i=0 ; i<parseRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , controlRange.isInRange( parseRange.getAddressFromRange(i) ) ) ;
+        }        
+    }
     
     //Template
     /*
