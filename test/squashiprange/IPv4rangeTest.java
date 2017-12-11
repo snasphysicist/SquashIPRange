@@ -328,7 +328,7 @@ public class IPv4rangeTest {
      */
     @Test
     public void testParseAddStarNotation() {
-        System.out.println( "Basic Test --- IPv4range --- methodName" ) ;
+        System.out.println( "Basic Test --- IPv4range --- parseAddStarNotation" ) ;
         int i ;
         String starRange = "101.1.252.*" ;
         IPv4range parseRange = new IPv4range() ;
@@ -351,6 +351,36 @@ public class IPv4rangeTest {
             assertEquals( true , controlRange.isInRange( parseRange.getAddressFromRange(i) ) ) ;
         }
     }
+    
+    /**
+     * Test of method parseAddSlashNotation, in class IPv4range.
+     */
+    @Test
+    public void testParseAddSlashNotation() {
+        System.out.println( "Basic Test --- IPv4range --- parseAddSlashNotation" ) ;
+        int i ;
+        IPv4range parseRange = new IPv4range() ;
+        parseRange.parseAddSlashNotation( "195.138.54.167/25" ) ;
+        //Manually recreate the range by adding 
+        //addresses one at a time
+        IPv4range controlRange = new IPv4range( new IPv4address( "195.138.54.128" ) ) ;
+        for( i=0 ; i<128 ; i++ ) {
+            controlRange.addAddressToRange( new IPv4address( controlRange.getAddressFromRange(0).getIPAsNumber() + i ) , false ) ;
+        }
+        //The two ranges match if all addresses
+        //from each range can be found in the other
+        //First check that every address in the control range
+        //is also in the parsed range
+        for( i=0 ; i<controlRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , parseRange.isInRange( controlRange.getAddressFromRange(i) ) ) ;
+        }
+        //Then check that every address in the parsed range
+        //is also in the control range
+        for( i=0 ; i<parseRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , controlRange.isInRange( parseRange.getAddressFromRange(i) ) ) ;
+        }
+    }
+    
     
     //Template
     /*
