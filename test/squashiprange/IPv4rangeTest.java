@@ -323,6 +323,35 @@ public class IPv4rangeTest {
         }
     }
     
+    /**
+     * Test of method parseAddStarNotation, in class IPv4range.
+     */
+    @Test
+    public void testParseAddStarNotation() {
+        System.out.println( "Basic Test --- IPv4range --- methodName" ) ;
+        int i ;
+        String starRange = "101.1.252.*" ;
+        IPv4range parseRange = new IPv4range() ;
+        parseRange.parseAddStarNotation( starRange ) ;
+        //Manually generate the same range by adding all 256 addresess
+        IPv4range controlRange = new IPv4range( new IPv4address( "101.1.252.0" ) ) ;
+        for( i=0 ; i<256 ; i++ ) {
+            controlRange.addAddressToRange( new IPv4address( controlRange.getAddressFromRange(0).getIPAsNumber() + i ) , false ) ;
+        }
+        //For the two ranges to match, we want each address
+        //in each range to be in the other range
+        //First check all addresses in the 
+        //control range are in the parsed range
+        for( i=0 ; i<controlRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , parseRange.isInRange( controlRange.getAddressFromRange(i) ) ) ;
+        }
+        //Secondly check that all addresses in the 
+        //parsed range are in the control range
+        for( i=0 ; i<parseRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , controlRange.isInRange( parseRange.getAddressFromRange(i) ) ) ;
+        }
+    }
+    
     //Template
     /*
     /**
