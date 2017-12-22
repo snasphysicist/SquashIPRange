@@ -208,6 +208,14 @@ public class SquashIPRange {
         return j ;
     }
     
+    //Copy to clipboard method to put some input text
+    //on to the system clipboard
+    public static void copyToClipboard( String textToClipboard ) {
+        java.awt.datatransfer.StringSelection stringSelection = new java.awt.datatransfer.StringSelection( textToClipboard );
+        java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+    } 
+    
     /**
      * @param args none
      */
