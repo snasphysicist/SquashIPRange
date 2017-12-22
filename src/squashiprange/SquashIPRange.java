@@ -95,9 +95,14 @@ public class SquashIPRange {
         
         int i ;
         
+        //We'll assume that spaces and tabs cannot act
+        //as delimiters between ranges, and strip them out
+        ranges = ranges.replace( " " , "" ) ;
+        ranges = ranges.replace( "\t" , "" ) ;
+        
         //Accepted delimiters between IP address ranges
         //which will be replaced by commas
-        String[] delimiters = new String[]{"\\|",";"," ","\t","\n","\r"} ;
+        String[] delimiters = new String[]{"\\|",";","\n","\r"} ;
         
         //Possible characters that look like dashes (in unicode)
         //These will be replaced by dashes
@@ -146,7 +151,7 @@ public class SquashIPRange {
         IPv4address splitTool = new IPv4address(0L) ;
         int sector3min , sector3max ;
         IPv4range[] allRanges = new IPv4range[0] ;
-        
+
         //Taking the string ranges
         //and converting them to IPv4ranges
         //In a robust, error handled way
