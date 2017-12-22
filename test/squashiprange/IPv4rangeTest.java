@@ -390,7 +390,7 @@ public class IPv4rangeTest {
         Integer i , j;
         IPv4range parseRange = new IPv4range() ;
         parseRange.parseAddDashNotation( "143.157.53-223.39-223" ) ;
-        //Manually build the range represented by the notation above
+        //Manually build t0he range represented by the notation above
         //By adding in the IP addresses one by one
         IPv4range controlRange = new IPv4range() ;
         for( i=53 ; i<224 ; i++ ) {

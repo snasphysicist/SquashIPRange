@@ -17,7 +17,6 @@ public class IPv4address {
     
     //We're assuming human readable ip v4 addresses
     //in the form a.b.c.d where 0 <= a,b,c,d <=255
-    private String ipString ;
     private Long ipNumerical ;
     
     //Takes a human readable ip address as a string
@@ -28,7 +27,7 @@ public class IPv4address {
         //We'll split the a.b.c.d into the four sectors a, b, c, d
         Long[] longsectors = new Long[4] ;
         //Split ip address into an array of sectors, as strings
-        stringsectors = this.splitBySector( ipAsString ) ;
+        stringsectors = splitBySector( ipAsString ) ;
         //Convert these strings to longs
         for(i=0;i<longsectors.length;i++) {
             longsectors[i] = new Long( stringsectors[i] ) ;
@@ -66,17 +65,17 @@ public class IPv4address {
     
     //Constructor taking a human readable ip address
     public IPv4address( String inipString ) {
-        this.setIPAsString( inipString ) ;
+        setIPAsString( inipString ) ;
     }
     
     //Constructor taking a numerical ip address
     public IPv4address( Long inipNumerical ) {
-        this.setIPAsNumber(inipNumerical) ;
+        setIPAsNumber(inipNumerical) ;
     }
     
     //Returns the ip in human readable format
     public String getIPAsString() {
-        return ipString ;
+        return ipToString( ipNumerical ) ;
     }
     
     //Returns the ip in numerical format
@@ -87,32 +86,24 @@ public class IPv4address {
     //Takes a human readable ip address and sets both the string
     //and numerical forms based on this
     public void setIPAsString( String inipString ) {
-        ipString = inipString ;
-        ipNumerical = this.ipToNumerical( inipString ) ;
+        ipNumerical = ipToNumerical( inipString ) ;
     }
     
     //Takes a numerical ip address and sets both the string
     //and numerical forms based on this
     public void setIPAsNumber( Long inipNumerical ) {
         ipNumerical = inipNumerical ;
-        ipString = this.ipToString( inipNumerical ) ;
     }
     
     //Increases the ip address by one
     public IPv4address incrementAddress() {
         ipNumerical++ ;
-        //After we update the numerical ip address
-        //we must remember to update the human readable form
-        ipString = this.ipToString(ipNumerical) ;
         return this ;
     }
     
     //Decreases the ip address by one
     public IPv4address decrementAddress() {
         ipNumerical-- ;
-        //After we update the numerical ip address
-        //we must remember to update the human readable form
-        ipString = this.ipToString(ipNumerical) ;
         return this ;
     }
     
@@ -147,7 +138,7 @@ public class IPv4address {
     //We'll assume people will refer to a.b.c.d as sectors
     //1.2.3.4, so we need to subtract 1
     public String getSectorAsString( int sectorNumber ) {
-        return this.splitBySector( ipString )[sectorNumber-1] ;
+        return this.splitBySector( getIPAsString() )[sectorNumber-1] ;
     }
     
     //Method to decide if the ip address as the argument
