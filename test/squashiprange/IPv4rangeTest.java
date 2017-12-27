@@ -412,6 +412,43 @@ public class IPv4rangeTest {
         }        
     }
     
+    /**
+     * Test of method subtractRange, in class IPv4range.
+     */
+    @Test
+    public void testSubtractRange() {
+        System.out.println( "Basic Test --- IPv4range --- subtractRange" ) ;
+        int i ;
+        //Subtract from this
+        String textRange1 = "162.221.100.10-32" ;
+        //Subtract this
+        String textRange2 = "162.221.100.0-20" ;
+        //This range should result
+        String textRange3 = "162.221.100.21-32" ;
+        //Convert these three to ranges
+        IPv4range range1 = new IPv4range() ;
+        range1.parseAddDashNotation( textRange1 ) ;
+        IPv4range range2 = new IPv4range() ;
+        range2.parseAddDashNotation( textRange2 ) ;
+        IPv4range range3 = new IPv4range() ;
+        range3.parseAddDashNotation( textRange3 ) ;
+        //Subtract range2 from range1
+        //to create the differenced range
+        IPv4range diffrange = range1.createCopy() ;
+        diffrange.subtractRange( range2 ) ;
+        //Differenced range should be
+        //equivalent to range3
+        //This is true if for all addresses in diffrange
+        //the addresses are also in range3
+        for( i=0 ; i<diffrange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , range3.isInRange( diffrange.getAddressFromRange(i) ) ) ;
+        }
+        //and vice versa
+        for( i=0 ; i<range3.getSizeOfRange() ; i++ ) {
+            assertEquals( true , diffrange.isInRange( range3.getAddressFromRange(i) ) ) ;
+        }
+    }
+    
     //Template
     /*
     /**
