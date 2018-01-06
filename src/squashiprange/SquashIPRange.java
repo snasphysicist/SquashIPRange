@@ -93,12 +93,8 @@ public class SquashIPRange {
     
     public static String[] splitStringRanges( String ranges ) {
         
-        int i ;
-        
-        //We'll assume that spaces and tabs cannot act
-        //as delimiters between ranges, and strip them out
-        ranges = ranges.replace( " " , "" ) ;
-        ranges = ranges.replace( "\t" , "" ) ;
+        int i , j ;  
+        boolean isAllowed ;
         
         //Accepted delimiters between IP address ranges
         //which will be replaced by commas
@@ -111,6 +107,14 @@ public class SquashIPRange {
                                             "\u2010","\u2011","\u2012","\u203E","\u2043",
                                             "\u207B","\u208B","\u2212","\u223C","\u23AF",
                                             "\u23E4","\u2500","\u2796","\u2E3A","\u2E3B" } ;
+        
+        //After the above transformations, we'll only allow
+        //numbers and full stops (characters for IP addresses)
+        //commas (chosen delimiters)
+        //dashes, stars, forward slashes (part of IP range formats)
+        String [] allowedChars = new String[]{"1","2","3","4","5",
+                                              "6","7","8","9","0",
+                                              ",",".","/","*","-" } ;
         
         //This will contain the split set of
         //ip address ranges as strings
@@ -136,10 +140,43 @@ public class SquashIPRange {
             ranges = ranges.replace( ",," , "," ) ;
         }
         
+        //Finally, remove any character left
+        //that is not explicitly allowed
+        i = 0 ;
+        while ( i < ranges.length() ) {
+            isAllowed = false ;
+            for( j=0 ; j<allowedChars.length ; j++ ) {
+                //Here we extract the current ranges character and
+                //compare it to the current allowed character
+                //as single characters, not as Strings
+                //Hence the .charAt(0) on the allowed Chars
+                //it's a lazy type conversion ;)
+                if( ranges.charAt(i) == allowedChars[j].charAt(0) ) {
+                    isAllowed = true ;
+                }
+            }
+            //If it hasn't been found in the list of allowed
+            //characters, then we get rid of it
+            //We also need to decrement i by one,
+            //because the string has been shortened by
+            //one character
+            if( !isAllowed ) {
+                ranges = removeCharFromString( ranges , i ) ;
+                i-- ;
+            }
+            i++ ;
+        }
+        
         //Then split by comma (representing all delimiters)
         separatedRanges = ranges.split( "," ) ;
         
         return separatedRanges ;
+    }
+    
+    //Removes the character from a string at the index
+    //specified in the input
+    public static String removeCharFromString( String inString , int charIndex ) {
+        return inString.substring(0, charIndex) + inString.substring(charIndex+1) ;
     }
     
     public static IPv4range[] parseStringRanges( String[] ranges ) {
