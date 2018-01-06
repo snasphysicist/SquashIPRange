@@ -266,27 +266,11 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         //isn't reported, even if there is a crash
         setOutputNumbers( 0 , 0 ) ;
         jTextArea2.setText( "" ) ;
-        
-        int i , j ;
-        String outputText = "" ;
+
         IPv4range[] inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
-        IPv4range overlappingAddresses ;
-        
-        for( i=0 ; i<inputRanges.length ; i++ ) {
-            for( j=i+1 ; j<inputRanges.length ; j++ ) {
-                overlappingAddresses = inputRanges[i].findOverlap( inputRanges[j] ) ;
-                if( overlappingAddresses.getSizeOfRange() > 0 ) {
-                    outputText += "Overlap between " 
-                                + inputRanges[i].convertRangeHumanReadable( inputRanges[i] )
-                                + " and " 
-                                + inputRanges[j].convertRangeHumanReadable( inputRanges[j] )
-                                + " : "
-                                + overlappingAddresses.convertRangeHumanReadable( overlappingAddresses )
-                                + "\n" ;
-                }
-            }
-        }
-        
+
+        String outputText = SquashIPRange.findRangeSetOverlap( inputRanges ) ;
+                
         //If no overlap is found between any of the ranges
         //report this in the output text box
         if ( outputText.equals( "" ) ) {
