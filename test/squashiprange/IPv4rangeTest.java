@@ -448,6 +448,39 @@ public class IPv4rangeTest {
             assertEquals( true , diffrange.isInRange( range3.getAddressFromRange(i) ) ) ;
         }
     }
+
+    /**
+     * Test of method methodName, in class IPv4range.
+     */
+    @Test
+    public void testFindOverlap() {
+        System.out.println( "Basic Test --- IPv4range --- findOverlap" ) ;
+        int i ;
+        IPv4range range1 = new IPv4range() ;
+        range1.parseAddDashNotation( "238.122.193.13-50" ) ;
+        IPv4range range2 = new IPv4range() ;
+        range2.parseAddDashNotation( "238.122.193.0-12" ) ;
+        IPv4range range3 = new IPv4range() ;
+        range3.parseAddDashNotation( "238.122.193.40-90" ) ;
+        // This is overlap of range 1 with range 3
+        IPv4range knownOverlap = new IPv4range() ;
+        knownOverlap.parseAddDashNotation( "238.122.193.40-50" ) ;
+        //Overlap of range 1 with range 2
+        IPv4range foundOverlap1 = range1.findOverlap( range2 ) ;
+        //Overlap of range 1 with range 3
+        IPv4range foundOverlap2 = range1.findOverlap( range3 ) ;        
+        //We expect there to be no overlap between range 1 and range 2
+        assertEquals( true , foundOverlap1.getSizeOfRange() == 0 ) ;
+        //We expect all addresses in knownOverlap to be present
+        //in the overlap between range 2 and range 3
+        //and vice versa (i.e. knownOverlap == foundOverlap2)
+        for( i=0 ; i<knownOverlap.getSizeOfRange() ; i++ ) {
+            assertEquals( true , foundOverlap2.isInRange( knownOverlap.getAddressFromRange(i) ) ) ;
+        }
+        for( i=0 ; i<foundOverlap2.getSizeOfRange() ; i++ ) {
+            assertEquals( true , knownOverlap.isInRange( foundOverlap2.getAddressFromRange(i) ) ) ;
+        }
+    }
     
     //Template
     /*
