@@ -344,15 +344,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
         
-        //Combine all input ranges into one range
-        concatenatedRange.concatenateWithRange( inputRanges[0] , false ) ;
-        for( i=1 ; i<inputRanges.length ; i++ ) {
-            if( concatenatedRange.getAddressFromRange( 0 ).getIPAsNumber() > inputRanges[i].getAddressFromRange( inputRanges[i].getSizeOfRange()-1 ).getIPAsNumber() ) {
-                concatenatedRange.concatenateWithRange( inputRanges[i] , true ) ;
-            } else {
-                concatenatedRange.concatenateWithRange( inputRanges[i] , false ) ;
-            }
-        }
+        concatenatedRange = SquashIPRange.concatenateManyRanges( inputRanges ) ;
         
         java.time.Instant time3 = java.time.Instant.now() ;
         System.out.println( "Create whole range " + (time3.toEpochMilli() - time2.toEpochMilli()) );
