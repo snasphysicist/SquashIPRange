@@ -251,7 +251,23 @@ public class SquashIPRange {
         java.awt.datatransfer.StringSelection stringSelection = new java.awt.datatransfer.StringSelection( textToClipboard );
         java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
-    } 
+    }
+    
+    //Combine all ranges from an input array of ranges into one range
+    public static IPv4range concatenateManyRanges( IPv4range[] inRanges ) {
+        int i ;
+        IPv4range intmRange = new IPv4range() ;
+                
+        intmRange.concatenateWithRange( inRanges[0] , false ) ;
+        for( i=1 ; i<inRanges.length ; i++ ) {
+            if( intmRange.getAddressFromRange( 0 ).getIPAsNumber() > inRanges[i].getAddressFromRange( inRanges[i].getSizeOfRange()-1 ).getIPAsNumber() ) {
+                intmRange.concatenateWithRange( inRanges[i] , true ) ;
+            } else {
+                intmRange.concatenateWithRange( inRanges[i] , false ) ;
+            }
+        }
+        return intmRange ;
+    }
     
     /**
      * @param args none
