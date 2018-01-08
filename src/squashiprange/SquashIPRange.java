@@ -269,6 +269,36 @@ public class SquashIPRange {
         return intmRange ;
     }
     
+    //This method takes an array of ranges as input
+    //In that set of ranges it finds all pairs of ranges 
+    //which are adjacent and for each pair it merges
+    //the ranges
+    public static void mergeAdjacentRanges( IPv4range[] inRanges ) {
+        int i , j ;
+        for( i=0 ; i<inRanges.length ; i++ ) {
+            j = i + 1 ;
+            while( j < inRanges.length ) {
+                //Return value of 1 implies that the range indexed
+                //by j has higher numbers than that indexed by i,
+                //so the latter's addresses are inserted at
+                //the end of the former.
+                if( inRanges[i].isAdjacentRange( inRanges[j] ) == 1 ) {
+                    inRanges[i].concatenateWithRange( inRanges[j] , false );
+                    inRanges = inRanges[0].popFromIPv4rangeArray( inRanges , j ) ;
+                    j-- ;
+                //Alternatively a return value of -1 means the opposite
+                //Range j's numbers lower than i's
+                //Range j's addresses inserted before of range i's
+                } else if ( inRanges[i].isAdjacentRange( inRanges[j] ) == -1 ) {
+                    inRanges[i].concatenateWithRange( inRanges[j] , true );
+                    inRanges = inRanges[0].popFromIPv4rangeArray( inRanges , j ) ;
+                    j-- ;
+                }
+                j++ ;
+            }
+        }
+    }
+    
     /**
      * @param args none
      */

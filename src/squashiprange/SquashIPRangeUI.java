@@ -331,13 +331,6 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
         
         //Debug
-        //for( i=0 ; i<inputRanges.length ; i++ ) {
-        //    System.out.println( inputRanges[i].getAllAddressesAsString() ) ;
-        //    System.out.println( inputRanges[i].convertRangeHumanReadable( inputRanges[i] ) ) ;
-        //}
-        //
-        
-        //Debug
         java.time.Instant time2 = java.time.Instant.now() ;
         System.out.println( "Initial parsing " + (time2.toEpochMilli() - time1.toEpochMilli()) );
         //
@@ -363,32 +356,9 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         System.out.println( "Split ranges " + (time5.toEpochMilli() - time4.toEpochMilli()) );
         //
         
-        //Debug
-        //for( i=0 ; i<ipRangesOut.length ; i++ ) {
-        //    System.out.println( ipRangesOut[i].convertRangeHumanReadable( ipRangesOut[i] ) ) ;
-        //}
-        //
-        
         //Concat and remove in one step
         //Check for & concatenate adjacent ranges
-        for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            j = i + 1 ;
-            while( j < ipRangesOut.length ) {
-                //Debug
-                //System.out.println( i + " " + j + " " + ipRangesOut[i].getAddressFromRange(0).getIPAsString() + " " + ipRangesOut[j].getAddressFromRange(0).getIPAsString() ) ;
-                //
-                if( ipRangesOut[i].isAdjacentRange( ipRangesOut[j] ) == 1 ) {
-                    ipRangesOut[i].concatenateWithRange( ipRangesOut[j] , false );
-                    ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , j ) ;
-                    j-- ;
-                } else if ( ipRangesOut[i].isAdjacentRange( ipRangesOut[j] ) == -1 ) {
-                    ipRangesOut[i].concatenateWithRange( ipRangesOut[j] , true );
-                    ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , j ) ;
-                    j-- ;
-                }
-                j++ ;
-            }
-        }
+        SquashIPRange.mergeAdjacentRanges( ipRangesOut );
         
         java.time.Instant time6 = java.time.Instant.now() ;
         System.out.println( "Concat adjacent ranges " + (time6.toEpochMilli() - time5.toEpochMilli()) );
