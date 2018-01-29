@@ -299,6 +299,21 @@ public class SquashIPRange {
         }
     }
     
+    //Takes an array of IPv4range objects and removes
+    //any overlapping self-addresses from those ranges
+    public static void removeRangeSetOverlap( IPv4range[] inRanges ) {
+        int i , j ;
+        for( i=0 ; i<inRanges.length ; i++ ) {
+            for( j=i+1 ; j<inRanges.length ; j++ ) {
+                if( inRanges[i].getSizeOfRange() >= inRanges[j].getSizeOfRange() ) {
+                    inRanges[j].subtractRange( inRanges[i] ) ;
+                } else {
+                    inRanges[i].subtractRange( inRanges[j] ) ;                
+                }
+            }
+        }
+    }
+    
     /**
      * @param args none
      */

@@ -6,8 +6,6 @@
 *******************************************************************/
 package squashiprange;
 
-//import static squashiprange.SquashIPRange.appendToIPv4rangeArray;
-
 /**
  *
  * @author snasphysicist
@@ -364,15 +362,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         System.out.println( "Concat adjacent ranges " + (time6.toEpochMilli() - time5.toEpochMilli()) );
         
         //Remove overlapping IP addresses from ranges
-        for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            for( j=i+1 ; j<ipRangesOut.length ; j++ ) {
-                if( ipRangesOut[i].getSizeOfRange() >= ipRangesOut[j].getSizeOfRange() ) {
-                    ipRangesOut[j].subtractRange( ipRangesOut[i] ) ;
-                } else {
-                    ipRangesOut[i].subtractRange( ipRangesOut[j] ) ;                
-                }
-            }
-        }
+        SquashIPRange.removeRangeSetOverlap( ipRangesOut ) ;
         
         java.time.Instant time7 = java.time.Instant.now() ;
         System.out.println( "Remove overlap " + (time7.toEpochMilli() - time6.toEpochMilli()) );
