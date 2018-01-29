@@ -253,6 +253,31 @@ public class SquashIPRange {
         clipboard.setContents(stringSelection, null);
     } 
     
+    //Takes one array of input ranges, finds the
+    //overlap between each pair of ranges,
+    //converts each overlap to a human readable string
+    //then returns all strings concatenated as one string
+    public static String findRangeSetOverlap( IPv4range[] inRanges ) {
+        int i , j ;
+        IPv4range overlappingAddresses ;
+        String outputText = "" ;
+        for( i=0 ; i<inRanges.length ; i++ ) {
+            for( j=i+1 ; j<inRanges.length ; j++ ) {
+                overlappingAddresses = inRanges[i].findOverlap( inRanges[j] ) ;
+                if( overlappingAddresses.getSizeOfRange() > 0 ) {
+                    outputText += "Overlap between " 
+                                + inRanges[i].convertRangeHumanReadable( inRanges[i] )
+                                + " and " 
+                                + inRanges[j].convertRangeHumanReadable( inRanges[j] )
+                                + " : "
+                                + overlappingAddresses.convertRangeHumanReadable( overlappingAddresses )
+                                + "\n" ;
+                }
+            }
+        }
+        return outputText ;
+    }
+    
     /**
      * @param args none
      */
