@@ -314,6 +314,21 @@ public class SquashIPRange {
         }
     }
     
+    //Removes any empty ranges from
+    //an array of IPv4ranges
+    public static IPv4range[] removeEmptyRanges( IPv4range[] inRanges ) {
+        int i ;
+        i = 0 ;
+        while( i<inRanges.length ) {
+            if( inRanges[i].getSizeOfRange() == 0 ) {
+                inRanges = inRanges[0].popFromIPv4rangeArray( inRanges , i ) ;
+                i-- ;
+            }
+            i++ ;
+        }
+        return inRanges ;
+    }  
+    
     /**
      * @param args none
      */

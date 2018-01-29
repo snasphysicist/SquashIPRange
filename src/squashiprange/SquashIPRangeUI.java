@@ -368,14 +368,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         System.out.println( "Remove overlap " + (time7.toEpochMilli() - time6.toEpochMilli()) );
         
         //Remove any ranges which have been emptied by the above operation
-        i = 0 ;
-        while( i<ipRangesOut.length ) {
-            if( ipRangesOut[i].getSizeOfRange() == 0 ) {
-                ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , i ) ;
-                i-- ;
-            }
-            i++ ;
-        }
+        ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesOut ) ;
         
         java.time.Instant time8 = java.time.Instant.now() ;
         System.out.println( "Remove empty ranges " + (time8.toEpochMilli() - time7.toEpochMilli()) );
