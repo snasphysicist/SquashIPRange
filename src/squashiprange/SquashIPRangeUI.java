@@ -267,8 +267,11 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         setOutputNumbers( 0 , 0 ) ;
         jTextArea2.setText( "" ) ;
 
+        //Converts the raw input into an array of IPv4ranges
         IPv4range[] inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
-
+        
+        //Converts this array of IPv4ranges into a string
+        //detailing the overlap between those ranges
         String outputText = SquashIPRange.findRangeSetOverlap( inputRanges ) ;
                 
         //If no overlap is found between any of the ranges
@@ -277,8 +280,12 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
             outputText = "No overlap found" ;
         }
         
+        //Otherwise write the details of
+        //the overlapping ranges to the output box
         jTextArea2.setText( outputText ) ;
         
+        //Display the number of IP address ranges and
+        //the number of IP addresses in the input box
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
         
     }//GEN-LAST:event_jButton1ActionPerformed
