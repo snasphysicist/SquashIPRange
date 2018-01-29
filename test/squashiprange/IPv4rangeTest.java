@@ -482,6 +482,42 @@ public class IPv4rangeTest {
         }
     }
     
+    /**
+     * Test of method createCopy, in class IPv4range.
+     */
+    @Test
+    public void testCreateCopy() {
+        int i , j ;
+        boolean foundPointer ;
+        System.out.println( "Basic Test --- IPv4range --- createCopy" ) ;
+        //Create some range and fill it with addresses
+        IPv4range range1 = new IPv4range() ;
+        range1.parseAddStarNotation("57.14.143.*");
+        //Create a copy in another range
+        IPv4range range2 = range1.createCopy() ;
+        //For this to be correct, the values of
+        //each address in each range should be present
+        //in the other range
+        for( i=0 ; i<range1.getSizeOfRange() ; i++ ) {
+            assertEquals( true , range2.isInRange( range1.getAddressFromRange(i) ) ) ;
+        }
+        for( i=0 ; i<range2.getSizeOfRange() ; i++ ) {
+            assertEquals( true , range1.isInRange( range2.getAddressFromRange(i) ) ) ;
+        }
+        //However the pointer for an address
+        //should not be able to be found
+        //in the other range
+        for( i=0 ; i<range1.getSizeOfRange() ; i++ ) {
+            foundPointer = false ;
+            for( j=0 ; j<range2.getSizeOfRange() ; j++ ) {
+                if( range1.getAddressFromRange(i) == range2.getAddressFromRange(j) ) {
+                    foundPointer = true ;
+                }
+            }
+            assertEquals( false , foundPointer ) ; 
+        }        
+    }
+    
     //Template
     /*
     /**
