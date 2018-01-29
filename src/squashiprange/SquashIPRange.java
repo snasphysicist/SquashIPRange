@@ -251,7 +251,83 @@ public class SquashIPRange {
         java.awt.datatransfer.StringSelection stringSelection = new java.awt.datatransfer.StringSelection( textToClipboard );
         java.awt.datatransfer.Clipboard clipboard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
-    } 
+    }
+    
+    //Combine all ranges from an input array of ranges into one range
+    public static IPv4range concatenateManyRanges( IPv4range[] inRanges ) {
+        int i ;
+        IPv4range intmRange = new IPv4range() ;
+                
+        intmRange.concatenateWithRange( inRanges[0] , false ) ;
+        for( i=1 ; i<inRanges.length ; i++ ) {
+            if( intmRange.getAddressFromRange( 0 ).getIPAsNumber() > inRanges[i].getAddressFromRange( inRanges[i].getSizeOfRange()-1 ).getIPAsNumber() ) {
+                intmRange.concatenateWithRange( inRanges[i] , true ) ;
+            } else {
+                intmRange.concatenateWithRange( inRanges[i] , false ) ;
+            }
+        }
+        return intmRange ;
+    }
+    
+    //This method takes an array of ranges as input
+    //In that set of ranges it finds all pairs of ranges 
+    //which are adjacent and for each pair it merges
+    //the ranges
+    public static void mergeAdjacentRanges( IPv4range[] inRanges ) {
+        int i , j ;
+        for( i=0 ; i<inRanges.length ; i++ ) {
+            j = i + 1 ;
+            while( j < inRanges.length ) {
+                //Return value of 1 implies that the range indexed
+                //by j has higher numbers than that indexed by i,
+                //so the latter's addresses are inserted at
+                //the end of the former.
+                if( inRanges[i].isAdjacentRange( inRanges[j] ) == 1 ) {
+                    inRanges[i].concatenateWithRange( inRanges[j] , false );
+                    inRanges = inRanges[0].popFromIPv4rangeArray( inRanges , j ) ;
+                    j-- ;
+                //Alternatively a return value of -1 means the opposite
+                //Range j's numbers lower than i's
+                //Range j's addresses inserted before of range i's
+                } else if ( inRanges[i].isAdjacentRange( inRanges[j] ) == -1 ) {
+                    inRanges[i].concatenateWithRange( inRanges[j] , true );
+                    inRanges = inRanges[0].popFromIPv4rangeArray( inRanges , j ) ;
+                    j-- ;
+                }
+                j++ ;
+            }
+        }
+    }
+    
+    //Takes an array of IPv4range objects and removes
+    //any overlapping self-addresses from those ranges
+    public static void removeRangeSetOverlap( IPv4range[] inRanges ) {
+        int i , j ;
+        for( i=0 ; i<inRanges.length ; i++ ) {
+            for( j=i+1 ; j<inRanges.length ; j++ ) {
+                if( inRanges[i].getSizeOfRange() >= inRanges[j].getSizeOfRange() ) {
+                    inRanges[j].subtractRange( inRanges[i] ) ;
+                } else {
+                    inRanges[i].subtractRange( inRanges[j] ) ;                
+                }
+            }
+        }
+    }
+    
+    //Removes any empty ranges from
+    //an array of IPv4ranges
+    public static IPv4range[] removeEmptyRanges( IPv4range[] inRanges ) {
+        int i ;
+        i = 0 ;
+        while( i<inRanges.length ) {
+            if( inRanges[i].getSizeOfRange() == 0 ) {
+                inRanges = inRanges[0].popFromIPv4rangeArray( inRanges , i ) ;
+                i-- ;
+            }
+            i++ ;
+        }
+        return inRanges ;
+    }  
     
     //Takes one array of input ranges, finds the
     //overlap between each pair of ranges,

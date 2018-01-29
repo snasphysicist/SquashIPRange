@@ -6,8 +6,6 @@
 *******************************************************************/
 package squashiprange;
 
-//import static squashiprange.SquashIPRange.appendToIPv4rangeArray;
-
 /**
  *
  * @author snasphysicist
@@ -322,28 +320,13 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
         
         //Debug
-        //for( i=0 ; i<inputRanges.length ; i++ ) {
-        //    System.out.println( inputRanges[i].getAllAddressesAsString() ) ;
-        //    System.out.println( inputRanges[i].convertRangeHumanReadable( inputRanges[i] ) ) ;
-        //}
-        //
-        
-        //Debug
         java.time.Instant time2 = java.time.Instant.now() ;
         System.out.println( "Initial parsing " + (time2.toEpochMilli() - time1.toEpochMilli()) );
         //
         
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
         
-        //Combine all input ranges into one range
-        concatenatedRange.concatenateWithRange( inputRanges[0] , false ) ;
-        for( i=1 ; i<inputRanges.length ; i++ ) {
-            if( concatenatedRange.getAddressFromRange( 0 ).getIPAsNumber() > inputRanges[i].getAddressFromRange( inputRanges[i].getSizeOfRange()-1 ).getIPAsNumber() ) {
-                concatenatedRange.concatenateWithRange( inputRanges[i] , true ) ;
-            } else {
-                concatenatedRange.concatenateWithRange( inputRanges[i] , false ) ;
-            }
-        }
+        concatenatedRange = SquashIPRange.concatenateManyRanges( inputRanges ) ;
         
         java.time.Instant time3 = java.time.Instant.now() ;
         System.out.println( "Create whole range " + (time3.toEpochMilli() - time2.toEpochMilli()) );
@@ -362,59 +345,21 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         System.out.println( "Split ranges " + (time5.toEpochMilli() - time4.toEpochMilli()) );
         //
         
-        //Debug
-        //for( i=0 ; i<ipRangesOut.length ; i++ ) {
-        //    System.out.println( ipRangesOut[i].convertRangeHumanReadable( ipRangesOut[i] ) ) ;
-        //}
-        //
-        
         //Concat and remove in one step
         //Check for & concatenate adjacent ranges
-        for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            j = i + 1 ;
-            while( j < ipRangesOut.length ) {
-                //Debug
-                //System.out.println( i + " " + j + " " + ipRangesOut[i].getAddressFromRange(0).getIPAsString() + " " + ipRangesOut[j].getAddressFromRange(0).getIPAsString() ) ;
-                //
-                if( ipRangesOut[i].isAdjacentRange( ipRangesOut[j] ) == 1 ) {
-                    ipRangesOut[i].concatenateWithRange( ipRangesOut[j] , false );
-                    ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , j ) ;
-                    j-- ;
-                } else if ( ipRangesOut[i].isAdjacentRange( ipRangesOut[j] ) == -1 ) {
-                    ipRangesOut[i].concatenateWithRange( ipRangesOut[j] , true );
-                    ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , j ) ;
-                    j-- ;
-                }
-                j++ ;
-            }
-        }
+        SquashIPRange.mergeAdjacentRanges( ipRangesOut );
         
         java.time.Instant time6 = java.time.Instant.now() ;
         System.out.println( "Concat adjacent ranges " + (time6.toEpochMilli() - time5.toEpochMilli()) );
         
         //Remove overlapping IP addresses from ranges
-        for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            for( j=i+1 ; j<ipRangesOut.length ; j++ ) {
-                if( ipRangesOut[i].getSizeOfRange() >= ipRangesOut[j].getSizeOfRange() ) {
-                    ipRangesOut[j].subtractRange( ipRangesOut[i] ) ;
-                } else {
-                    ipRangesOut[i].subtractRange( ipRangesOut[j] ) ;                
-                }
-            }
-        }
+        SquashIPRange.removeRangeSetOverlap( ipRangesOut ) ;
         
         java.time.Instant time7 = java.time.Instant.now() ;
         System.out.println( "Remove overlap " + (time7.toEpochMilli() - time6.toEpochMilli()) );
         
         //Remove any ranges which have been emptied by the above operation
-        i = 0 ;
-        while( i<ipRangesOut.length ) {
-            if( ipRangesOut[i].getSizeOfRange() == 0 ) {
-                ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , i ) ;
-                i-- ;
-            }
-            i++ ;
-        }
+        ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesOut ) ;
         
         java.time.Instant time8 = java.time.Instant.now() ;
         System.out.println( "Remove empty ranges " + (time8.toEpochMilli() - time7.toEpochMilli()) );
