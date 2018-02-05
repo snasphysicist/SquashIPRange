@@ -354,6 +354,26 @@ public class SquashIPRange {
         return outputText ;
     }
     
+    //Determines if a long dash notation representation of an
+    //IPv4 address cannot be represented by short dash notation    
+    public static boolean incompatibleWithShortDash( String rangeLongDash ) {
+        //Convert the start and end addresses of the range
+        //into IPv4address objects for ease of parsing
+        IPv4address startAddress = new IPv4address( rangeLongDash.split("-")[0] ) ;
+        IPv4address endAddress = new IPv4address( rangeLongDash.split("-")[1] ) ;
+        //The indicated range is incompatible if the third octets of these two
+        //are not equal and either the start addressdoes not end in zero 
+        //or the end address does not end in 255
+        return ( !startAddress.equalsThirdOctet( endAddress ) ) & ( (!startAddress.getSectorAsString(4).equals("0") ) ) | ( !endAddress.getSectorAsString(4).equals("255") ) ;
+    }
+    
+    //Splits ranges created from long dash notation
+    //input which are cannot be represented in short dash notation
+    //into two or three ranges which can be represented in short dash notation
+    public static IPv4range[] longToShortDash( IPv4range rangeLongDash ) {
+        
+    }
+    
     /**
      * @param args none
      */
