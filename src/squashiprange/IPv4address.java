@@ -197,4 +197,10 @@ public class IPv4address {
         return ( this.getSectorAsString(4).equals( inipAddress.getSectorAsString(4) ) ) ;
     }
     
+    //Masks this IPv4address with the input bitmask 
+    //and returns the result as an IPv4address
+    public IPv4address maskAddress( Long bitmask ) {
+        return new IPv4address( ipNumerical & bitmask  ) ;
+    }
+    
 }
