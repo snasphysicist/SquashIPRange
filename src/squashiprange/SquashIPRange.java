@@ -370,7 +370,71 @@ public class SquashIPRange {
     //Splits ranges created from long dash notation
     //input which are cannot be represented in short dash notation
     //into two or three ranges which can be represented in short dash notation
-    public static IPv4range[] longToShortDash( IPv4range rangeLongDash ) {
+    public static IPv4range[] longToShortDash( String rangeLongDash ) {
+        
+        //The newly created short dash ranges
+        //will be stored in this array to be returned
+        IPv4range[] newRanges = new IPv4range[0] ;
+        
+        //Intermediate addresses used to 
+        //make code more readable
+        IPv4address intmAddress1 ;
+        IPv4address intmAddress2 ;
+        
+        //Convert the start and end addresses of the range
+        //into IPv4address objects for ease of parsing
+        IPv4address startAddress = new IPv4address( rangeLongDash.split("-")[0] ) ;
+        IPv4address endAddress = new IPv4address( rangeLongDash.split("-")[1] ) ;
+        
+        //Always create a.b.c.d-255 & a.b.e.0-f
+        //a.b.c.255 (from a.b.e.f -> a.b.e.0 -> a.b.c.255)
+        intmAddress1 = endAddress.maskAddress( ~255L ).decrementAddress() ;
+        //a.b.e.0 (from a.b.e.f -> a.b.e.0)
+        intmAddress2 = endAddress.maskAddress( ~255L ) ;
+        newRanges = appendToIPv4rangeArray( newRanges , 
+                                            new IPv4range( startAddress , intmAddress1 ) ) ; 
+        newRanges = appendToIPv4rangeArray( newRanges , 
+                                            new IPv4range( intmAddress2 , endAddress ) ) ; 
+
+        //In the case e-c=2 -> add the central bit, a.b.c+1.0-255
+        if( (endAddress.getSectorAsNumber(3) - startAddress.getSectorAsNumber(3)) == 2 ) {
+            //a.b.c+1.0 (from a.b.c.d -> a.b.c.0 -> number -> +256 -> IP address)  
+            intmAddress1 = new IPv4address( startAddress.maskAddress( ~255L ).getIPAsNumber() + 256L ) ;
+            //a.b.c+1.0 (from a.b.c+1.0 -> number -> +255 -> IP address)  
+            intmAddress2 = new IPv4address( intmAddress1.getIPAsNumber() + 255L ) ; 
+            newRanges = appendToIPv4rangeArray( newRanges , new IPv4range( intmAddress1 , intmAddress2 ) ) ;
+        }
+        
+        //In the case e-c>2 -> add the central bit, a.b.c+1-e-1.0-255
+        if( (endAddress.getSectorAsNumber(3) - startAddress.getSectorAsNumber(3)) > 2 ) {
+            //a.b.c+1.0 (from a.b.c.d -> a.b.c.0 -> number -> +256 -> IP address) 
+            intmAddress1 = new IPv4address( startAddress.maskAddress( ~255L ).getIPAsNumber() + 256L ) ;
+            //a.b.e-1.255 (from a.b.e.f -> a.b.e.0 -> number -> -1 -> IP address)
+            intmAddress2 = new IPv4address( endAddress.maskAddress( ~255L ).getIPAsNumber() - 1L ) ; 
+            newRanges = appendToIPv4rangeArray( newRanges , new IPv4range( intmAddress1 , intmAddress2 ) ) ;
+        }
+        
+        //We only need to think about concatenating some of the ranges
+        //if e-c>1, so a "central" range was added
+        if( newRanges.length == 3 ) {
+            
+            //If d=0, concatenate a.b.c.d-255 with the central bit
+            if( startAddress.getSectorAsNumber( 4 ) == 0 ) {
+                newRanges[ newRanges.length-1 ].concatenateWithRange( newRanges[0] , true ) ;
+                newRanges = newRanges[0].popFromIPv4rangeArray( newRanges , 0 ) ;
+            }
+
+            //If f=255, concatenate a.b.e.0-f with the central bit
+            if( endAddress.getSectorAsNumber(4) == 255 ) {
+                newRanges[ newRanges.length-1 ].concatenateWithRange( newRanges[newRanges.length-2] , false ) ;
+                newRanges = newRanges[0].popFromIPv4rangeArray( newRanges , newRanges.length-2 ) ;
+            }
+            
+        }
+        
+        //Return the two or three short dash ranges into which
+        //the input long dash range has been split
+        return newRanges ;
         
     }
     
