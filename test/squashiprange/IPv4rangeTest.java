@@ -574,7 +574,7 @@ public class IPv4rangeTest {
                                         "63.253.150-151.249",
                                         "63.253.150-151.249",
                                         "63.253.150-151.249",
-                                        "63.253.150-151.249"} ;
+                                        "63.253.150-151.249" } ;
                                         
         String[] ranges2 = new String[]{"26.131.50.199",
                                         "26.131.51.199",
@@ -642,8 +642,8 @@ public class IPv4rangeTest {
             assertEquals( expected[i] , range1.isAdjacentRange( range2 ) ) ;
         }
         
-    }
-    
+    }   
+
     //Template
     /*
     /**
