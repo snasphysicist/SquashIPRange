@@ -518,6 +518,32 @@ public class IPv4rangeTest {
         }        
     }
     
+    /**
+     * Test of method methodName, in class IPv4range.
+     */
+    @Test
+    public void testGetAllAddressesAsString() {
+        System.out.println( "Basic Test --- IPv4range --- getAllAddressesAsString" ) ;
+        //Case 1 - single address
+        IPv4range range1 = new IPv4range( new IPv4address("58.35.212.146") ) ;
+        String expected1 = "58.35.212.146 " ; 
+        //Case 2 - range of addresses
+        IPv4range range2 = new IPv4range() ;
+        range2.parseAddDashNotation( "219.145.101.126-131" ) ;
+        String expected2 = "219.145.101.126 219.145.101.127 219.145.101.128 "
+                    + "219.145.101.129 219.145.101.130 219.145.101.131 " ;
+        //Case 3 - non-contiguous addresses
+        IPv4range range3 = new IPv4range( new IPv4address("36.164.200.182") ) ;
+        range3.addAddressToRange( new IPv4address( "16.164.16.36" ) , false ) ;
+        range3.addAddressToRange( new IPv4address( "226.1.228.172" ) , false ) ;
+        String expected3 = "36.164.200.182 16.164.16.36 226.1.228.172 " ;
+        //Check all three outputs
+        //match the expected strings
+        assertEquals( true , range1.getAllAddressesAsString().equals( expected1 ) ) ;
+        assertEquals( true , range2.getAllAddressesAsString().equals( expected2 ) ) ;
+        assertEquals( true , range3.getAllAddressesAsString().equals( expected3 ) ) ;
+    }
+    
     //Template
     /*
     /**
