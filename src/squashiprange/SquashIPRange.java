@@ -184,6 +184,7 @@ public class SquashIPRange {
         Integer i,j ;
         boolean parsedRange ;
         IPv4range intmRange ;
+        IPv4range[] intmRanges ;
         String[] sectors ;
         IPv4address splitTool = new IPv4address(0L) ;
         int sector3min , sector3max ;
@@ -197,13 +198,10 @@ public class SquashIPRange {
                 intmRange = new IPv4range() ;
                 ranges[i] = ranges[i].replaceAll("\\*", "0-255") ;
                 if( substringOccurrences( ranges[i] , "." ) > 3 ) {
-                    //Constuctor call split over three lines to
-                    //restrict width of line
-                    //range( address( string ) , address( string ) )
-                    intmRange = new IPv4range( 
-                                new IPv4address( ranges[i].split("-")[0] ) ,
-                                new IPv4address( ranges[i].split("-")[1] ) ) ;
-                    parsedRange = true ;
+                    intmRanges = longToShortDash( ranges[i] ) ;
+                    for( j=0 ; j<intmRanges.length ; j++ ) {
+                        allRanges = SquashIPRange.appendToIPv4rangeArray( allRanges , intmRanges[j] ) ;
+                    }
                 } else {
                     sectors = splitTool.splitBySector( ranges[i] ) ;
                     if ( sectors[3].contains( "/" ) ) {
@@ -218,10 +216,11 @@ public class SquashIPRange {
                     } else {
                         parsedRange = intmRange.parseAddDashNotation( ranges[i] ) ;
                     }
+                    if( parsedRange ) {
+                        allRanges = appendToIPv4rangeArray( allRanges , intmRange ) ;
+                    }
                 }
-                if( parsedRange ) {
-                    allRanges = appendToIPv4rangeArray( allRanges , intmRange ) ;
-                }
+
             } 
             catch ( Exception e ) {
                 System.out.println( "Failed to parse range" ) ;
