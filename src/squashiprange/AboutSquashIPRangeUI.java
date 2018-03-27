@@ -14,10 +14,10 @@ public class AboutSquashIPRangeUI extends javax.swing.JDialog {
     
     String authorText = "Written by Scott Nicholas Allan Smith (snasphysicist)" ;
     String toolsText = "Written using Netbeans 8.1" ;
-    String versionText = "SquashIPRange Version 1.0" ;
-    String releaseText = "Released 08/12/2017" ;
+    String versionText = "SquashIPRange Build " + "0" ;
+    String releaseText = "Original release 08/12/2017" ;
     String gitText = "Source code at https://github.com/snasphysicist/SquashIPRange" ;
-    String bugText = "Bug reports and feature requests to snas@physics.org" ;
+    String bugText = "For bug reports and feature requests, open an issue on GitHub" ;
     
     /**
      * Creates new form AboutSquashIPRange
