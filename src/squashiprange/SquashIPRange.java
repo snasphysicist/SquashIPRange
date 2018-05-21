@@ -253,6 +253,34 @@ public class SquashIPRange {
         clipboard.setContents(stringSelection, null);
     }
     
+    //Old, slower, more "detailed" squash method
+    public static IPv4range[] fullSquash( IPv4range[] ipRangesToSquash ) {
+        
+        IPv4range concatenatedRange ;
+        IPv4range[] ipRangesOut ;
+        
+        //Take all the address from all the input ranges
+        //and put them into a single large range
+        concatenatedRange = concatenateManyRanges( ipRangesToSquash ) ;
+        
+        //Sort the IP addresses in the range
+        concatenatedRange.sortRange() ;
+        
+        //Split this back into contiguous sub ranges
+        ipRangesOut = concatenatedRange.getContiguousSubranges() ;
+        
+        //Merge any "adjacent" ranges into single ranges
+        mergeAdjacentRanges( ipRangesOut ) ;
+        
+        //Remove any overlap between the ranges that remain
+        removeRangeSetOverlap( ipRangesOut ) ;
+        
+        //Remove any ranges which are emptied by the previous operation
+        ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesOut ) ;
+        
+        return ipRangesOut ;
+    }
+    
     //Combine all ranges from an input array of ranges into one range
     public static IPv4range concatenateManyRanges( IPv4range[] inRanges ) {
         int i ;

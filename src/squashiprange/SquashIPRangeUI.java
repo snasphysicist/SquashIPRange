@@ -174,9 +174,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -313,10 +311,12 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
         int i , j ;
         String outputText = "" ;
-        IPv4range[] inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
+        IPv4range[] inputRanges ;
         IPv4range concatenatedRange = new IPv4range() ;
         IPv4range[] ipRangesOut ;
-       
+
+        inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
+        
         inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
         
         //Debug
@@ -325,44 +325,8 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         //
         
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
-        
-        concatenatedRange = SquashIPRange.concatenateManyRanges( inputRanges ) ;
-        
-        java.time.Instant time3 = java.time.Instant.now() ;
-        System.out.println( "Create whole range " + (time3.toEpochMilli() - time2.toEpochMilli()) );
-        
-        //Sort this range
-        concatenatedRange.sortRange() ;
-        
-        java.time.Instant time4 = java.time.Instant.now() ;
-        System.out.println( "Sort range " + (time4.toEpochMilli() - time3.toEpochMilli()) );
-        
-        //Split into contiguous subranges
-        ipRangesOut = concatenatedRange.getContiguousSubranges() ;
-        
-        //Debug
-        java.time.Instant time5 = java.time.Instant.now() ;
-        System.out.println( "Split ranges " + (time5.toEpochMilli() - time4.toEpochMilli()) );
-        //
-        
-        //Concat and remove in one step
-        //Check for & concatenate adjacent ranges
-        SquashIPRange.mergeAdjacentRanges( ipRangesOut );
-        
-        java.time.Instant time6 = java.time.Instant.now() ;
-        System.out.println( "Concat adjacent ranges " + (time6.toEpochMilli() - time5.toEpochMilli()) );
-        
-        //Remove overlapping IP addresses from ranges
-        SquashIPRange.removeRangeSetOverlap( ipRangesOut ) ;
-        
-        java.time.Instant time7 = java.time.Instant.now() ;
-        System.out.println( "Remove overlap " + (time7.toEpochMilli() - time6.toEpochMilli()) );
-        
-        //Remove any ranges which have been emptied by the above operation
-        ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesOut ) ;
-        
-        java.time.Instant time8 = java.time.Instant.now() ;
-        System.out.println( "Remove empty ranges " + (time8.toEpochMilli() - time7.toEpochMilli()) );
+   
+        ipRangesOut = SquashIPRange.fullSquash( inputRanges ) ;
         
         //Get the resulting ranges in human readable format
         //and write them to a string to output
