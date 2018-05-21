@@ -454,15 +454,24 @@ public class IPv4range {
         
         int isAdjacent = 0 ;
         
+        //Minimum and maximum bounding third octets
+        //of this IPv4range
         Integer[] thisBoundingThirdOctet = new Integer[2] ;
+        //Minimum and maximum bounding third octets
+        //of the input IPv4range
         Integer[] inBoundingThirdOctet = new Integer[2] ;
         
+        //Minimum third octet value for this IPv4range
         thisBoundingThirdOctet[0] = new Integer( this.addressArray[0].getSectorAsString(3) ) ;
+        //Maximum third octet value for this IPv4range
         thisBoundingThirdOctet[1] = new Integer( this.addressArray[this.addressArray.length-1].getSectorAsString(3) ) ;
-        
+
+        //Minimum third octet value for the input IPv4range
         inBoundingThirdOctet[0] = new Integer( inipRange.getAddressFromRange(0).getSectorAsString(3) ) ;
+        //Maximum third octet value for the input IPv4range
         inBoundingThirdOctet[1] = new Integer( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1).getSectorAsString(3) ) ;
-                
+        
+        //Check if first octets match, second octets match, fourth octets match
         if(     this.addressArray[0].equalsFirstOctet( inipRange.getAddressFromRange(0) )
                 && this.addressArray[0].equalsSecondOctet( inipRange.getAddressFromRange(0) )
                 && this.addressArray[0].equalsFourthOctet(inipRange.getAddressFromRange(0))
