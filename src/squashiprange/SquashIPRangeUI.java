@@ -298,35 +298,26 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
 
     //Squash button
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
-        //Debug
-        java.time.Instant time1 = java.time.Instant.now() ;
-        //
-        
+
         //Reset outputs to blank at the start
         //to ensure that incorrect information
         //isn't reported, even if there is a crash
         setOutputNumbers( 0 , 0 ) ;
         jTextArea2.setText( "" ) ;
         
-        int i , j ;
+        int i ;
         String outputText = "" ;
         IPv4range[] inputRanges ;
-        IPv4range concatenatedRange = new IPv4range() ;
         IPv4range[] ipRangesOut ;
 
         inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
         
         inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
         
-        //Debug
-        java.time.Instant time2 = java.time.Instant.now() ;
-        System.out.println( "Initial parsing " + (time2.toEpochMilli() - time1.toEpochMilli()) );
-        //
-        
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
    
         ipRangesOut = SquashIPRange.fullSquash( inputRanges ) ;
+        //ipRangesOut = SquashIPRange.quickSquash( inputRanges ) ;
         
         //Get the resulting ranges in human readable format
         //and write them to a string to output
