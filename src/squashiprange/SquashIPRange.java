@@ -252,6 +252,51 @@ public class SquashIPRange {
         clipboard.setContents(stringSelection, null);
     }
     
+    //Old, slower, more "thorough" squash method
+    public static IPv4range[] fullSquash( IPv4range[] ipRangesToSquash ) {
+        
+        IPv4range concatenatedRange ;
+        IPv4range[] ipRangesOut ;
+        
+        //Take all the address from all the input ranges
+        //and put them into a single large range
+        concatenatedRange = concatenateManyRanges( ipRangesToSquash ) ;
+        
+        //Sort the IP addresses in the range
+        concatenatedRange.sortRange() ;
+        
+        //Split this back into contiguous sub ranges
+        ipRangesOut = concatenatedRange.getContiguousSubranges() ;
+        
+        //Merge any "adjacent" ranges into single ranges
+        mergeAdjacentRanges( ipRangesOut ) ;
+        
+        //Remove any overlap between the ranges that remain
+        removeRangeSetOverlap( ipRangesOut ) ;
+        
+        //Remove any ranges which are emptied by the previous operation
+        ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesOut ) ;
+        
+        return ipRangesOut ;
+    }
+    
+    //Newer, faster, less thorough squash method
+    public static IPv4range[] quickSquash( IPv4range[] ipRangesToSquash ) {
+        
+        IPv4range[] ipRangesOut ;
+        
+        //Remove any overlap between the ranges in the input array
+        removeRangeSetOverlap( ipRangesToSquash ) ;
+        
+        //Remove any ranges which are left empty by this operation
+        ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesToSquash ) ;
+        
+        //Merge any "adjacent" ranges in this set into single ranges
+       ipRangesOut = mergeAdjacentRanges( ipRangesOut ) ;
+        
+        return ipRangesOut ;
+    }
+    
     //Combine all ranges from an input array of ranges into one range
     public static IPv4range concatenateManyRanges( IPv4range[] inRanges ) {
         int i ;
@@ -272,7 +317,7 @@ public class SquashIPRange {
     //In that set of ranges it finds all pairs of ranges 
     //which are adjacent and for each pair it merges
     //the ranges
-    public static void mergeAdjacentRanges( IPv4range[] inRanges ) {
+    public static IPv4range[] mergeAdjacentRanges( IPv4range[] inRanges ) {
         int i , j ;
         for( i=0 ; i<inRanges.length ; i++ ) {
             j = i + 1 ;
@@ -296,6 +341,7 @@ public class SquashIPRange {
                 j++ ;
             }
         }
+        return inRanges ;
     }
     
     //Takes an array of IPv4range objects and removes
@@ -438,6 +484,9 @@ public class SquashIPRange {
     }
     
     /**
+     * This was being used for testing
+     * but the code here is no longer being used
+     * To be removed in a future refactor
      * @param args none
      */
     public static void main(String[] args) {
