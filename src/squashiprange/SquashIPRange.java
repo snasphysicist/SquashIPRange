@@ -253,7 +253,7 @@ public class SquashIPRange {
         clipboard.setContents(stringSelection, null);
     }
     
-    //Old, slower, more "detailed" squash method
+    //Old, slower, more "thorough" squash method
     public static IPv4range[] fullSquash( IPv4range[] ipRangesToSquash ) {
         
         IPv4range concatenatedRange ;
@@ -401,6 +401,9 @@ public class SquashIPRange {
     }
     
     /**
+     * This was being used for testing
+     * but the code here is no longer being used
+     * To be removed in a future refactor
      * @param args none
      */
     public static void main(String[] args) {
