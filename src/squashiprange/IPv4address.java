@@ -141,6 +141,13 @@ public class IPv4address {
         return this.splitBySector( getIPAsString() )[sectorNumber-1] ;
     }
     
+    //Returns a single sector of the ip address as a number
+    //We'll assume people will refer to a.b.c.d as sectors
+    //1.2.3.4, so we need to subtract 1
+    public Integer getSectorAsNumber( int sectorNumber ) {
+        return new Integer( this.splitBySector( getIPAsString() )[sectorNumber-1] ) ;
+    }
+    
     //Method to decide if the ip address as the argument
     //is "adjacent" to this ip address
     //Adjacency means in this context that the numerical
@@ -188,6 +195,12 @@ public class IPv4address {
     
     public boolean equalsFourthOctet( IPv4address inipAddress ) {
         return ( this.getSectorAsString(4).equals( inipAddress.getSectorAsString(4) ) ) ;
+    }
+    
+    //Masks this IPv4address with the input bitmask 
+    //and returns the result as an IPv4address
+    public IPv4address maskAddress( Long bitmask ) {
+        return new IPv4address( ipNumerical & bitmask  ) ;
     }
     
 }

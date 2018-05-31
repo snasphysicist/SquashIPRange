@@ -184,6 +184,7 @@ public class SquashIPRange {
         Integer i,j ;
         boolean parsedRange ;
         IPv4range intmRange ;
+        IPv4range[] intmRanges ;
         String[] sectors ;
         IPv4address splitTool = new IPv4address(0L) ;
         int sector3min , sector3max ;
@@ -197,13 +198,10 @@ public class SquashIPRange {
                 intmRange = new IPv4range() ;
                 ranges[i] = ranges[i].replaceAll("\\*", "0-255") ;
                 if( substringOccurrences( ranges[i] , "." ) > 3 ) {
-                    //Constuctor call split over three lines to
-                    //restrict width of line
-                    //range( address( string ) , address( string ) )
-                    intmRange = new IPv4range( 
-                                new IPv4address( ranges[i].split("-")[0] ) ,
-                                new IPv4address( ranges[i].split("-")[1] ) ) ;
-                    parsedRange = true ;
+                    intmRanges = longToShortDash( ranges[i] ) ;
+                    for( j=0 ; j<intmRanges.length ; j++ ) {
+                        allRanges = SquashIPRange.appendToIPv4rangeArray( allRanges , intmRanges[j] ) ;
+                    }
                 } else {
                     sectors = splitTool.splitBySector( ranges[i] ) ;
                     if ( sectors[3].contains( "/" ) ) {
@@ -218,10 +216,11 @@ public class SquashIPRange {
                     } else {
                         parsedRange = intmRange.parseAddDashNotation( ranges[i] ) ;
                     }
+                    if( parsedRange ) {
+                        allRanges = appendToIPv4rangeArray( allRanges , intmRange ) ;
+                    }
                 }
-                if( parsedRange ) {
-                    allRanges = appendToIPv4rangeArray( allRanges , intmRange ) ;
-                }
+
             } 
             catch ( Exception e ) {
                 System.out.println( "Failed to parse range" ) ;
@@ -253,6 +252,51 @@ public class SquashIPRange {
         clipboard.setContents(stringSelection, null);
     }
     
+    //Old, slower, more "thorough" squash method
+    public static IPv4range[] fullSquash( IPv4range[] ipRangesToSquash ) {
+        
+        IPv4range concatenatedRange ;
+        IPv4range[] ipRangesOut ;
+        
+        //Take all the address from all the input ranges
+        //and put them into a single large range
+        concatenatedRange = concatenateManyRanges( ipRangesToSquash ) ;
+        
+        //Sort the IP addresses in the range
+        concatenatedRange.sortRange() ;
+        
+        //Split this back into contiguous sub ranges
+        ipRangesOut = concatenatedRange.getContiguousSubranges() ;
+        
+        //Merge any "adjacent" ranges into single ranges
+        mergeAdjacentRanges( ipRangesOut ) ;
+        
+        //Remove any overlap between the ranges that remain
+        removeRangeSetOverlap( ipRangesOut ) ;
+        
+        //Remove any ranges which are emptied by the previous operation
+        ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesOut ) ;
+        
+        return ipRangesOut ;
+    }
+    
+    //Newer, faster, less thorough squash method
+    public static IPv4range[] quickSquash( IPv4range[] ipRangesToSquash ) {
+        
+        IPv4range[] ipRangesOut ;
+        
+        //Remove any overlap between the ranges in the input array
+        removeRangeSetOverlap( ipRangesToSquash ) ;
+        
+        //Remove any ranges which are left empty by this operation
+        ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesToSquash ) ;
+        
+        //Merge any "adjacent" ranges in this set into single ranges
+       ipRangesOut = mergeAdjacentRanges( ipRangesOut ) ;
+        
+        return ipRangesOut ;
+    }
+    
     //Combine all ranges from an input array of ranges into one range
     public static IPv4range concatenateManyRanges( IPv4range[] inRanges ) {
         int i ;
@@ -273,7 +317,7 @@ public class SquashIPRange {
     //In that set of ranges it finds all pairs of ranges 
     //which are adjacent and for each pair it merges
     //the ranges
-    public static void mergeAdjacentRanges( IPv4range[] inRanges ) {
+    public static IPv4range[] mergeAdjacentRanges( IPv4range[] inRanges ) {
         int i , j ;
         for( i=0 ; i<inRanges.length ; i++ ) {
             j = i + 1 ;
@@ -297,6 +341,7 @@ public class SquashIPRange {
                 j++ ;
             }
         }
+        return inRanges ;
     }
     
     //Takes an array of IPv4range objects and removes
@@ -354,7 +399,94 @@ public class SquashIPRange {
         return outputText ;
     }
     
+    //Determines if a long dash notation representation of an
+    //IPv4 address cannot be represented by short dash notation    
+    public static boolean incompatibleWithShortDash( String rangeLongDash ) {
+        //Convert the start and end addresses of the range
+        //into IPv4address objects for ease of parsing
+        IPv4address startAddress = new IPv4address( rangeLongDash.split("-")[0] ) ;
+        IPv4address endAddress = new IPv4address( rangeLongDash.split("-")[1] ) ;
+        //The indicated range is incompatible if the third octets of these two
+        //are not equal and either the start addressdoes not end in zero 
+        //or the end address does not end in 255
+        return ( !startAddress.equalsThirdOctet( endAddress ) ) & ( (!startAddress.getSectorAsString(4).equals("0") ) ) | ( !endAddress.getSectorAsString(4).equals("255") ) ;
+    }
+    
+    //Splits ranges created from long dash notation
+    //input which are cannot be represented in short dash notation
+    //into two or three ranges which can be represented in short dash notation
+    public static IPv4range[] longToShortDash( String rangeLongDash ) {
+        
+        //The newly created short dash ranges
+        //will be stored in this array to be returned
+        IPv4range[] newRanges = new IPv4range[0] ;
+        
+        //Intermediate addresses used to 
+        //make code more readable
+        IPv4address intmAddress1 ;
+        IPv4address intmAddress2 ;
+        
+        //Convert the start and end addresses of the range
+        //into IPv4address objects for ease of parsing
+        IPv4address startAddress = new IPv4address( rangeLongDash.split("-")[0] ) ;
+        IPv4address endAddress = new IPv4address( rangeLongDash.split("-")[1] ) ;
+        
+        //Always create a.b.c.d-255 & a.b.e.0-f
+        //a.b.c.255 (from a.b.e.f -> a.b.e.0 -> a.b.c.255)
+        intmAddress1 = endAddress.maskAddress( ~255L ).decrementAddress() ;
+        //a.b.e.0 (from a.b.e.f -> a.b.e.0)
+        intmAddress2 = endAddress.maskAddress( ~255L ) ;
+        newRanges = appendToIPv4rangeArray( newRanges , 
+                                            new IPv4range( startAddress , intmAddress1 ) ) ; 
+        newRanges = appendToIPv4rangeArray( newRanges , 
+                                            new IPv4range( intmAddress2 , endAddress ) ) ; 
+
+        //In the case e-c=2 -> add the central bit, a.b.c+1.0-255
+        if( (endAddress.getSectorAsNumber(3) - startAddress.getSectorAsNumber(3)) == 2 ) {
+            //a.b.c+1.0 (from a.b.c.d -> a.b.c.0 -> number -> +256 -> IP address)  
+            intmAddress1 = new IPv4address( startAddress.maskAddress( ~255L ).getIPAsNumber() + 256L ) ;
+            //a.b.c+1.0 (from a.b.c+1.0 -> number -> +255 -> IP address)  
+            intmAddress2 = new IPv4address( intmAddress1.getIPAsNumber() + 255L ) ; 
+            newRanges = appendToIPv4rangeArray( newRanges , new IPv4range( intmAddress1 , intmAddress2 ) ) ;
+        }
+        
+        //In the case e-c>2 -> add the central bit, a.b.c+1-e-1.0-255
+        if( (endAddress.getSectorAsNumber(3) - startAddress.getSectorAsNumber(3)) > 2 ) {
+            //a.b.c+1.0 (from a.b.c.d -> a.b.c.0 -> number -> +256 -> IP address) 
+            intmAddress1 = new IPv4address( startAddress.maskAddress( ~255L ).getIPAsNumber() + 256L ) ;
+            //a.b.e-1.255 (from a.b.e.f -> a.b.e.0 -> number -> -1 -> IP address)
+            intmAddress2 = new IPv4address( endAddress.maskAddress( ~255L ).getIPAsNumber() - 1L ) ; 
+            newRanges = appendToIPv4rangeArray( newRanges , new IPv4range( intmAddress1 , intmAddress2 ) ) ;
+        }
+        
+        //We only need to think about concatenating some of the ranges
+        //if e-c>1, so a "central" range was added
+        if( newRanges.length == 3 ) {
+            
+            //If d=0, concatenate a.b.c.d-255 with the central bit
+            if( startAddress.getSectorAsNumber( 4 ) == 0 ) {
+                newRanges[ newRanges.length-1 ].concatenateWithRange( newRanges[0] , true ) ;
+                newRanges = newRanges[0].popFromIPv4rangeArray( newRanges , 0 ) ;
+            }
+
+            //If f=255, concatenate a.b.e.0-f with the central bit
+            if( endAddress.getSectorAsNumber(4) == 255 ) {
+                newRanges[ newRanges.length-1 ].concatenateWithRange( newRanges[newRanges.length-2] , false ) ;
+                newRanges = newRanges[0].popFromIPv4rangeArray( newRanges , newRanges.length-2 ) ;
+            }
+            
+        }
+        
+        //Return the two or three short dash ranges into which
+        //the input long dash range has been split
+        return newRanges ;
+        
+    }
+    
     /**
+     * This was being used for testing
+     * but the code here is no longer being used
+     * To be removed in a future refactor
      * @param args none
      */
     public static void main(String[] args) {
