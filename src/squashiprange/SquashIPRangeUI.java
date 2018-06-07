@@ -168,6 +168,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setSelected(true);
         jRadioButton1.setText("Quick");
 
         buttonGroup1.add(jRadioButton2);
