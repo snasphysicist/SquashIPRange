@@ -343,9 +343,13 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
         
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
-   
-        ipRangesOut = SquashIPRange.fullSquash( inputRanges ) ;
-        //ipRangesOut = SquashIPRange.quickSquash( inputRanges ) ;
+        
+        // jRadioButton1 is the button with label "Quick"
+        if( jRadioButton1.isSelected() ) {
+            ipRangesOut = SquashIPRange.quickSquash( inputRanges ) ;
+        } else {
+            ipRangesOut = SquashIPRange.fullSquash( inputRanges ) ;
+        }
         
         //Get the resulting ranges in human readable format
         //and write them to a string to output
