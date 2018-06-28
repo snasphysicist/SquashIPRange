@@ -66,7 +66,6 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1268, 513));
-        setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(1268, 513));
         setResizable(false);
 
