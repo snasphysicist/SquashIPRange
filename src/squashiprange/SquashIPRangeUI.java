@@ -65,9 +65,8 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         jRadioButton2 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(1268, 513));
-        setPreferredSize(new java.awt.Dimension(1268, 513));
-        setResizable(false);
+        setMaximumSize(new java.awt.Dimension(1285, 550));
+        setPreferredSize(new java.awt.Dimension(1285, 550));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Squash IP Range"));
         jPanel1.setRequestFocusEnabled(false);
@@ -265,14 +264,14 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(10, 10, 10))
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10))
+                .addGap(31, 31, 31))
         );
 
         jPanel1.getAccessibleContext().setAccessibleName("Squash IP Range v 1.0");
