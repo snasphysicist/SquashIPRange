@@ -469,11 +469,8 @@ public class SquashIPRange {
             
             //If d=0, concatenate a.b.c.d-255 with the central bit
             if( startAddress.getSectorAsNumber( 4 ) == 0 ) {
-                IPv4range tempRange = new IPv4range() ;
-                tempRange.concatenateWithRange( newRanges[ 0 ] , true ) ;
-                tempRange.concatenateWithRange( newRanges[newRanges.length-1] , false ) ;
-                newRanges[ newRanges.length-1 ].concatenateWithRange( newRanges[0] , false ) ; 
-               newRanges = newRanges[0].popFromIPv4rangeArray( newRanges , 0 ) ;
+                newRanges[ newRanges.length-1 ].concatenateWithRange( newRanges[0] , true ) ; 
+                newRanges = newRanges[0].popFromIPv4rangeArray( newRanges , 0 ) ;
             }
 
             //If f=255, concatenate a.b.e.0-f with the central bit
