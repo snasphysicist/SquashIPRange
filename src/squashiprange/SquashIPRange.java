@@ -292,7 +292,7 @@ public class SquashIPRange {
         ipRangesOut = SquashIPRange.removeEmptyRanges( ipRangesToSquash ) ;
         
         //Merge any "adjacent" ranges in this set into single ranges
-       ipRangesOut = mergeAdjacentRanges( ipRangesOut ) ;
+        ipRangesOut = mergeAdjacentRanges( ipRangesOut ) ;
         
         return ipRangesOut ;
     }
@@ -432,12 +432,16 @@ public class SquashIPRange {
         IPv4address endAddress = new IPv4address( rangeLongDash.split("-")[1] ) ;
         
         //Always create a.b.c.d-255 & a.b.e.0-f
-        //a.b.c.255 (from a.b.e.f -> a.b.e.0 -> a.b.c.255)
-        intmAddress1 = endAddress.maskAddress( ~255L ).decrementAddress() ;
+        //Firstly, a.b.c.d-255
+        //a.b.c.0 (a.b.c.255 -> a.b.c.0)
+        intmAddress1 = startAddress.maskAddress( ~255L ) ;
+        intmAddress1 = new IPv4address( intmAddress1.getIPAsNumber() + 255L ) ;
+        newRanges = appendToIPv4rangeArray( newRanges , 
+                                            new IPv4range( startAddress , intmAddress1 ) ) ;
+        
+        //Secondly, a.b.e.0-f
         //a.b.e.0 (from a.b.e.f -> a.b.e.0)
         intmAddress2 = endAddress.maskAddress( ~255L ) ;
-        newRanges = appendToIPv4rangeArray( newRanges , 
-                                            new IPv4range( startAddress , intmAddress1 ) ) ; 
         newRanges = appendToIPv4rangeArray( newRanges , 
                                             new IPv4range( intmAddress2 , endAddress ) ) ; 
 
@@ -465,8 +469,11 @@ public class SquashIPRange {
             
             //If d=0, concatenate a.b.c.d-255 with the central bit
             if( startAddress.getSectorAsNumber( 4 ) == 0 ) {
-                newRanges[ newRanges.length-1 ].concatenateWithRange( newRanges[0] , true ) ;
-                newRanges = newRanges[0].popFromIPv4rangeArray( newRanges , 0 ) ;
+                IPv4range tempRange = new IPv4range() ;
+                tempRange.concatenateWithRange( newRanges[ 0 ] , true ) ;
+                tempRange.concatenateWithRange( newRanges[newRanges.length-1] , false ) ;
+                newRanges[ newRanges.length-1 ].concatenateWithRange( newRanges[0] , false ) ; 
+               newRanges = newRanges[0].popFromIPv4rangeArray( newRanges , 0 ) ;
             }
 
             //If f=255, concatenate a.b.e.0-f with the central bit
