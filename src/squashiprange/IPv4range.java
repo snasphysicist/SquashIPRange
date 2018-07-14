@@ -188,7 +188,7 @@ public class IPv4range {
         IPv4address[] intmRange = new IPv4address[ this.addressArray.length + inipRange.getSizeOfRange() ] ;
         //The new addressArray will be the length of the current one
         //plus the extra elements
-        //It's crucial this is one after the subtraction above
+        //It's crucial this is done after the subtraction above
         //Otherwise the new array could be too large
         
         //this.addressArray = new IPv4address[ intmRange.getSizeOfRange() + inipRange.getSizeOfRange() ] ;
@@ -211,8 +211,8 @@ public class IPv4range {
                 //this.addressArray[ i + intmRange.getSizeOfRange() ] = inipRange.getAddressFromRange(i) ;
                 intmRange[ i + this.addressArray.length ] = inipRange.getAddressFromRange( i ) ;
             }
-            this.addressArray = intmRange ;
         }
+        this.addressArray = intmRange ;
     }
     
     //Returns all addresses in the range as an array of IPv4addresses
