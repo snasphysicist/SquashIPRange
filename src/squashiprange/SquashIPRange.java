@@ -179,6 +179,21 @@ public class SquashIPRange {
         return inString.substring(0, charIndex) + inString.substring(charIndex+1) ;
     }
     
+    /*
+     * Determines if a string matches the format
+     * for "compressed star" notation, a.b.*
+     */
+    public static boolean matchesCompressedStar( String range ) {
+        /*
+         * regex for octet optional 0-2 optional 0-9 required 0-9
+         * -> [012]?\d?\d
+         * regex for full range format
+         * |a        |.|b         |.|*|
+         * [012]?\d?\d\.[012]?\d?\d\.\*
+         */
+        return java.util.regex.Pattern.matches( "[012]?\\d?\\d\\.[012]?\\d?\\d\\.\\*" , range ) ;
+    }
+    
     public static IPv4range[] parseStringRanges( String[] ranges ) {
         
         Integer i,j ;
@@ -190,12 +205,22 @@ public class SquashIPRange {
         int sector3min , sector3max ;
         IPv4range[] allRanges = new IPv4range[0] ;
 
-        //Taking the string ranges
-        //and converting them to IPv4ranges
-        //In a robust, error handled way
+        /*
+         * Taking the string ranges
+         * and converting them to IPv4ranges
+         * In a robust, error handled way
+        */
         for( i=0 ; i<ranges.length ; i++ ) {
             try {
                 intmRange = new IPv4range() ;
+                /*
+                 * If the range is in the format
+                 * a.b.*, convert it to a.b.*.*
+
+                */
+                if( matchesCompressedStar( ranges[i] ) ) {
+                    ranges[i] = ranges[i] + ".*" ; 
+                }
                 ranges[i] = ranges[i].replaceAll("\\*", "0-255") ;
                 if( substringOccurrences( ranges[i] , "." ) > 3 ) {
                     intmRanges = longToShortDash( ranges[i] ) ;
