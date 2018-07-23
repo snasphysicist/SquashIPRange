@@ -14,10 +14,10 @@ package squashiprange;
  */
 public class SquashIPRangeUINew {
     
-    private static java.awt.GridBagConstraints setupConstraints( int row , int column ) {
+    private static java.awt.GridBagConstraints setUpConstraints( int column , int row ) {
         java.awt.GridBagConstraints constraints = new java.awt.GridBagConstraints() ;
-        constraints.gridx = row ;
-        constraints.gridy = column ;
+        constraints.gridx = column ;
+        constraints.gridy = row ;
         return constraints ;
     }
     
@@ -29,11 +29,48 @@ public class SquashIPRangeUINew {
         //Set the layout method for the frame
         mainFrame.setLayout( new java.awt.GridBagLayout() ) ;
         
-        //Buttons
+        /*
+         * Buttons
+         * Here we'll set up the buttons for the application
+         * The basic layout for each will be
+         *      Constructor with name
+         *      Location in grid
+         *      Binding function to perform on action
+         */
         
+        //Reformat
+        javax.swing.JButton reformatButton = new javax.swing.JButton( "Reformat" ) ;
+        mainFrame.add( reformatButton , setUpConstraints( 1 , 1 ) ) ;
+        
+        //Squash
+        javax.swing.JButton squashButton = new javax.swing.JButton( "Squash" ) ;
+        mainFrame.add( squashButton , setUpConstraints( 1 , 2 ) ) ;
+        
+        //Find Overlap
+        javax.swing.JButton overlapButton = new javax.swing.JButton( "Find Overlap" ) ;
+        mainFrame.add( overlapButton , setUpConstraints( 1 , 3 ) ) ;
+        
+        //Clear Input
+        javax.swing.JButton clearInputButton = new javax.swing.JButton( "Clear Input" ) ;
+        mainFrame.add( clearInputButton , setUpConstraints( 1 , 4 ) ) ;
+        
+        //To Clipboard
+        javax.swing.JButton clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
+        mainFrame.add( clipboardButton , setUpConstraints( 2 , 1 ) ) ;
+        
+        //Close
+        javax.swing.JButton closeButton = new javax.swing.JButton( "Close" ) ;
+        mainFrame.add( closeButton , setUpConstraints( 2 , 4 ) ) ;
+        
+        //Help
+        javax.swing.JButton aboutButton = new javax.swing.JButton( "About" ) ;
+        mainFrame.add( aboutButton , setUpConstraints( 2 , 5 ) ) ;
         
         //Exit on close
         mainFrame.setDefaultCloseOperation( javax.swing.JFrame.EXIT_ON_CLOSE ) ;
+        
+        //Pack the GUI around the contents
+        mainFrame.pack() ;
         
         //Display the GUI
         mainFrame.setVisible( true ) ;
