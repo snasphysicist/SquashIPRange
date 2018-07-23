@@ -782,15 +782,10 @@ public class IPv4rangeTest {
         int i , j ;
         //5 ranges
         IPv4range range1 = new IPv4range() ;
-        range1.addAddressToRange( new IPv4address( "245.231.144.194" ) , true ) ;
         IPv4range range2 = new IPv4range() ;
-        range2.addAddressToRange( new IPv4address( "103.128.49.1" ) , true ) ;
         IPv4range range3 = new IPv4range() ;
-        range3.addAddressToRange( new IPv4address( "114.211.138.104" ) , true ) ;
         IPv4range range4 = new IPv4range() ;
-        range4.addAddressToRange( new IPv4address( "95.240.225.240" ) , true ) ;
         IPv4range range5 = new IPv4range() ; 
-        range5.addAddressToRange( new IPv4address( "13.107.234.3" ) , true ) ;
         //Array of 5 ranges
         IPv4range[] rangeArray = {range1, range2, range3, range4, range5} ;
         //Order to pop elements
