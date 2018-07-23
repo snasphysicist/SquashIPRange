@@ -14,12 +14,40 @@ package squashiprange;
  */
 public class SquashIPRangeUINew {
     
-    private static java.awt.GridBagConstraints setUpConstraints( int column , int row , int fill ) {
+    private static final int GBBOTH = java.awt.GridBagConstraints.BOTH ;
+    private static final int GBNONE = java.awt.GridBagConstraints.BOTH ;
+    
+    //Most general setUpConstraints method
+    private static java.awt.GridBagConstraints setUpConstraints( int column , int row , 
+                                                                 int fill , int columns ,
+                                                                 int rows ) {
         java.awt.GridBagConstraints constraints = new java.awt.GridBagConstraints() ;
         constraints.gridx = column ;
         constraints.gridy = row ;
         constraints.fill = fill ;
+        constraints.gridwidth = columns ;
+        constraints.gridheight = rows ;
         return constraints ;
+    }
+    
+    /*
+     * Second least general setUpConstraints method
+     * Defaults:
+     *      gridwith = 1 -> takes up one column
+     *      gridheight = 1 -> takes up one row
+     */
+    private static java.awt.GridBagConstraints setUpConstraints( int column , int row , int fill ) {
+        return setUpConstraints( column , row , fill , 1 , 1 ) ;
+    }
+    /*
+     * Least general setUpConstraints method
+     * Defaults:
+     *      fill = NONE -> won't expand
+     *      gridwidth = 1 -> takes up one column
+     *      gridheight = 1 -> takes up one row
+     */
+    private static java.awt.GridBagConstraints setUpConstraints( int column , int row ) {
+        return setUpConstraints( column , row , GBNONE , 1 , 1 ) ;
     }
     
     public static void main( String[] args ) {
