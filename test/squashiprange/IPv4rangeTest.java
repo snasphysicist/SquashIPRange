@@ -773,6 +773,43 @@ public class IPv4rangeTest {
         assertEquals( true , range3.getAllAddressesAsString().equals( expected3 ) ) ;
     }
 
+    /**
+     * Test of method popFromIPv4rangeArray, in class IPv4range.
+     */
+    @Test
+    public void testPopFromIPv4rangeArray() {
+        System.out.println( "Basic Test --- IPv4range --- popFromIPv4rangeArray" ) ;
+        int i , j ;
+        //5 ranges
+        IPv4range range1 = new IPv4range() ;
+        IPv4range range2 = new IPv4range() ;
+        IPv4range range3 = new IPv4range() ;
+        IPv4range range4 = new IPv4range() ;
+        IPv4range range5 = new IPv4range() ; 
+        //Array of 5 ranges
+        IPv4range[] rangeArray = {range1, range2, range3, range4, range5} ;
+        //Order to pop elements
+        int[] toPop = {0, 1, 2, 1, 0} ;
+        //Expected contents after pop operations
+        IPv4range[][] expectedRangeArrays = { {range2, range3, range4, range5 } ,
+                                              {range2, range4, range5 } ,
+                                              {range2, range4} ,
+                                              {range2} , 
+                                              {} } ;
+        for( i=0 ; i<5 ; i++ ){
+            rangeArray = rangeArray[0].popFromIPv4rangeArray( rangeArray, toPop[i] ) ;
+            //Length should match expected length
+            assertEquals( expectedRangeArrays[i].length , rangeArray.length ) ;
+            for( j=0 ; j<rangeArray.length ; j++ ) {
+                /*
+                 * jth range's pointer from ith expected array 
+                 * should match jth range's pointer from actual array
+                 */
+                assertEquals( expectedRangeArrays[i][j], rangeArray[j] ) ;
+            }
+        }
+    }
+    
     //Template
     /*
     /**
