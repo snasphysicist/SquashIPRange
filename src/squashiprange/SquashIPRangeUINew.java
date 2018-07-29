@@ -131,14 +131,66 @@ public class SquashIPRangeUINew {
         javax.swing.JButton clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
         outputPanel.add( clipboardButton , setUpConstraints( 1, 0, GBBOTH ) ) ;
         
-        //Help, in misc panel
+        //About, in misc panel
         javax.swing.JButton aboutButton = new javax.swing.JButton( "About" ) ;
         miscPanel.add( aboutButton , setUpConstraints( 0, 0, GBBOTH, 1, 1, GBRIGHT )  ) ;
-         
-       
+        
         //Close, in misc panel
         javax.swing.JButton closeButton = new javax.swing.JButton( "Close" ) ;
         miscPanel.add( closeButton , setUpConstraints( 1, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
+        
+        /*
+         * Tie actions to buttons
+         */
+        
+        //Reformat
+        reformatButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                System.out.println( "TEST" ) ;
+            }
+        } ) ;
+        
+        //Squash
+        squashButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                System.out.println( "TEST" ) ;
+            }
+        } ) ;
+        
+        //Overlap
+        overlapButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                System.out.println( "TEST" ) ;
+            }
+        } ) ;
+        
+        //Clear Input
+        clearInputButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                System.out.println( "TEST" ) ;
+            }
+        } ) ;
+        
+        //Clipboard
+        clipboardButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                System.out.println( "TEST" ) ;
+            }
+        } ) ;
+        
+        //About
+        aboutButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                System.out.println( "TEST" ) ;
+            }
+        } ) ;
+        
+        //Close
+        closeButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                System.out.println( "TEST" ) ;
+            }
+        } ) ;
         
         /*
          * Input and output text areas
