@@ -44,15 +44,76 @@ public class SquashIPRangeUINew {
     private static final int TEXTAREAWIDTH = 20 ;
     private static final int TEXTAREAHEIGHT = 30 ;
     
-    //Generate titled border objects
-    private static javax.swing.border.Border titledBorder( String title ) {
-        javax.swing.border.Border theBorder = javax.swing.BorderFactory.createEtchedBorder() ;
-        return javax.swing.BorderFactory.createTitledBorder( theBorder , title ) ;
+    /*
+     * Methods fired when buttons are clicked
+     */
+    
+    //Reformat button
+    private void reformatOnClick() {
+        
+        //Reset outputs to blank at the start
+        //to ensure that incorrect information
+        //isn't reported, even if there is a crash
+        setOutputNumbers( 0 , 0 ) ;
+        outputTextArea.setText( "" ) ;
+
+        //Loop counter
+        int i ;
+
+        //We'll gather the output text here
+        String outputText = "" ;
+        
+        //All we do is attempt to parse the ranges
+        //written in the input box
+        IPv4range[] inputRanges = SquashIPRange.parseStringRanges( 
+                                    SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
+                                    ) ;
+        
+        //Then we convert these into strings and
+        //write what we've found into the output box
+        for( i=0 ; i<inputRanges.length ; i++ ) {
+            outputText += inputRanges[i].convertRangeHumanReadable( inputRanges[i] ) + "\n\r" ;
+        }
+        
+        setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+        
+        outputTextArea.setText( outputText ) ;
+        
+        setOutputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+        
+    }
+    
+    /*
+     * Helper functions that modify the appearance of the UI
+     */
+    
+    /*
+     * Set the display of the number of ranges and addresses
+     * detected in the input field
+     */
+    private void setInputNumbers( Integer numberOfRanges , Integer numberOfAddresses ) {
+        //TO DO bring over code from old UI class
+        ;
+    }
+    
+    /*
+     * Set the display of the number of ranges and addresses
+     * entered into the output field
+     */
+    private void setOutputNumbers( Integer numberOfRanges , Integer numberOfAddresses ) {
+        //TO DO bring over code from old UI class
+        ;
     }
     
     /*
      * Functions used in UI construction
      */
+    
+    //Generate titled border objects
+    private static javax.swing.border.Border titledBorder( String title ) {
+        javax.swing.border.Border theBorder = javax.swing.BorderFactory.createEtchedBorder() ;
+        return javax.swing.BorderFactory.createTitledBorder( theBorder , title ) ;
+    }
     
     //Most general setUpConstraints method
     private static java.awt.GridBagConstraints setUpConstraints( int column , int row , 
