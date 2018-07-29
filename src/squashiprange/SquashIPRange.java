@@ -513,14 +513,13 @@ public class SquashIPRange {
     }
     
     /**
-     * This was being used for testing
-     * but the code here is no longer being used
-     * To be removed in a future refactor
+     * Creates new class of the main gui
+     * Then sets visible to open the gui
      * @param args none
      */
     public static void main(String[] args) {
         SquashIPRangeUINew gui = new SquashIPRangeUINew() ;
         gui.setVisible( true ) ;
-    } // Closing main
+    }
     
-} // Closing class
+}
