@@ -14,6 +14,27 @@ package squashiprange;
  */
 public class SquashIPRangeUINew {
     
+    /*
+     * Declare all UI components
+     */
+    private javax.swing.JFrame mainFrame ;
+    private javax.swing.JPanel inputPanel ;
+    private javax.swing.JPanel outputPanel ;
+    private javax.swing.JPanel miscPanel ;
+    private javax.swing.JButton reformatButton ;
+    private javax.swing.JButton squashButton ;
+    private javax.swing.JButton overlapButton ;
+    private javax.swing.JButton clearInputButton ;
+    private javax.swing.JButton clipboardButton ;
+    private javax.swing.JButton aboutButton ;
+    private javax.swing.JButton closeButton ;
+    private javax.swing.JTextArea inputTextArea ;
+    private javax.swing.JTextArea outputTextArea ;
+    
+    /*
+     * Set up constants
+     */
+    
     //Grid Bag Constrains constants
     private static final int GBBOTH = java.awt.GridBagConstraints.BOTH ;
     private static final int GBNONE = java.awt.GridBagConstraints.BOTH ;
@@ -28,6 +49,10 @@ public class SquashIPRangeUINew {
         javax.swing.border.Border theBorder = javax.swing.BorderFactory.createEtchedBorder() ;
         return javax.swing.BorderFactory.createTitledBorder( theBorder , title ) ;
     }
+    
+    /*
+     * Functions used in UI construction
+     */
     
     //Most general setUpConstraints method
     private static java.awt.GridBagConstraints setUpConstraints( int column , int row , 
@@ -74,10 +99,25 @@ public class SquashIPRangeUINew {
         return setUpConstraints( column , row , GBNONE , 1 , 1 , GBCENTER ) ;
     }
     
-    public static void main( String[] args ) {
+    /*
+     * Note: the reason we use
+     * main calling constructor calling setUpComponents
+     * then this.setVisible as a wrapper for mainFrame.setVisible
+     * instead of just putting all the setup code in main
+     * is to avoid having to make everything static
+     * 
+     * Although I can't imagine why someone would have two
+     * instances of this class at once, this approach 
+     * at least anticipates and accounts for this
+     */
+    
+    /*
+     * Called from constructor to set up UI components
+     */
+    private void setUpComponents() {
         
-        //The main container for the GUI
-        javax.swing.JFrame mainFrame = new javax.swing.JFrame( "Squash IP Range" ) ;
+       //The main container for the GUI
+        mainFrame = new javax.swing.JFrame( "Squash IP Range" ) ;
         
         //Set the layout method for the frame
         mainFrame.setLayout( new java.awt.GridBagLayout() ) ;
@@ -90,13 +130,13 @@ public class SquashIPRangeUINew {
          *   About/Exit
          * Each will have a titled border
          */
-        javax.swing.JPanel inputPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
+        inputPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
         inputPanel.setBorder( titledBorder( "Input" ) );
         
-        javax.swing.JPanel outputPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
+        outputPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
         outputPanel.setBorder( titledBorder( "Output" ) ) ;
         
-        javax.swing.JPanel miscPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
+        miscPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
         
         mainFrame.add( inputPanel , setUpConstraints( 0 , 0 , GBBOTH ) ) ;
         mainFrame.add( outputPanel , setUpConstraints( 1 , 0 , GBBOTH , 1 , 1 ) ) ;
@@ -112,31 +152,31 @@ public class SquashIPRangeUINew {
          */
         
         //Reformat, in input panel
-        javax.swing.JButton reformatButton = new javax.swing.JButton( "Reformat" ) ;
+        reformatButton = new javax.swing.JButton( "Reformat" ) ;
         inputPanel.add( reformatButton , setUpConstraints( 1, 0, GBBOTH ) ) ;
         
         //Squash, in input panel
-        javax.swing.JButton squashButton = new javax.swing.JButton( "Squash" ) ;
+        squashButton = new javax.swing.JButton( "Squash" ) ;
         inputPanel.add( squashButton , setUpConstraints( 1, 1, GBBOTH ) ) ;
         
         //Find Overlap, in input panel
-        javax.swing.JButton overlapButton = new javax.swing.JButton( "Find Overlap" ) ;
+        overlapButton = new javax.swing.JButton( "Find Overlap" ) ;
         inputPanel.add( overlapButton , setUpConstraints( 1, 2, GBBOTH ) ) ;
         
         //Clear Input, in input panel
-        javax.swing.JButton clearInputButton = new javax.swing.JButton( "Clear Input" ) ;
+        clearInputButton = new javax.swing.JButton( "Clear Input" ) ;
         inputPanel.add( clearInputButton , setUpConstraints( 1, 3, GBBOTH ) ) ;
         
         //To Clipboard, in output panel
-        javax.swing.JButton clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
+        clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
         outputPanel.add( clipboardButton , setUpConstraints( 1, 0, GBBOTH ) ) ;
         
         //About, in misc panel
-        javax.swing.JButton aboutButton = new javax.swing.JButton( "About" ) ;
+        aboutButton = new javax.swing.JButton( "About" ) ;
         miscPanel.add( aboutButton , setUpConstraints( 0, 0, GBBOTH, 1, 1, GBRIGHT )  ) ;
         
         //Close, in misc panel
-        javax.swing.JButton closeButton = new javax.swing.JButton( "Close" ) ;
+        closeButton = new javax.swing.JButton( "Close" ) ;
         miscPanel.add( closeButton , setUpConstraints( 1, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
         
         /*
@@ -197,14 +237,14 @@ public class SquashIPRangeUINew {
          */
         
         //Input, in input panel
-        javax.swing.JTextArea inputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
-                                                                         TEXTAREAWIDTH ) ;
+        inputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
+                                                   TEXTAREAWIDTH ) ;
         inputPanel.add( inputTextArea, setUpConstraints( 0 , 0 , GBBOTH , 1 , 6 ) ) ;
         inputTextArea.setLineWrap( true ) ;
         
         //Output, in output panel
-        javax.swing.JTextArea outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
-                                                                          TEXTAREAWIDTH ) ;
+        outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
+                                                    TEXTAREAWIDTH ) ;
         outputPanel.add( outputTextArea, setUpConstraints( 0 , 0 , GBBOTH , 1 , 6 ) ) ;
         outputTextArea.setLineWrap( true ) ;
         
@@ -214,6 +254,25 @@ public class SquashIPRangeUINew {
         //Pack the GUI around the contents
         mainFrame.pack() ;
         
+    }
+    
+    /*
+     * Set visible method
+     * Wrapper for JFrame's set visible method
+     */
+    private void setVisible( boolean visible ) {
+        mainFrame.setVisible( visible ) ;
+    }
+    
+    /*
+     * Class constructor
+     * Just calls the component setup method above
+     */
+    public SquashIPRangeUINew() {
+        setUpComponents() ;
+    }
+    
+    public static void main( String[] args ) {
         //Display the GUI
         mainFrame.setVisible( true ) ;
         
