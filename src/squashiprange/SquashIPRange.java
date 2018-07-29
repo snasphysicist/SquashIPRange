@@ -519,7 +519,8 @@ public class SquashIPRange {
      * @param args none
      */
     public static void main(String[] args) {
-        ;
+        SquashIPRangeUINew gui = new SquashIPRangeUINew() ;
+        gui.setVisible( true ) ;
     } // Closing main
     
 } // Closing class

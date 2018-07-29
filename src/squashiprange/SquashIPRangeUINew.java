@@ -260,7 +260,7 @@ public class SquashIPRangeUINew {
      * Set visible method
      * Wrapper for JFrame's set visible method
      */
-    private void setVisible( boolean visible ) {
+    public void setVisible( boolean visible ) {
         mainFrame.setVisible( visible ) ;
     }
     
@@ -270,12 +270,6 @@ public class SquashIPRangeUINew {
      */
     public SquashIPRangeUINew() {
         setUpComponents() ;
-    }
-    
-    public static void main( String[] args ) {
-        //Display the GUI
-        mainFrame.setVisible( true ) ;
-        
     }
     
 }
