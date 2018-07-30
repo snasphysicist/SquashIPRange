@@ -33,6 +33,10 @@ public class SquashIPRangeUINew {
     private javax.swing.JRadioButton quickRadioButton ;
     private javax.swing.JRadioButton fullRadioButton ;
     private javax.swing.ButtonGroup groupRadioButtons = new javax.swing.ButtonGroup() ;
+    private javax.swing.JLabel rangesInLabel ;
+    private javax.swing.JLabel rangesOutLabel ;
+    private javax.swing.JLabel addressesInLabel ;
+    private javax.swing.JLabel addressesOutLabel ;
     
     /*
      * Set up constants
@@ -308,6 +312,29 @@ public class SquashIPRangeUINew {
         mainFrame.add( miscPanel , setUpConstraints( 2 , 1 , GBBOTH , 1 , 1 , GBRIGHT ) ) ;
         
         /*
+         * First, the Labels
+         * Layout
+         *      Constructor with default text
+         *      Location in grid
+         */
+        
+        //Number of ranges in, in input panel
+        rangesInLabel = new javax.swing.JLabel( "Ranges in:" ) ;
+        inputPanel.add( rangesInLabel , setUpConstraints( 0 , 0 ) ) ;
+        
+        //Number of addresses in, in input panel
+        addressesInLabel = new javax.swing.JLabel( "Addresses in:" ) ;
+        inputPanel.add( addressesInLabel , setUpConstraints( 0 , 1 ) ) ;
+        
+        //Number of ranges out, in output panel
+        rangesOutLabel = new javax.swing.JLabel( "Ranges out:" ) ;
+        outputPanel.add( rangesOutLabel , setUpConstraints( 0 , 0 ) ) ;
+        
+        //Number of addresses out, in output panel
+        addressesOutLabel = new javax.swing.JLabel( "Addresses out:" ) ;
+        outputPanel.add( addressesOutLabel , setUpConstraints( 0 , 1 ) ) ;
+        
+        /*
          * Buttons
          * Here we'll set up the buttons for the application
          * The basic layout for each will be
@@ -318,23 +345,23 @@ public class SquashIPRangeUINew {
         
         //Reformat, in input panel
         reformatButton = new javax.swing.JButton( "Reformat" ) ;
-        inputPanel.add( reformatButton , setUpConstraints( 1, 0, GBBOTH ) ) ;
+        inputPanel.add( reformatButton , setUpConstraints( 1, 2, GBBOTH ) ) ;
         
         //Squash, in input panel
         squashButton = new javax.swing.JButton( "Squash" ) ;
-        inputPanel.add( squashButton , setUpConstraints( 1, 1, GBBOTH ) ) ;
+        inputPanel.add( squashButton , setUpConstraints( 1, 3, GBBOTH ) ) ;
         
         //Find Overlap, in input panel
         overlapButton = new javax.swing.JButton( "Find Overlap" ) ;
-        inputPanel.add( overlapButton , setUpConstraints( 1, 2, GBBOTH ) ) ;
+        inputPanel.add( overlapButton , setUpConstraints( 1, 4, GBBOTH ) ) ;
         
         //Clear Input, in input panel
         clearInputButton = new javax.swing.JButton( "Clear Input" ) ;
-        inputPanel.add( clearInputButton , setUpConstraints( 1, 3, GBBOTH ) ) ;
+        inputPanel.add( clearInputButton , setUpConstraints( 1, 5, GBBOTH ) ) ;
         
         //To Clipboard, in output panel
         clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
-        outputPanel.add( clipboardButton , setUpConstraints( 1, 0, GBBOTH ) ) ;
+        outputPanel.add( clipboardButton , setUpConstraints( 1, 2, GBBOTH ) ) ;
         
         //About, in misc panel
         aboutButton = new javax.swing.JButton( "About" ) ;
@@ -343,27 +370,6 @@ public class SquashIPRangeUINew {
         //Close, in misc panel
         closeButton = new javax.swing.JButton( "Close" ) ;
         miscPanel.add( closeButton , setUpConstraints( 1, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
-        
-        /*
-         * Radio buttons
-         * Format:
-         *      Constructor, with name
-         *      Location in grid
-         *      Add to button group
-         */
-        
-        //Quick, in input panel
-        quickRadioButton = new javax.swing.JRadioButton( "Quick" ) ;
-        inputPanel.add( quickRadioButton , setUpConstraints( 1 , 4 ) ) ;
-        groupRadioButtons.add( quickRadioButton ) ;
-        
-        //Full, in input panel
-        fullRadioButton = new javax.swing.JRadioButton( "Full" ) ;
-        inputPanel.add( fullRadioButton , setUpConstraints( 1 , 5 ) ) ;
-        groupRadioButtons.add( fullRadioButton ) ;
-        
-        //Quick is selected by default
-        quickRadioButton.setSelected( true ) ;
         
         /*
          * Tie actions to buttons
@@ -419,19 +425,40 @@ public class SquashIPRangeUINew {
         } ) ;
         
         /*
+         * Radio buttons
+         * Format:
+         *      Constructor, with name
+         *      Location in grid
+         *      Add to button group
+         */
+        
+        //Quick, in input panel
+        quickRadioButton = new javax.swing.JRadioButton( "Quick" ) ;
+        inputPanel.add( quickRadioButton , setUpConstraints( 1 , 6 ) ) ;
+        groupRadioButtons.add( quickRadioButton ) ;
+        
+        //Full, in input panel
+        fullRadioButton = new javax.swing.JRadioButton( "Full" ) ;
+        inputPanel.add( fullRadioButton , setUpConstraints( 1 , 7 ) ) ;
+        groupRadioButtons.add( fullRadioButton ) ;
+        
+        //Quick is selected by default
+        quickRadioButton.setSelected( true ) ;
+        
+        /*
          * Input and output text areas
          */
         
         //Input, in input panel
         inputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
                                                    TEXTAREAWIDTH ) ;
-        inputPanel.add( inputTextArea, setUpConstraints( 0 , 0 , GBBOTH , 1 , 7 ) ) ;
+        inputPanel.add( inputTextArea, setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
         inputTextArea.setLineWrap( true ) ;
         
         //Output, in output panel
         outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
                                                     TEXTAREAWIDTH ) ;
-        outputPanel.add( outputTextArea, setUpConstraints( 0 , 0 , GBBOTH , 1 , 7 ) ) ;
+        outputPanel.add( outputTextArea, setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
         outputTextArea.setLineWrap( true ) ;
         
         //Exit on close
