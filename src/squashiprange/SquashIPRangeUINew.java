@@ -30,6 +30,9 @@ public class SquashIPRangeUINew {
     private javax.swing.JButton closeButton ;
     private javax.swing.JTextArea inputTextArea ;
     private javax.swing.JTextArea outputTextArea ;
+    private javax.swing.JRadioButton quickRadioButton ;
+    private javax.swing.JRadioButton fullRadioButton ;
+    private javax.swing.ButtonGroup groupRadioButtons = new javax.swing.ButtonGroup() ;
     
     /*
      * Set up constants
@@ -80,6 +83,47 @@ public class SquashIPRangeUINew {
         outputTextArea.setText( outputText ) ;
         
         setOutputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+        
+    }
+    
+    private void squashOnClick() {
+        
+        //Reset outputs to blank at the start
+        //to ensure that incorrect information
+        //isn't reported, even if there is a crash
+        setOutputNumbers( 0 , 0 ) ;
+        outputTextArea.setText( "" ) ;
+        
+        int i ;
+        String outputText = "" ;
+        IPv4range[] inputRanges ;
+        IPv4range[] ipRangesOut ;
+
+        inputRanges = SquashIPRange.parseStringRanges( 
+                        SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
+                        ) ;
+        
+        inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
+        
+        setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+        
+        // jRadioButton1 is the button with label "Quick"
+        if( quickRadioButton.isSelected() ) {
+            ipRangesOut = SquashIPRange.quickSquash( inputRanges ) ;
+        } else {
+            ipRangesOut = SquashIPRange.fullSquash( inputRanges ) ;
+        }
+        
+        //Get the resulting ranges in human readable format
+        //and write them to a string to output
+        for( i=0 ; i<ipRangesOut.length ; i++ ) {
+            outputText += ipRangesOut[i].convertRangeHumanReadable( ipRangesOut[i] ) + "\n" ;
+        }
+        
+        //Write this to the output area
+        outputTextArea.setText( outputText ) ;
+
+        setOutputNumbers( ipRangesOut.length , SquashIPRange.countAddresses( ipRangesOut ) ) ;
         
     }
     
@@ -209,7 +253,7 @@ public class SquashIPRangeUINew {
          * The basic layout for each will be
          *      Constructor with name
          *      Location in grid
-         *      Binding function to perform on action
+         * Event handlers are added later
          */
         
         //Reformat, in input panel
@@ -239,6 +283,24 @@ public class SquashIPRangeUINew {
         //Close, in misc panel
         closeButton = new javax.swing.JButton( "Close" ) ;
         miscPanel.add( closeButton , setUpConstraints( 1, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
+        
+        /*
+         * Radio buttons
+         * Format:
+         *      Constructor, with name
+         *      Location in grid
+         *      Add to button group
+         */
+        
+        //Quick, in input panel
+        quickRadioButton = new javax.swing.JRadioButton( "Quick" ) ;
+        inputPanel.add( quickRadioButton , setUpConstraints( 1 , 4 ) ) ;
+        groupRadioButtons.add( quickRadioButton ) ;
+        
+        //Full, in input panel
+        fullRadioButton = new javax.swing.JRadioButton( "Full" ) ;
+        inputPanel.add( fullRadioButton , setUpConstraints( 1 , 5 ) ) ;
+        groupRadioButtons.add( fullRadioButton ) ;
         
         /*
          * Tie actions to buttons
@@ -300,13 +362,13 @@ public class SquashIPRangeUINew {
         //Input, in input panel
         inputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
                                                    TEXTAREAWIDTH ) ;
-        inputPanel.add( inputTextArea, setUpConstraints( 0 , 0 , GBBOTH , 1 , 6 ) ) ;
+        inputPanel.add( inputTextArea, setUpConstraints( 0 , 0 , GBBOTH , 1 , 7 ) ) ;
         inputTextArea.setLineWrap( true ) ;
         
         //Output, in output panel
         outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
                                                     TEXTAREAWIDTH ) ;
-        outputPanel.add( outputTextArea, setUpConstraints( 0 , 0 , GBBOTH , 1 , 6 ) ) ;
+        outputPanel.add( outputTextArea, setUpConstraints( 0 , 0 , GBBOTH , 1 , 7 ) ) ;
         outputTextArea.setLineWrap( true ) ;
         
         //Exit on close
