@@ -372,49 +372,49 @@ public class SquashIPRangeUINew {
         //Reformat
         reformatButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
-                System.out.println( "TEST" ) ;
+                reformatOnClick() ;
             }
         } ) ;
         
         //Squash
         squashButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
-                System.out.println( "TEST" ) ;
+                squashOnClick() ;
             }
         } ) ;
         
         //Overlap
         overlapButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
-                System.out.println( "TEST" ) ;
+                overlapOnClick() ;
             }
         } ) ;
         
         //Clear Input
         clearInputButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
-                System.out.println( "TEST" ) ;
+                clearInputOnClick() ;
             }
         } ) ;
         
         //Clipboard
         clipboardButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
-                System.out.println( "TEST" ) ;
+                clipboardOnClick() ;
             }
         } ) ;
         
         //About
         aboutButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
-                System.out.println( "TEST" ) ;
+                aboutOnClick() ;
             }
         } ) ;
         
         //Close
         closeButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
-                System.out.println( "TEST" ) ;
+                closeOnClick() ;
             }
         } ) ;
         
