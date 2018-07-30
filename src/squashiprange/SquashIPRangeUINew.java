@@ -200,8 +200,8 @@ public class SquashIPRangeUINew {
      * detected in the input field
      */
     private void setInputNumbers( Integer numberOfRanges , Integer numberOfAddresses ) {
-        //TO DO bring over code from old UI class
-        ;
+        rangesInLabel.setText( "Ranges in: " + numberOfRanges.toString() ) ;
+        addressesInLabel.setText( "Addresses in: " + numberOfAddresses.toString() ) ;
     }
     
     /*
@@ -209,8 +209,8 @@ public class SquashIPRangeUINew {
      * entered into the output field
      */
     private void setOutputNumbers( Integer numberOfRanges , Integer numberOfAddresses ) {
-        //TO DO bring over code from old UI class
-        ;
+        rangesOutLabel.setText( "Ranges out: " + numberOfRanges.toString() ) ;
+        addressesOutLabel.setText( "Addresses out: " + numberOfAddresses.toString() ) ;
     }
     
     /*
