@@ -6,7 +6,7 @@
  *Written by snasphysicist (Scott N A Smith)
  ******************************************************************
  */
-package squashiprange;
+package squashiprange ;
 
 /**
  *
@@ -292,7 +292,7 @@ public class SquashIPRangeUINew {
      */
     private void setUpComponents() {
         
-       //The main container for the GUI
+        //The main container for the GUI
         mainFrame = new javax.swing.JFrame( "Squash IP Range" ) ;
         
         //Set the layout method for the frame
@@ -477,6 +477,60 @@ public class SquashIPRangeUINew {
     }
     
     /*
+     * Check available looks and feels
+     * Select preferred if possible
+     * Otherwise, fall back to a default
+     */
+    private void setLookAndFeel() {
+        
+        int i , j ;
+        //Get list of looks and feels
+        javax.swing.UIManager.LookAndFeelInfo[] allLooksAndFeels =
+                javax.swing.UIManager.getInstalledLookAndFeels() ;
+        //Preferred look and feel names, in order of preference
+        String[] preferred = { "Nimbus" , "Metal" } ;
+        //Location of these looks and feels in looks and feels array
+        int[] indices = { -1 , -1 } ;
+        
+        /*
+         * Go through each look and feel available
+         * and check if the name matches each of
+         * the names in the preferred list
+         * Record the index when a match is found
+         */
+        for( i=0 ; i<allLooksAndFeels.length ; i++ ) {
+            for( j=0 ; j<preferred.length ; j++ ) {
+                if( preferred[j].equals( allLooksAndFeels[i].getName() ) ) {
+                    indices[j] = i ;
+                }
+            }
+        }
+        
+        /*
+         * For each preferred look and feel
+         * check whether an index has been found
+         * If so, apply the index then exit the loop
+         */
+        for( i=0 ; i<preferred.length ; i++ ) { //1
+            if( indices[i] > -1 ) { //2
+                try {
+                    javax.swing.UIManager.setLookAndFeel( 
+                            allLooksAndFeels[ indices[i] ].getClassName() 
+                            ) ;
+                    break ;
+                } catch ( ClassNotFoundException | 
+                            InstantiationException | 
+                            IllegalAccessException | 
+                            javax.swing.UnsupportedLookAndFeelException e ) { //3
+                   //Just print the exception and move on to the next class
+                   e.printStackTrace() ; 
+                } //3
+            } //2
+        } //1
+        
+    }
+    
+    /*
      * Set visible method
      * Wrapper for JFrame's set visible method
      */
@@ -489,6 +543,7 @@ public class SquashIPRangeUINew {
      * Just calls the component setup method above
      */
     public SquashIPRangeUINew() {
+        setLookAndFeel() ;
         setUpComponents() ;
     }
     
