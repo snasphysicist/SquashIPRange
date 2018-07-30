@@ -167,7 +167,7 @@ public class SquashIPRangeUINew {
         inputTextArea.setText( "" ) ;
     }
     
-    //To clipboard button handler
+    //To Clipboard button handler
     private void clipboardOnClick() {
         /* 
          * Simply send the text into the output box to the
@@ -175,7 +175,12 @@ public class SquashIPRangeUINew {
          * from the SquashIPRange class
          */
         SquashIPRange.copyToClipboard( outputTextArea.getText() ) ;
-    } 
+    }
+    
+    //About button handler
+    private void aboutOnClick() {
+        new AboutSquashIPRangeUI( mainFrame , false ).setVisible(true) ;
+    }
    
     //Close button handler
     private void closeOnClick() {
