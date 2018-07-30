@@ -167,6 +167,16 @@ public class SquashIPRangeUINew {
         inputTextArea.setText( "" ) ;
     }
     
+    //To clipboard button handler
+    private void clipboardOnClick() {
+        /* 
+         * Simply send the text into the output box to the
+         * system clipboard using the copyToClipboard method
+         * from the SquashIPRange class
+         */
+        SquashIPRange.copyToClipboard( outputTextArea.getText() ) ;
+    } 
+   
     //Close button handler
     private void closeOnClick() {
         System.exit(0) ;
