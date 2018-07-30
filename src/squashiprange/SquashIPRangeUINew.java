@@ -48,7 +48,8 @@ public class SquashIPRangeUINew {
     private static final int GBCENTER = java.awt.GridBagConstraints.CENTER ;
     private static final int GBRIGHT = java.awt.GridBagConstraints.EAST ;
     //textArea sizes (in arbitrary units)
-    private static final int TEXTAREAWIDTH = 20 ;
+    private static final int NARROWTEXTAREAWIDTH = 20 ;
+    private static final int WIDETEXTAREAWIDTH = 40 ;
     private static final int TEXTAREAHEIGHT = 30 ;
     
     /*
@@ -58,12 +59,14 @@ public class SquashIPRangeUINew {
     //Reformat button handler
     private void reformatOnClick() {
         
-        //Reset outputs to blank at the start
-        //to ensure that incorrect information
-        //isn't reported, even if there is a crash
+        /*
+         * Reset outputs to blank at the start
+         * to ensure that incorrect information
+         * isn't reported, even if there is a crash
+         */
         setOutputNumbers( 0 , 0 ) ;
         outputTextArea.setText( "" ) ;
-
+        
         //Loop counter
         int i ;
 
@@ -93,9 +96,11 @@ public class SquashIPRangeUINew {
     //Squash button handler
     private void squashOnClick() {
         
-        //Reset outputs to blank at the start
-        //to ensure that incorrect information
-        //isn't reported, even if there is a crash
+        /*
+         * Reset outputs to blank at the start
+         * to ensure that incorrect information
+         * isn't reported, even if there is a crash
+         */
         setOutputNumbers( 0 , 0 ) ;
         outputTextArea.setText( "" ) ;
         
@@ -135,9 +140,11 @@ public class SquashIPRangeUINew {
     //Overlap button handler
     private void overlapOnClick() {
         
-        //Reset outputs to blank at the start
-        //to ensure that incorrect information
-        //isn't reported, even if there is a crash
+        /*
+         * Reset outputs to blank at the start
+         * to ensure that incorrect information
+         * isn't reported, even if there is a crash
+         */
         setOutputNumbers( 0 , 0 ) ;
         outputTextArea.setText( "" ) ;
 
@@ -451,13 +458,13 @@ public class SquashIPRangeUINew {
         
         //Input, in input panel
         inputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
-                                                   TEXTAREAWIDTH ) ;
+                                                   NARROWTEXTAREAWIDTH ) ;
         inputPanel.add( inputTextArea, setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
         inputTextArea.setLineWrap( true ) ;
         
         //Output, in output panel
         outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
-                                                    TEXTAREAWIDTH ) ;
+                                                    WIDETEXTAREAWIDTH ) ;
         outputPanel.add( outputTextArea, setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
         outputTextArea.setLineWrap( true ) ;
         
