@@ -51,7 +51,7 @@ public class SquashIPRangeUINew {
      * Methods fired when buttons are clicked
      */
     
-    //Reformat button
+    //Reformat button handler
     private void reformatOnClick() {
         
         //Reset outputs to blank at the start
@@ -86,6 +86,7 @@ public class SquashIPRangeUINew {
         
     }
     
+    //Squash button handler
     private void squashOnClick() {
         
         //Reset outputs to blank at the start
@@ -127,6 +128,7 @@ public class SquashIPRangeUINew {
         
     }
     
+    //Overlap button handler
     private void overlapOnClick() {
         
         //Reset outputs to blank at the start
@@ -158,6 +160,11 @@ public class SquashIPRangeUINew {
         //the number of IP addresses in the input box
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
         
+    }
+    
+    //Clear input button handler
+    private void clearInputOnClick() {
+        inputTextArea.setText( "" ) ;
     }
     
     /*
