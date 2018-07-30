@@ -127,6 +127,39 @@ public class SquashIPRangeUINew {
         
     }
     
+    private void overlapOnClick() {
+        
+        //Reset outputs to blank at the start
+        //to ensure that incorrect information
+        //isn't reported, even if there is a crash
+        setOutputNumbers( 0 , 0 ) ;
+        outputTextArea.setText( "" ) ;
+
+        //Converts the raw input into an array of IPv4ranges
+        IPv4range[] inputRanges = SquashIPRange.parseStringRanges( 
+                                    SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
+                                    ) ;
+        
+        //Converts this array of IPv4ranges into a string
+        //detailing the overlap between those ranges
+        String outputText = SquashIPRange.findRangeSetOverlap( inputRanges ) ;
+                
+        //If no overlap is found between any of the ranges
+        //report this in the output text box
+        if ( outputText.equals( "" ) ) {
+            outputText = "No overlap found" ;
+        }
+        
+        //Otherwise write the details of
+        //the overlapping ranges to the output box
+        outputTextArea.setText( outputText ) ;
+        
+        //Display the number of IP address ranges and
+        //the number of IP addresses in the input box
+        setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+        
+    }
+    
     /*
      * Helper functions that modify the appearance of the UI
      */
@@ -301,6 +334,9 @@ public class SquashIPRangeUINew {
         fullRadioButton = new javax.swing.JRadioButton( "Full" ) ;
         inputPanel.add( fullRadioButton , setUpConstraints( 1 , 5 ) ) ;
         groupRadioButtons.add( fullRadioButton ) ;
+        
+        //Quick is selected by default
+        quickRadioButton.setSelected( true ) ;
         
         /*
          * Tie actions to buttons
