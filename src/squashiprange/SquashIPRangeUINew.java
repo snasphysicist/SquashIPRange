@@ -167,6 +167,11 @@ public class SquashIPRangeUINew {
         inputTextArea.setText( "" ) ;
     }
     
+    //Close button handler
+    private void closeOnClick() {
+        System.exit(0) ;
+    }
+    
     /*
      * Helper functions that modify the appearance of the UI
      */
