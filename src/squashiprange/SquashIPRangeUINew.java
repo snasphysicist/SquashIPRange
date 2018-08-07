@@ -52,6 +52,8 @@ public class SquashIPRangeUINew {
     private static final int WIDETEXTAREAWIDTH = 40 ;
     private static final int TEXTAREAHEIGHT = 30 ;
     
+    private IPv4range[] returnedRanges ;
+    
     /*
      * Methods fired when buttons are clicked
      */
@@ -105,35 +107,65 @@ public class SquashIPRangeUINew {
         outputTextArea.setText( "" ) ;
         
         int i ;
-        String outputText = "" ;
-        IPv4range[] inputRanges ;
-        IPv4range[] ipRangesOut ;
+        
+        javax.swing.SwingWorker workerThread = new javax.swing.SwingWorker<Object, Object>() {
+            
+            //Squashing code to run in background
+            public Object doInBackground() {
 
-        inputRanges = SquashIPRange.parseStringRanges( 
-                        SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
-                        ) ;
-        
-        inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
-        
-        setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
-        
-        // jRadioButton1 is the button with label "Quick"
-        if( quickRadioButton.isSelected() ) {
-            ipRangesOut = SquashIPRange.quickSquash( inputRanges ) ;
-        } else {
-            ipRangesOut = SquashIPRange.fullSquash( inputRanges ) ;
-        }
-        
-        //Get the resulting ranges in human readable format
-        //and write them to a string to output
-        for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            outputText += ipRangesOut[i].convertRangeHumanReadable( ipRangesOut[i] ) + "\n" ;
-        }
-        
-        //Write this to the output area
-        outputTextArea.setText( outputText ) ;
+                System.out.println( "Starting" ) ;
 
-        setOutputNumbers( ipRangesOut.length , SquashIPRange.countAddresses( ipRangesOut ) ) ;
+                IPv4range[] inputRanges = SquashIPRange.parseStringRanges( 
+                    SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
+                    ) ;
+
+                System.out.println( "Operation 1" ) ;
+
+                inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
+
+                System.out.println( "Operation 2" ) ;
+
+                setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+
+                System.out.println( "Operation 3" ) ;
+
+                if( quickRadioButton.isSelected() ) {
+                    returnedRanges = SquashIPRange.quickSquash( inputRanges ) ;
+                } else {
+                    returnedRanges = SquashIPRange.fullSquash( inputRanges ) ;
+                }
+
+                System.out.println( "Operation 4" ) ;
+
+                return null ;
+
+            } ;
+                
+            //After squashing code has run
+            protected void done() {
+                
+                int i ;
+                String outputText = "" ;
+                
+                //Get the resulting ranges in human readable format
+                //and write them to a string to output
+                for( i=0 ; i<returnedRanges.length ; i++ ) {
+                    outputText += returnedRanges[i].convertRangeHumanReadable( returnedRanges[i] ) + "\n" ;
+                }
+
+                //Write this to the output area
+                outputTextArea.setText( outputText ) ;
+                
+                //Set the numbers of ranges and addresses returned
+                setOutputNumbers( returnedRanges.length , SquashIPRange.countAddresses( returnedRanges ) ) ;                
+
+                //Reset the result, so it can't be used again by mistake
+                returnedRanges = null ;
+            }
+                
+        } ;
+        
+        workerThread.execute() ;
         
     }
     
