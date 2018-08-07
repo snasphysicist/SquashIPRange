@@ -513,120 +513,13 @@ public class SquashIPRange {
     }
     
     /**
-     * This was being used for testing
-     * but the code here is no longer being used
-     * To be removed in a future refactor
+     * Creates new class of the main gui
+     * Then sets visible to open the gui
      * @param args none
      */
     public static void main(String[] args) {
-        
-        //An IPv4address object so we can use the
-        //splitBySector method
-        IPv4address splitTool = new IPv4address(0L) ;
-        
-        //This is where we'll put the sectors as strings
-        String[] sectors ;
-        
-        //Output minimal set of address ranges
-        //in human readable format
-        String[] stringipRangesOut ;
-        
-        //Used as an intermediate range
-        //when initialising ranges
-        IPv4range intmRange ;
-        
-        //A single range to hold all addresses added
-        IPv4range allAddresses = new IPv4range() ;
-        
-        //Used for parsing a.b.c-d.e-f notation
-        Integer sector3min ;
-        Integer sector3max ;
-        
-        //Loop counters
-        Integer i, j, k ;
-        
-        //IPv4range[] overlappingAddresses = new IPv4range[ (numberOfRanges*(numberOfRanges-1))/2 ] ;
-        
-        //Input human readable IP ranges
-        String[] stringipRanges = new String[]{"10.13.17.100-105","10.13.17.98-101"} ;
-        
-        //Number of input address ranges
-        Integer numberOfRanges = stringipRanges.length ;
-        
-        //All input ranges converted to IPv4range objects
-        IPv4range[] allRanges = new IPv4range[0] ;
-        
-        //Track if an IPv4range is created successfully
-        boolean parsedRange ;
-
-        //Taking the string ranges
-        //and converting them to IPv4ranges
-        //In a robust, error handled way
-        for( j=0 ; j<stringipRanges.length ; j++ ) {
-            //System.out.println( new Integer(j).toString() );
-            try {
-                parsedRange = false ;
-                intmRange = new IPv4range() ;
-                stringipRanges[j] = stringipRanges[j].replaceAll("\\*", "0-255") ;
-                sectors = splitTool.splitBySector( stringipRanges[j] ) ;
-                if ( sectors[3].contains( "/" ) ) {
-                    parsedRange = intmRange.parseAddSlashNotation( stringipRanges[j] ) ;
-                } else if ( sectors[2].contains( "-" ) ) {
-                    sector3min = new Integer( sectors[2].split( "-" )[0] ) ;
-                    sector3max = new Integer( sectors[2].split( "-" )[1] ) ;
-                    parsedRange = true ;
-                    for(i=sector3min;i<=sector3max;i++) {
-                        parsedRange = parsedRange && intmRange.parseAddDashNotation( sectors[0] + "." + sectors[1] + "." + i.toString() + "." + sectors[3] ) ;
-                    }
-                } else {
-                    parsedRange = intmRange.parseAddDashNotation( stringipRanges[j] ) ;
-                }
-                if( parsedRange ) {
-                    allRanges = appendToIPv4rangeArray( allRanges , intmRange ) ;
-                }
-            } 
-            catch ( Exception e ) {
-                System.out.println( "Failed to parse range" ) ;
-                e.printStackTrace() ;
-            }
-        }
-        
-        /*
-        k = 0 ;
-        for( i=0 ; i<numberOfRanges ; i++ ) {
-            for( j=i+1 ; j<numberOfRanges;j++ ) {
-                overlappingAddresses[k] = allRanges[i].findOverlap(allRanges[j]) ;
-                k++ ;
-            }
-        }
-        */
-        
-        //Remove overlapping parts of ranges
-        for( i=0 ; i<numberOfRanges ; i++ ) {
-            for( j=i+1 ; j<numberOfRanges;j++ ) {
-                if( allRanges[i].getSizeOfRange() < allRanges[j].getSizeOfRange() ) {
-                    allRanges[i].subtractRange( allRanges[j] );
-                } else {
-                    allRanges[j].subtractRange( allRanges[i] );
-                }
-            }
-        }
-        
-        for( i=0 ; i<numberOfRanges ; i++ ) {
-            allAddresses.concatenateWithRange( allRanges[i] ,  false );
-        }
-        /*
-        for( i=0 ; i<allAddresses.getSizeOfRange() ; i++ ) {
-            System.out.println( allAddresses.getAddressFromRange(i).getIPAsString() ) ;
-        }
-        
-        stringipRangesOut = allAddresses.getWholeRangeHumanReadable() ;
-        
-        for( i=0 ; i<stringipRangesOut.length ; i++ ) {
-            System.out.println( stringipRangesOut[i] ) ;
-        }
-        */
-        
-    } // Closing main
+        SquashIPRangeUINew gui = new SquashIPRangeUINew() ;
+        gui.setVisible( true ) ;
+    }
     
-} // Closing class
+}
