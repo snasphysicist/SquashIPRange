@@ -20,7 +20,7 @@ public class SquashIPRangeUINew {
     private javax.swing.JFrame mainFrame ;
     private javax.swing.JPanel inputPanel ;
     private javax.swing.JPanel outputPanel ;
-    private javax.swing.JPanel miscPanel ;
+    private java.awt.Container miscPanel ;
     private javax.swing.JButton reformatButton ;
     private javax.swing.JButton squashButton ;
     private javax.swing.JButton overlapButton ;
@@ -48,6 +48,7 @@ public class SquashIPRangeUINew {
     private static final int GBNONE = java.awt.GridBagConstraints.BOTH ;
     private static final int GBCENTER = java.awt.GridBagConstraints.CENTER ;
     private static final int GBRIGHT = java.awt.GridBagConstraints.EAST ;
+    private static final int GBTOP = java.awt.GridBagConstraints.NORTH ;
     //textArea sizes (in arbitrary units)
     private static final int NARROWTEXTAREAWIDTH = 20 ;
     private static final int WIDETEXTAREAWIDTH = 40 ;
@@ -374,11 +375,12 @@ public class SquashIPRangeUINew {
         outputPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
         outputPanel.setBorder( titledBorder( "Output" ) ) ;
         
-        miscPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
+        //What is 0?
+        miscPanel = new javax.swing.Box( 1 ) ;
         
         mainFrame.add( inputPanel , setUpConstraints( 0 , 0 , GBBOTH ) ) ;
         mainFrame.add( outputPanel , setUpConstraints( 1 , 0 , GBBOTH , 1 , 1 ) ) ;
-        mainFrame.add( miscPanel , setUpConstraints( 2 , 1 , GBBOTH , 1 , 1 , GBRIGHT ) ) ;
+        mainFrame.add( miscPanel , setUpConstraints( 2 , 0 , GBNONE , 1 , 1 , GBTOP ) ) ;
         
         /*
          * First, the Labels
@@ -432,17 +434,17 @@ public class SquashIPRangeUINew {
         clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
         outputPanel.add( clipboardButton , setUpConstraints( 1, 2, GBBOTH ) ) ;
         
+        //Cancel, in misc panel
+        cancelButton = new javax.swing.JButton( "Cancel" ) ;
+        miscPanel.add( cancelButton ) ;
+        
         //About, in misc panel
         aboutButton = new javax.swing.JButton( "About" ) ;
-        miscPanel.add( aboutButton , setUpConstraints( 1, 0, GBBOTH, 1, 1, GBRIGHT )  ) ;
+        miscPanel.add( aboutButton ) ;
         
         //Close, in misc panel
         closeButton = new javax.swing.JButton( "Close" ) ;
-        miscPanel.add( closeButton , setUpConstraints( 2, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
-        
-        //Cancel, in misc panel
-        cancelButton = new javax.swing.JButton( "Cancel" ) ;
-        miscPanel.add( cancelButton , setUpConstraints( 0, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
+        miscPanel.add( closeButton ) ;
         
         /*
          * Tie actions to buttons
