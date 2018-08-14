@@ -52,7 +52,20 @@ public class SquashIPRangeUINew {
     private static final int WIDETEXTAREAWIDTH = 40 ;
     private static final int TEXTAREAHEIGHT = 30 ;
     
+    /*
+     * Variables that are used for threaded running
+     * Most need to be defined here since they
+     * are accessed from inner classes
+     */
     private IPv4range[] returnedRanges ;
+    
+    /*
+     * This holds a reference to the currently
+     * running thread, needs to be at class
+     * level so cancel button method can
+     * access the thread to kill it
+     */
+    private javax.swing.SwingWorker<Object,Object> workerThread ;
     
     /*
      * Methods fired when buttons are clicked
@@ -105,10 +118,8 @@ public class SquashIPRangeUINew {
          */
         setOutputNumbers( 0 , 0 ) ;
         outputTextArea.setText( "" ) ;
-        
-        int i ;
-        
-        javax.swing.SwingWorker workerThread = new javax.swing.SwingWorker<Object, Object>() {
+
+        workerThread = new javax.swing.SwingWorker<Object, Object>() {
             
             //Squashing code to run in background
             public Object doInBackground() {
@@ -250,6 +261,18 @@ public class SquashIPRangeUINew {
     private void setOutputNumbers( Integer numberOfRanges , Integer numberOfAddresses ) {
         rangesOutLabel.setText( "Ranges out: " + numberOfRanges.toString() ) ;
         addressesOutLabel.setText( "Addresses out: " + numberOfAddresses.toString() ) ;
+    }
+    
+    /*
+     * Toggles buttons active/inactive depending upon
+     * the swing worker is doing something in the background
+     */
+    private void toggleUIRunningState() {
+        reformatButton.setEnabled( !reformatButton.isEnabled() ) ;
+        squashButton.setEnabled( !squashButton.isEnabled() ) ;
+        overlapButton.setEnabled( !overlapButton.isEnabled() ) ;
+        clearInputButton.setEnabled( !clearInputButton.isEnabled() ) ;
+        clipboardButton.setEnabled( !clipboardButton.isEnabled() ) ;
     }
     
     /*
