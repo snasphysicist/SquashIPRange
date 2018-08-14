@@ -28,6 +28,7 @@ public class SquashIPRangeUINew {
     private javax.swing.JButton clipboardButton ;
     private javax.swing.JButton aboutButton ;
     private javax.swing.JButton closeButton ;
+    private javax.swing.JButton cancelButton ;
     private javax.swing.JTextArea inputTextArea ;
     private javax.swing.JTextArea outputTextArea ;
     private javax.swing.JRadioButton quickRadioButton ;
@@ -118,6 +119,9 @@ public class SquashIPRangeUINew {
          */
         setOutputNumbers( 0 , 0 ) ;
         outputTextArea.setText( "" ) ;
+        
+        //Toggle cancel button on & other buttons off
+        toggleUIRunningState() ;
 
         workerThread = new javax.swing.SwingWorker<Object, Object>() {
             
@@ -172,6 +176,9 @@ public class SquashIPRangeUINew {
 
                 //Reset the result, so it can't be used again by mistake
                 returnedRanges = null ;
+                
+                //Finally, call method to toggle cancel off/other buttons back on
+                toggleUIRunningState() ;
             }
                 
         } ;
@@ -427,11 +434,15 @@ public class SquashIPRangeUINew {
         
         //About, in misc panel
         aboutButton = new javax.swing.JButton( "About" ) ;
-        miscPanel.add( aboutButton , setUpConstraints( 0, 0, GBBOTH, 1, 1, GBRIGHT )  ) ;
+        miscPanel.add( aboutButton , setUpConstraints( 1, 0, GBBOTH, 1, 1, GBRIGHT )  ) ;
         
         //Close, in misc panel
         closeButton = new javax.swing.JButton( "Close" ) ;
-        miscPanel.add( closeButton , setUpConstraints( 1, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
+        miscPanel.add( closeButton , setUpConstraints( 2, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
+        
+        //Cancel, in misc panel
+        cancelButton = new javax.swing.JButton( "Cancel" ) ;
+        miscPanel.add( cancelButton , setUpConstraints( 0, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
         
         /*
          * Tie actions to buttons
