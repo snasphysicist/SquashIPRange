@@ -270,11 +270,15 @@ public class SquashIPRangeUINew {
      * the swing worker is doing something in the background
      */
     private void toggleUIRunningState() {
-        reformatButton.setEnabled( !reformatButton.isEnabled() ) ;
-        squashButton.setEnabled( !squashButton.isEnabled() ) ;
-        overlapButton.setEnabled( !overlapButton.isEnabled() ) ;
-        clearInputButton.setEnabled( !clearInputButton.isEnabled() ) ;
-        clipboardButton.setEnabled( !clipboardButton.isEnabled() ) ;
+        javax.swing.JButton[] buttons = { reformatButton ,
+                                          squashButton ,
+                                          overlapButton ,
+                                          clearInputButton ,
+                                          clipboardButton ,
+                                          cancelButton } ;
+        for( javax.swing.JButton button : buttons ) {
+            button.setEnabled( !button.isEnabled() ) ;
+        }
     }
     
     /*
@@ -345,7 +349,7 @@ public class SquashIPRangeUINew {
                             clipboardButton ,
                             cancelButton ,
                             aboutButton ,
-                            closeButton
+                            closeButton ,
                 } ;
         
         for( javax.swing.JButton button : buttons ) {
@@ -453,6 +457,8 @@ public class SquashIPRangeUINew {
         //Cancel, in misc panel
         cancelButton = new javax.swing.JButton( "Cancel" ) ;
         miscPanel.add( cancelButton , setUpConstraints( 0 , 0 , GBBOTH ) ) ;
+        //Disabled by default
+        cancelButton.setEnabled( false ) ;
         
         //About, in misc panel
         aboutButton = new javax.swing.JButton( "About" ) ;
