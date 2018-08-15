@@ -20,7 +20,7 @@ public class SquashIPRangeUINew {
     private javax.swing.JFrame mainFrame ;
     private javax.swing.JPanel inputPanel ;
     private javax.swing.JPanel outputPanel ;
-    private java.awt.Container miscPanel ;
+    private javax.swing.JPanel miscPanel ;
     private javax.swing.JButton reformatButton ;
     private javax.swing.JButton squashButton ;
     private javax.swing.JButton overlapButton ;
@@ -45,14 +45,16 @@ public class SquashIPRangeUINew {
     
     //Grid Bag Constrains constants
     private static final int GBBOTH = java.awt.GridBagConstraints.BOTH ;
-    private static final int GBNONE = java.awt.GridBagConstraints.BOTH ;
-    private static final int GBCENTER = java.awt.GridBagConstraints.CENTER ;
-    private static final int GBRIGHT = java.awt.GridBagConstraints.EAST ;
-    private static final int GBTOP = java.awt.GridBagConstraints.NORTH ;
+    private static final int GBNONE = java.awt.GridBagConstraints.NONE ;
+    private static final int GBLEFT = java.awt.GridBagConstraints.LINE_START ;
+    private static final int GBBOTTOM = java.awt.GridBagConstraints.PAGE_END ;
     //textArea sizes (in arbitrary units)
     private static final int NARROWTEXTAREAWIDTH = 20 ;
     private static final int WIDETEXTAREAWIDTH = 40 ;
     private static final int TEXTAREAHEIGHT = 30 ;
+    //Button sizes
+    private static final int BUTTONWIDTH = 130 ;
+    private static final int BUTTONHEIGHT = 30 ;
     
     /*
      * Variables that are used for threaded running
@@ -135,23 +137,15 @@ public class SquashIPRangeUINew {
                     SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
                     ) ;
 
-                System.out.println( "Operation 1" ) ;
-
                 inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
 
-                System.out.println( "Operation 2" ) ;
-
                 setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
-
-                System.out.println( "Operation 3" ) ;
 
                 if( quickRadioButton.isSelected() ) {
                     returnedRanges = SquashIPRange.quickSquash( inputRanges ) ;
                 } else {
                     returnedRanges = SquashIPRange.fullSquash( inputRanges ) ;
                 }
-
-                System.out.println( "Operation 4" ) ;
 
                 return null ;
 
@@ -315,7 +309,7 @@ public class SquashIPRangeUINew {
     private static java.awt.GridBagConstraints setUpConstraints( int column , int row , 
                                                                  int fill , int columns ,
                                                                  int rows ) {
-        return setUpConstraints( column , row , fill , columns , rows , GBCENTER ) ;
+        return setUpConstraints( column , row , fill , columns , rows , GBLEFT ) ;
     }
     
     /*
@@ -325,7 +319,7 @@ public class SquashIPRangeUINew {
      *      gridheight = 1 -> takes up one row
      */
     private static java.awt.GridBagConstraints setUpConstraints( int column , int row , int fill ) {
-        return setUpConstraints( column , row , fill , 1 , 1 , GBCENTER ) ;
+        return setUpConstraints( column , row , fill , 1 , 1 , GBLEFT ) ;
     }
     /*
      * Least general setUpConstraints method
@@ -335,7 +329,30 @@ public class SquashIPRangeUINew {
      *      gridheight = 1 -> takes up one row
      */
     private static java.awt.GridBagConstraints setUpConstraints( int column , int row ) {
-        return setUpConstraints( column , row , GBNONE , 1 , 1 , GBCENTER ) ;
+        return setUpConstraints( column , row , GBNONE , 1 , 1 , GBLEFT ) ;
+    }
+    
+    /*
+     * Used to make all buttons equal in size
+     */
+    private void normaliseButtonSizes() {
+        javax.swing.JButton[] 
+                buttons = {
+                            reformatButton ,
+                            squashButton ,
+                            overlapButton ,
+                            clearInputButton ,
+                            clipboardButton ,
+                            cancelButton ,
+                            aboutButton ,
+                            closeButton
+                } ;
+        
+        for( javax.swing.JButton button : buttons ) {
+            button.setPreferredSize( new java.awt.Dimension( BUTTONWIDTH , BUTTONHEIGHT ) ) ;
+            button.revalidate() ;
+        }
+                
     }
     
     /*
@@ -375,12 +392,11 @@ public class SquashIPRangeUINew {
         outputPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
         outputPanel.setBorder( titledBorder( "Output" ) ) ;
         
-        //What is 0?
-        miscPanel = new javax.swing.Box( 1 ) ;
+        miscPanel = new javax.swing.JPanel( new java.awt.GridBagLayout() ) ;
         
         mainFrame.add( inputPanel , setUpConstraints( 0 , 0 , GBBOTH ) ) ;
         mainFrame.add( outputPanel , setUpConstraints( 1 , 0 , GBBOTH , 1 , 1 ) ) ;
-        mainFrame.add( miscPanel , setUpConstraints( 2 , 0 , GBNONE , 1 , 1 , GBTOP ) ) ;
+        mainFrame.add( miscPanel , setUpConstraints( 2 , 0 , GBNONE , 2 , 1 , GBBOTTOM ) ) ;
         
         /*
          * First, the Labels
@@ -424,27 +440,27 @@ public class SquashIPRangeUINew {
         
         //Find Overlap, in input panel
         overlapButton = new javax.swing.JButton( "Find Overlap" ) ;
-        inputPanel.add( overlapButton , setUpConstraints( 1, 4, GBBOTH ) ) ;
+        inputPanel.add( overlapButton , setUpConstraints( 1 , 4 , GBBOTH ) ) ;
         
         //Clear Input, in input panel
         clearInputButton = new javax.swing.JButton( "Clear Input" ) ;
-        inputPanel.add( clearInputButton , setUpConstraints( 1, 5, GBBOTH ) ) ;
+        inputPanel.add( clearInputButton , setUpConstraints( 1 , 5 , GBBOTH ) ) ;
         
         //To Clipboard, in output panel
         clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
-        outputPanel.add( clipboardButton , setUpConstraints( 1, 2, GBBOTH ) ) ;
+        outputPanel.add( clipboardButton , setUpConstraints( 1 , 2 , GBBOTH ) ) ;
         
         //Cancel, in misc panel
         cancelButton = new javax.swing.JButton( "Cancel" ) ;
-        miscPanel.add( cancelButton ) ;
+        miscPanel.add( cancelButton , setUpConstraints( 0 , 0 , GBBOTH ) ) ;
         
         //About, in misc panel
         aboutButton = new javax.swing.JButton( "About" ) ;
-        miscPanel.add( aboutButton ) ;
+        miscPanel.add( aboutButton , setUpConstraints( 0 , 1 , GBBOTH ) ) ;
         
         //Close, in misc panel
         closeButton = new javax.swing.JButton( "Close" ) ;
-        miscPanel.add( closeButton ) ;
+        miscPanel.add( closeButton , setUpConstraints( 0 , 2 , GBBOTH ) ) ;
         
         /*
          * Tie actions to buttons
@@ -538,6 +554,9 @@ public class SquashIPRangeUINew {
         
         //Exit on close
         mainFrame.setDefaultCloseOperation( javax.swing.JFrame.EXIT_ON_CLOSE ) ;
+        
+        //Normalise button sizes
+        normaliseButtonSizes() ;
         
         //Pack the GUI around the contents
         mainFrame.pack() ;
