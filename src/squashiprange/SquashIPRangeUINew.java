@@ -153,24 +153,25 @@ public class SquashIPRangeUINew {
                 
             //After squashing code has run
             protected void done() {
-                
-                int i ;
-                String outputText = "" ;
-                
-                //Get the resulting ranges in human readable format
-                //and write them to a string to output
-                for( i=0 ; i<returnedRanges.length ; i++ ) {
-                    outputText += returnedRanges[i].convertRangeHumanReadable( returnedRanges[i] ) + "\n" ;
+                if( !this.isCancelled() ) {
+                    int i ;
+                    String outputText = "" ;
+
+                    //Get the resulting ranges in human readable format
+                    //and write them to a string to output
+                    for( i=0 ; i<returnedRanges.length ; i++ ) {
+                        outputText += returnedRanges[i].convertRangeHumanReadable( returnedRanges[i] ) + "\n" ;
+                    }
+
+                    //Write this to the output area
+                    outputTextArea.setText( outputText ) ;
+
+                    //Set the numbers of ranges and addresses returned
+                    setOutputNumbers( returnedRanges.length , SquashIPRange.countAddresses( returnedRanges ) ) ;                
+
+                    //Reset the result, so it can't be used again by mistake
+                    returnedRanges = null ;
                 }
-
-                //Write this to the output area
-                outputTextArea.setText( outputText ) ;
-                
-                //Set the numbers of ranges and addresses returned
-                setOutputNumbers( returnedRanges.length , SquashIPRange.countAddresses( returnedRanges ) ) ;                
-
-                //Reset the result, so it can't be used again by mistake
-                returnedRanges = null ;
                 
                 //Finally, call method to toggle cancel off/other buttons back on
                 toggleUIRunningState() ;
@@ -231,6 +232,11 @@ public class SquashIPRangeUINew {
          * from the SquashIPRange class
          */
         SquashIPRange.copyToClipboard( outputTextArea.getText() ) ;
+    }
+    
+    //Cancel button handler
+    private void cancelOnClick() {
+        workerThread.cancel( true ) ;
     }
     
     //About button handler
@@ -349,7 +355,7 @@ public class SquashIPRangeUINew {
                             clipboardButton ,
                             cancelButton ,
                             aboutButton ,
-                            closeButton ,
+                            closeButton
                 } ;
         
         for( javax.swing.JButton button : buttons ) {
@@ -504,6 +510,13 @@ public class SquashIPRangeUINew {
         clipboardButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
                 clipboardOnClick() ;
+            }
+        } ) ;
+        
+        //Cancel
+        cancelButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                cancelOnClick() ;
             }
         } ) ;
         
