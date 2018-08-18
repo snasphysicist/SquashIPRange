@@ -28,6 +28,7 @@ public class SquashIPRangeUINew {
     private javax.swing.JButton clipboardButton ;
     private javax.swing.JButton aboutButton ;
     private javax.swing.JButton closeButton ;
+    private javax.swing.JButton cancelButton ;
     private javax.swing.JTextArea inputTextArea ;
     private javax.swing.JTextArea outputTextArea ;
     private javax.swing.JRadioButton quickRadioButton ;
@@ -44,13 +45,31 @@ public class SquashIPRangeUINew {
     
     //Grid Bag Constrains constants
     private static final int GBBOTH = java.awt.GridBagConstraints.BOTH ;
-    private static final int GBNONE = java.awt.GridBagConstraints.BOTH ;
-    private static final int GBCENTER = java.awt.GridBagConstraints.CENTER ;
-    private static final int GBRIGHT = java.awt.GridBagConstraints.EAST ;
+    private static final int GBNONE = java.awt.GridBagConstraints.NONE ;
+    private static final int GBLEFT = java.awt.GridBagConstraints.LINE_START ;
+    private static final int GBBOTTOM = java.awt.GridBagConstraints.PAGE_END ;
     //textArea sizes (in arbitrary units)
     private static final int NARROWTEXTAREAWIDTH = 20 ;
     private static final int WIDETEXTAREAWIDTH = 40 ;
     private static final int TEXTAREAHEIGHT = 30 ;
+    //Button sizes
+    private static final int BUTTONWIDTH = 130 ;
+    private static final int BUTTONHEIGHT = 30 ;
+    
+    /*
+     * Variables that are used for threaded running
+     * Most need to be defined here since they
+     * are accessed from inner classes
+     */
+    private IPv4range[] returnedRanges ;
+    
+    /*
+     * This holds a reference to the currently
+     * running thread, needs to be at class
+     * level so cancel button method can
+     * access the thread to kill it
+     */
+    private javax.swing.SwingWorker<Object,Object> workerThread ;
     
     /*
      * Methods fired when buttons are clicked
@@ -104,36 +123,63 @@ public class SquashIPRangeUINew {
         setOutputNumbers( 0 , 0 ) ;
         outputTextArea.setText( "" ) ;
         
-        int i ;
-        String outputText = "" ;
-        IPv4range[] inputRanges ;
-        IPv4range[] ipRangesOut ;
+        //Toggle cancel button on & other buttons off
+        toggleUIRunningState() ;
 
-        inputRanges = SquashIPRange.parseStringRanges( 
-                        SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
-                        ) ;
-        
-        inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
-        
-        setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
-        
-        // jRadioButton1 is the button with label "Quick"
-        if( quickRadioButton.isSelected() ) {
-            ipRangesOut = SquashIPRange.quickSquash( inputRanges ) ;
-        } else {
-            ipRangesOut = SquashIPRange.fullSquash( inputRanges ) ;
-        }
-        
-        //Get the resulting ranges in human readable format
-        //and write them to a string to output
-        for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            outputText += ipRangesOut[i].convertRangeHumanReadable( ipRangesOut[i] ) + "\n" ;
-        }
-        
-        //Write this to the output area
-        outputTextArea.setText( outputText ) ;
+        workerThread = new javax.swing.SwingWorker<Object, Object>() {
+            
+            //Squashing code to run in background
+            public Object doInBackground() {
 
-        setOutputNumbers( ipRangesOut.length , SquashIPRange.countAddresses( ipRangesOut ) ) ;
+                System.out.println( "Starting" ) ;
+
+                IPv4range[] inputRanges = SquashIPRange.parseStringRanges( 
+                    SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
+                    ) ;
+
+                inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
+
+                setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+
+                if( quickRadioButton.isSelected() ) {
+                    returnedRanges = SquashIPRange.quickSquash( inputRanges ) ;
+                } else {
+                    returnedRanges = SquashIPRange.fullSquash( inputRanges ) ;
+                }
+
+                return null ;
+
+            } ;
+                
+            //After squashing code has run
+            protected void done() {
+                if( !this.isCancelled() ) {
+                    int i ;
+                    String outputText = "" ;
+
+                    //Get the resulting ranges in human readable format
+                    //and write them to a string to output
+                    for( i=0 ; i<returnedRanges.length ; i++ ) {
+                        outputText += returnedRanges[i].convertRangeHumanReadable( returnedRanges[i] ) + "\n" ;
+                    }
+
+                    //Write this to the output area
+                    outputTextArea.setText( outputText ) ;
+
+                    //Set the numbers of ranges and addresses returned
+                    setOutputNumbers( returnedRanges.length , SquashIPRange.countAddresses( returnedRanges ) ) ;                
+
+                    //Reset the result, so it can't be used again by mistake
+                    returnedRanges = null ;
+                }
+                
+                //Finally, call method to toggle cancel off/other buttons back on
+                toggleUIRunningState() ;
+            }
+                
+        } ;
+        
+        workerThread.execute() ;
         
     }
     
@@ -188,6 +234,11 @@ public class SquashIPRangeUINew {
         SquashIPRange.copyToClipboard( outputTextArea.getText() ) ;
     }
     
+    //Cancel button handler
+    private void cancelOnClick() {
+        workerThread.cancel( true ) ;
+    }
+    
     //About button handler
     private void aboutOnClick() {
         new AboutSquashIPRangeUI( mainFrame , false ).setVisible(true) ;
@@ -218,6 +269,22 @@ public class SquashIPRangeUINew {
     private void setOutputNumbers( Integer numberOfRanges , Integer numberOfAddresses ) {
         rangesOutLabel.setText( "Ranges out: " + numberOfRanges.toString() ) ;
         addressesOutLabel.setText( "Addresses out: " + numberOfAddresses.toString() ) ;
+    }
+    
+    /*
+     * Toggles buttons active/inactive depending upon
+     * the swing worker is doing something in the background
+     */
+    private void toggleUIRunningState() {
+        javax.swing.JButton[] buttons = { reformatButton ,
+                                          squashButton ,
+                                          overlapButton ,
+                                          clearInputButton ,
+                                          clipboardButton ,
+                                          cancelButton } ;
+        for( javax.swing.JButton button : buttons ) {
+            button.setEnabled( !button.isEnabled() ) ;
+        }
     }
     
     /*
@@ -252,7 +319,7 @@ public class SquashIPRangeUINew {
     private static java.awt.GridBagConstraints setUpConstraints( int column , int row , 
                                                                  int fill , int columns ,
                                                                  int rows ) {
-        return setUpConstraints( column , row , fill , columns , rows , GBCENTER ) ;
+        return setUpConstraints( column , row , fill , columns , rows , GBLEFT ) ;
     }
     
     /*
@@ -262,7 +329,7 @@ public class SquashIPRangeUINew {
      *      gridheight = 1 -> takes up one row
      */
     private static java.awt.GridBagConstraints setUpConstraints( int column , int row , int fill ) {
-        return setUpConstraints( column , row , fill , 1 , 1 , GBCENTER ) ;
+        return setUpConstraints( column , row , fill , 1 , 1 , GBLEFT ) ;
     }
     /*
      * Least general setUpConstraints method
@@ -272,7 +339,30 @@ public class SquashIPRangeUINew {
      *      gridheight = 1 -> takes up one row
      */
     private static java.awt.GridBagConstraints setUpConstraints( int column , int row ) {
-        return setUpConstraints( column , row , GBNONE , 1 , 1 , GBCENTER ) ;
+        return setUpConstraints( column , row , GBNONE , 1 , 1 , GBLEFT ) ;
+    }
+    
+    /*
+     * Used to make all buttons equal in size
+     */
+    private void normaliseButtonSizes() {
+        javax.swing.JButton[] 
+                buttons = {
+                            reformatButton ,
+                            squashButton ,
+                            overlapButton ,
+                            clearInputButton ,
+                            clipboardButton ,
+                            cancelButton ,
+                            aboutButton ,
+                            closeButton
+                } ;
+        
+        for( javax.swing.JButton button : buttons ) {
+            button.setPreferredSize( new java.awt.Dimension( BUTTONWIDTH , BUTTONHEIGHT ) ) ;
+            button.revalidate() ;
+        }
+                
     }
     
     /*
@@ -316,7 +406,7 @@ public class SquashIPRangeUINew {
         
         mainFrame.add( inputPanel , setUpConstraints( 0 , 0 , GBBOTH ) ) ;
         mainFrame.add( outputPanel , setUpConstraints( 1 , 0 , GBBOTH , 1 , 1 ) ) ;
-        mainFrame.add( miscPanel , setUpConstraints( 2 , 1 , GBBOTH , 1 , 1 , GBRIGHT ) ) ;
+        mainFrame.add( miscPanel , setUpConstraints( 2 , 0 , GBNONE , 2 , 1 , GBBOTTOM ) ) ;
         
         /*
          * First, the Labels
@@ -360,23 +450,29 @@ public class SquashIPRangeUINew {
         
         //Find Overlap, in input panel
         overlapButton = new javax.swing.JButton( "Find Overlap" ) ;
-        inputPanel.add( overlapButton , setUpConstraints( 1, 4, GBBOTH ) ) ;
+        inputPanel.add( overlapButton , setUpConstraints( 1 , 4 , GBBOTH ) ) ;
         
         //Clear Input, in input panel
         clearInputButton = new javax.swing.JButton( "Clear Input" ) ;
-        inputPanel.add( clearInputButton , setUpConstraints( 1, 5, GBBOTH ) ) ;
+        inputPanel.add( clearInputButton , setUpConstraints( 1 , 5 , GBBOTH ) ) ;
         
         //To Clipboard, in output panel
         clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
-        outputPanel.add( clipboardButton , setUpConstraints( 1, 2, GBBOTH ) ) ;
+        outputPanel.add( clipboardButton , setUpConstraints( 1 , 2 , GBBOTH ) ) ;
+        
+        //Cancel, in misc panel
+        cancelButton = new javax.swing.JButton( "Cancel" ) ;
+        miscPanel.add( cancelButton , setUpConstraints( 0 , 0 , GBBOTH ) ) ;
+        //Disabled by default
+        cancelButton.setEnabled( false ) ;
         
         //About, in misc panel
         aboutButton = new javax.swing.JButton( "About" ) ;
-        miscPanel.add( aboutButton , setUpConstraints( 0, 0, GBBOTH, 1, 1, GBRIGHT )  ) ;
+        miscPanel.add( aboutButton , setUpConstraints( 0 , 1 , GBBOTH ) ) ;
         
         //Close, in misc panel
         closeButton = new javax.swing.JButton( "Close" ) ;
-        miscPanel.add( closeButton , setUpConstraints( 1, 0, GBBOTH, 1, 1, GBRIGHT ) ) ;
+        miscPanel.add( closeButton , setUpConstraints( 0 , 2 , GBBOTH ) ) ;
         
         /*
          * Tie actions to buttons
@@ -414,6 +510,13 @@ public class SquashIPRangeUINew {
         clipboardButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
                 clipboardOnClick() ;
+            }
+        } ) ;
+        
+        //Cancel
+        cancelButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                cancelOnClick() ;
             }
         } ) ;
         
@@ -470,6 +573,9 @@ public class SquashIPRangeUINew {
         
         //Exit on close
         mainFrame.setDefaultCloseOperation( javax.swing.JFrame.EXIT_ON_CLOSE ) ;
+        
+        //Normalise button sizes
+        normaliseButtonSizes() ;
         
         //Pack the GUI around the contents
         mainFrame.pack() ;
