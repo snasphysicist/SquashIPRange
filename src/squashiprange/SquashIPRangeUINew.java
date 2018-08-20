@@ -574,6 +574,7 @@ public class SquashIPRangeUINew {
         outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
                                                     WIDETEXTAREAWIDTH ) ;
         outputTextArea.setLineWrap( true ) ;
+        outputTextArea.setEditable( false ) ;
         outputScrollPane = new javax.swing.JScrollPane() ;
         outputScrollPane.setViewportView( outputTextArea ) ;
         outputPanel.add( outputScrollPane , setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
@@ -595,6 +596,7 @@ public class SquashIPRangeUINew {
         inputScrollPane.setPreferredSize( inputTextArea.getSize() ) ;
         outputScrollPane.setPreferredSize( outputTextArea.getSize() ) ;
         
+        //Prevent the window from being resized
         mainFrame.setResizable( false ) ;
         
     }
