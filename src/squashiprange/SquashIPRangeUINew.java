@@ -31,6 +31,8 @@ public class SquashIPRangeUINew {
     private javax.swing.JButton cancelButton ;
     private javax.swing.JTextArea inputTextArea ;
     private javax.swing.JTextArea outputTextArea ;
+    private javax.swing.JScrollPane inputScrollPane ;
+    private javax.swing.JScrollPane outputScrollPane ;
     private javax.swing.JRadioButton quickRadioButton ;
     private javax.swing.JRadioButton fullRadioButton ;
     private javax.swing.ButtonGroup groupRadioButtons = new javax.swing.ButtonGroup() ;
@@ -557,19 +559,29 @@ public class SquashIPRangeUINew {
         
         /*
          * Input and output text areas
+         * Wrapped in scroll panes
          */
         
         //Input, in input panel
         inputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
                                                    NARROWTEXTAREAWIDTH ) ;
-        inputPanel.add( inputTextArea, setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
         inputTextArea.setLineWrap( true ) ;
+        inputScrollPane = new javax.swing.JScrollPane() ;
+        inputScrollPane.setViewportView( inputTextArea ) ;
+        inputPanel.add( inputScrollPane , setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
         
         //Output, in output panel
         outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
                                                     WIDETEXTAREAWIDTH ) ;
-        outputPanel.add( outputTextArea, setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
         outputTextArea.setLineWrap( true ) ;
+        outputTextArea.setEditable( false ) ;
+        outputScrollPane = new javax.swing.JScrollPane() ;
+        outputScrollPane.setViewportView( outputTextArea ) ;
+        outputPanel.add( outputScrollPane , setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
+        
+        /*
+         * Final, general setup steps
+         */
         
         //Exit on close
         mainFrame.setDefaultCloseOperation( javax.swing.JFrame.EXIT_ON_CLOSE ) ;
@@ -579,6 +591,13 @@ public class SquashIPRangeUINew {
         
         //Pack the GUI around the contents
         mainFrame.pack() ;
+        
+        //Set minimum size for textAreas
+        inputScrollPane.setPreferredSize( inputTextArea.getSize() ) ;
+        outputScrollPane.setPreferredSize( outputTextArea.getSize() ) ;
+        
+        //Prevent the window from being resized
+        mainFrame.setResizable( false ) ;
         
     }
     
