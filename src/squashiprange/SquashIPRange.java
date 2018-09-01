@@ -559,6 +559,16 @@ public class SquashIPRange {
         return fullList ;
     }
     
+    //Overloaded version of above, for space as default delimiter
+    public String getAllAddressesAllRangesAsString( IPv4range[] ranges ) {
+        String fullList = "" ;
+        int i ;
+        for( i=0 ; i<ranges.length ; i++ ) {
+            fullList += ranges[i].getAllAddressesAsString( " " ) ;
+        }
+        return fullList ;
+    }
+    
     /*
      * Creates new class of the main gui
      * Then sets visible to open the gui
