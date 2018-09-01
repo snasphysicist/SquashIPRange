@@ -594,6 +594,11 @@ public class IPv4range {
         return intmString ;
     }
     
+    //Version of the above, but with space as default delimiter
+    public String getAllAddressesAsString() {
+        return this.getAllAddressesAsString( " " ) ;
+    }
+    
     //This method assumes that the input range contains a set
     //of ip addresses that satisfy:
     //For all i in {m,n}, a.b.c.i is in the range
