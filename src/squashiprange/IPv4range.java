@@ -579,13 +579,24 @@ public class IPv4range {
         }
     }
     
-    public String getAllAddressesAsString() {
+    /* 
+     * Returns a string containing a list
+     * of IP addresses in the range
+     * Accepts the delimiter between the
+     * addresses as input
+     */
+    public String getAllAddressesAsString( String delimiter ) {
         int i ;
         String intmString = "" ;
         for( i=0 ; i<addressArray.length ; i++ ) {
-            intmString += addressArray[i].getIPAsString() + " " ;
+            intmString += addressArray[i].getIPAsString() + delimiter ;
         }
         return intmString ;
+    }
+    
+    //Version of the above, but with space as default delimiter
+    public String getAllAddressesAsString() {
+        return this.getAllAddressesAsString( " " ) ;
     }
     
     //This method assumes that the input range contains a set
