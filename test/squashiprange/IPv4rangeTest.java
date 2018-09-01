@@ -766,11 +766,22 @@ public class IPv4rangeTest {
         range3.addAddressToRange( new IPv4address( "16.164.16.36" ) , false ) ;
         range3.addAddressToRange( new IPv4address( "226.1.228.172" ) , false ) ;
         String expected3 = "36.164.200.182 16.164.16.36 226.1.228.172 " ;
-        //Check all three outputs
-        //match the expected strings
+        //Case 4 - supplying a delimiter argument
+        IPv4range range4 = new IPv4range() ;
+        range4.parseAddDashNotation( "36.227.93.11-157" ) ;
+        String expected4 = "" ;
+        Integer i ;
+        for( i=11 ; i<=157 ; i++) {
+            expected4 += "36.227.93." + i.toString() + "," ;
+        }
+        /*
+         * Check all three outputs
+         * match the expected strings
+         */
         assertEquals( true , range1.getAllAddressesAsString().equals( expected1 ) ) ;
         assertEquals( true , range2.getAllAddressesAsString().equals( expected2 ) ) ;
         assertEquals( true , range3.getAllAddressesAsString().equals( expected3 ) ) ;
+        assertEquals( true , range4.getAllAddressesAsString( "," ).equals( expected4 ) ) ;
     }
 
     /**
