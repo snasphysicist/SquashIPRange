@@ -544,6 +544,22 @@ public class SquashIPRange {
     }
     
     /*
+     * Returns full string list of IP addresses
+     * for all IP ranges in an array
+     * Accepts the array of ranges as the first argument
+     * And the delimiter between the addresses
+     * as the second argume
+     */
+    public String getAllAddressesAllRangesAsString( IPv4range[] ranges , String delimiter ) {
+        String fullList = "" ;
+        int i ;
+        for( i=0 ; i<ranges.length ; i++ ) {
+            fullList += ranges[i].getAllAddressesAsString( delimiter ) ;
+        }
+        return fullList ;
+    }
+    
+    /*
      * Creates new class of the main gui
      * Then sets visible to open the gui
      */
