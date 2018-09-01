@@ -550,7 +550,7 @@ public class SquashIPRange {
      * And the delimiter between the addresses
      * as the second argume
      */
-    public String getAllAddressesAllRangesAsString( IPv4range[] ranges , String delimiter ) {
+    public static String getAllAddressesAllRangesAsString( IPv4range[] ranges , String delimiter ) {
         String fullList = "" ;
         int i ;
         for( i=0 ; i<ranges.length ; i++ ) {
@@ -560,7 +560,7 @@ public class SquashIPRange {
     }
     
     //Overloaded version of above, for space as default delimiter
-    public String getAllAddressesAllRangesAsString( IPv4range[] ranges ) {
+    public static String getAllAddressesAllRangesAsString( IPv4range[] ranges ) {
         String fullList = "" ;
         int i ;
         for( i=0 ; i<ranges.length ; i++ ) {
