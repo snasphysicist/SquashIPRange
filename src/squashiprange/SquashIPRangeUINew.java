@@ -16,6 +16,11 @@ public class SquashIPRangeUINew {
     
     /*
      * Declare all UI components
+     * Note: when adding new buttons
+     * check whether they need to be added
+     * to the lists in: 
+     *      toggleUIRunningState
+     *      normaliseButtonSizes
      */
     private javax.swing.JFrame mainFrame ;
     private javax.swing.JPanel inputPanel ;
@@ -24,6 +29,7 @@ public class SquashIPRangeUINew {
     private javax.swing.JButton reformatButton ;
     private javax.swing.JButton squashButton ;
     private javax.swing.JButton overlapButton ;
+    private javax.swing.JButton listButton ;
     private javax.swing.JButton clearInputButton ;
     private javax.swing.JButton clipboardButton ;
     private javax.swing.JButton aboutButton ;
@@ -274,13 +280,14 @@ public class SquashIPRangeUINew {
     }
     
     /*
-     * Toggles buttons active/inactive depending upon
+     * Toggles buttons active/inactive depending upon whether
      * the swing worker is doing something in the background
      */
     private void toggleUIRunningState() {
         javax.swing.JButton[] buttons = { reformatButton ,
                                           squashButton ,
                                           overlapButton ,
+                                          listButton ,
                                           clearInputButton ,
                                           clipboardButton ,
                                           cancelButton } ;
@@ -353,6 +360,7 @@ public class SquashIPRangeUINew {
                             reformatButton ,
                             squashButton ,
                             overlapButton ,
+                            listButton ,
                             clearInputButton ,
                             clipboardButton ,
                             cancelButton ,
@@ -454,9 +462,13 @@ public class SquashIPRangeUINew {
         overlapButton = new javax.swing.JButton( "Find Overlap" ) ;
         inputPanel.add( overlapButton , setUpConstraints( 1 , 4 , GBBOTH ) ) ;
         
+        //List Addresses, in input panel
+        listButton = new javax.swing.JButton( "List Addresses" ) ;
+        inputPanel.add( listButton , setUpConstraints( 1 , 5 , GBBOTH ) ) ;
+        
         //Clear Input, in input panel
         clearInputButton = new javax.swing.JButton( "Clear Input" ) ;
-        inputPanel.add( clearInputButton , setUpConstraints( 1 , 5 , GBBOTH ) ) ;
+        inputPanel.add( clearInputButton , setUpConstraints( 1 , 6 , GBBOTH ) ) ;
         
         //To Clipboard, in output panel
         clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
@@ -498,6 +510,12 @@ public class SquashIPRangeUINew {
         overlapButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
                 overlapOnClick() ;
+            }
+        } ) ;
+        
+        listButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                listOnClick() ;
             }
         } ) ;
         
@@ -546,12 +564,12 @@ public class SquashIPRangeUINew {
         
         //Quick, in input panel
         quickRadioButton = new javax.swing.JRadioButton( "Quick" ) ;
-        inputPanel.add( quickRadioButton , setUpConstraints( 1 , 6 ) ) ;
+        inputPanel.add( quickRadioButton , setUpConstraints( 1 , 7 ) ) ;
         groupRadioButtons.add( quickRadioButton ) ;
         
         //Full, in input panel
         fullRadioButton = new javax.swing.JRadioButton( "Full" ) ;
-        inputPanel.add( fullRadioButton , setUpConstraints( 1 , 7 ) ) ;
+        inputPanel.add( fullRadioButton , setUpConstraints( 1 , 8 ) ) ;
         groupRadioButtons.add( fullRadioButton ) ;
         
         //Quick is selected by default
@@ -568,7 +586,7 @@ public class SquashIPRangeUINew {
         inputTextArea.setLineWrap( true ) ;
         inputScrollPane = new javax.swing.JScrollPane() ;
         inputScrollPane.setViewportView( inputTextArea ) ;
-        inputPanel.add( inputScrollPane , setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
+        inputPanel.add( inputScrollPane , setUpConstraints( 0 , 2 , GBBOTH , 1 , 8 ) ) ;
         
         //Output, in output panel
         outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
