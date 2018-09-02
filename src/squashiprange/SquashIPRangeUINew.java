@@ -16,6 +16,11 @@ public class SquashIPRangeUINew {
     
     /*
      * Declare all UI components
+     * Note: when adding new buttons
+     * check whether they need to be added
+     * to the lists in: 
+     *      toggleUIRunningState
+     *      normaliseButtonSizes
      */
     private javax.swing.JFrame mainFrame ;
     private javax.swing.JPanel inputPanel ;
@@ -24,6 +29,7 @@ public class SquashIPRangeUINew {
     private javax.swing.JButton reformatButton ;
     private javax.swing.JButton squashButton ;
     private javax.swing.JButton overlapButton ;
+    private javax.swing.JButton listButton ;
     private javax.swing.JButton clearInputButton ;
     private javax.swing.JButton clipboardButton ;
     private javax.swing.JButton aboutButton ;
@@ -71,7 +77,7 @@ public class SquashIPRangeUINew {
      * level so cancel button method can
      * access the thread to kill it
      */
-    private javax.swing.SwingWorker<Object,Object> workerThread ;
+    private javax.swing.SwingWorker workerThread ;
     
     /*
      * Methods fired when buttons are clicked
@@ -132,8 +138,6 @@ public class SquashIPRangeUINew {
             
             //Squashing code to run in background
             public Object doInBackground() {
-
-                System.out.println( "Starting" ) ;
 
                 IPv4range[] inputRanges = SquashIPRange.parseStringRanges( 
                     SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
@@ -221,6 +225,76 @@ public class SquashIPRangeUINew {
         
     }
     
+    //List addresses button handler
+    private void listAddressesOnClick() {
+        
+        /*
+         * Reset outputs to blank at the start
+         * to ensure that incorrect information
+         * isn't reported, even if there is a crash
+         */
+        setOutputNumbers( 0 , 0 ) ;
+        outputTextArea.setText( "" ) ;
+        
+        //Toggle cancel button on & other buttons off
+        toggleUIRunningState() ;
+
+        workerThread = new javax.swing.SwingWorker<String, Object>() {
+            
+            /*
+             * Code to run in background
+             * Squash input and generate list
+             */
+            public String doInBackground() {
+                
+                IPv4range[] inputRanges = SquashIPRange.parseStringRanges( 
+                    SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
+                    ) ;
+
+                inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
+
+                setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+
+                if( quickRadioButton.isSelected() ) {
+                    returnedRanges = SquashIPRange.quickSquash( inputRanges ) ;
+                } else {
+                    returnedRanges = SquashIPRange.fullSquash( inputRanges ) ;
+                }
+
+                return SquashIPRange.getAllAddressesAllRangesAsString( 
+                        returnedRanges , 
+                        "," 
+                        ) ;
+            }
+            
+            //Update UI when squashing & listing done
+            protected void done() {
+                
+                if( !this.isCancelled() ) {
+
+                    //Write this to the output area
+                    try {
+                        outputTextArea.setText( this.get() ) ;
+                    }
+                    catch( java.util.concurrent.ExecutionException | InterruptedException e ) {
+                        outputTextArea.setText( "Operation cancelled" ) ;
+                    }
+
+                    //Reset the result, so it can't be used again by mistake
+                    returnedRanges = null ;
+                }
+                
+                //Finally, call method to toggle cancel off/other buttons back on
+                toggleUIRunningState() ;
+                
+            }
+            
+        } ;
+        
+        workerThread.execute() ;
+        
+    }
+    
     //Clear input button handler
     private void clearInputOnClick() {
         inputTextArea.setText( "" ) ;
@@ -274,13 +348,14 @@ public class SquashIPRangeUINew {
     }
     
     /*
-     * Toggles buttons active/inactive depending upon
+     * Toggles buttons active/inactive depending upon whether
      * the swing worker is doing something in the background
      */
     private void toggleUIRunningState() {
         javax.swing.JButton[] buttons = { reformatButton ,
                                           squashButton ,
                                           overlapButton ,
+                                          listButton ,
                                           clearInputButton ,
                                           clipboardButton ,
                                           cancelButton } ;
@@ -353,6 +428,7 @@ public class SquashIPRangeUINew {
                             reformatButton ,
                             squashButton ,
                             overlapButton ,
+                            listButton ,
                             clearInputButton ,
                             clipboardButton ,
                             cancelButton ,
@@ -454,9 +530,13 @@ public class SquashIPRangeUINew {
         overlapButton = new javax.swing.JButton( "Find Overlap" ) ;
         inputPanel.add( overlapButton , setUpConstraints( 1 , 4 , GBBOTH ) ) ;
         
+        //List Addresses, in input panel
+        listButton = new javax.swing.JButton( "List Addresses" ) ;
+        inputPanel.add( listButton , setUpConstraints( 1 , 5 , GBBOTH ) ) ;
+        
         //Clear Input, in input panel
         clearInputButton = new javax.swing.JButton( "Clear Input" ) ;
-        inputPanel.add( clearInputButton , setUpConstraints( 1 , 5 , GBBOTH ) ) ;
+        inputPanel.add( clearInputButton , setUpConstraints( 1 , 6 , GBBOTH ) ) ;
         
         //To Clipboard, in output panel
         clipboardButton = new javax.swing.JButton( "To Clipboard" ) ;
@@ -498,6 +578,12 @@ public class SquashIPRangeUINew {
         overlapButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
                 overlapOnClick() ;
+            }
+        } ) ;
+        
+        listButton.addActionListener( new java.awt.event.ActionListener() {
+            public void actionPerformed( java.awt.event.ActionEvent ae ) {
+                listAddressesOnClick() ;
             }
         } ) ;
         
@@ -546,12 +632,12 @@ public class SquashIPRangeUINew {
         
         //Quick, in input panel
         quickRadioButton = new javax.swing.JRadioButton( "Quick" ) ;
-        inputPanel.add( quickRadioButton , setUpConstraints( 1 , 6 ) ) ;
+        inputPanel.add( quickRadioButton , setUpConstraints( 1 , 7 ) ) ;
         groupRadioButtons.add( quickRadioButton ) ;
         
         //Full, in input panel
         fullRadioButton = new javax.swing.JRadioButton( "Full" ) ;
-        inputPanel.add( fullRadioButton , setUpConstraints( 1 , 7 ) ) ;
+        inputPanel.add( fullRadioButton , setUpConstraints( 1 , 8 ) ) ;
         groupRadioButtons.add( fullRadioButton ) ;
         
         //Quick is selected by default
@@ -568,7 +654,7 @@ public class SquashIPRangeUINew {
         inputTextArea.setLineWrap( true ) ;
         inputScrollPane = new javax.swing.JScrollPane() ;
         inputScrollPane.setViewportView( inputTextArea ) ;
-        inputPanel.add( inputScrollPane , setUpConstraints( 0 , 2 , GBBOTH , 1 , 7 ) ) ;
+        inputPanel.add( inputScrollPane , setUpConstraints( 0 , 2 , GBBOTH , 1 , 8 ) ) ;
         
         //Output, in output panel
         outputTextArea = new javax.swing.JTextArea( TEXTAREAHEIGHT, 
