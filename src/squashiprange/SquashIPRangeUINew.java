@@ -77,7 +77,7 @@ public class SquashIPRangeUINew {
      * level so cancel button method can
      * access the thread to kill it
      */
-    private javax.swing.SwingWorker<Object,Object> workerThread ;
+    private javax.swing.SwingWorker workerThread ;
     
     /*
      * Methods fired when buttons are clicked
@@ -138,8 +138,6 @@ public class SquashIPRangeUINew {
             
             //Squashing code to run in background
             public Object doInBackground() {
-
-                System.out.println( "Starting" ) ;
 
                 IPv4range[] inputRanges = SquashIPRange.parseStringRanges( 
                     SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
@@ -224,6 +222,76 @@ public class SquashIPRangeUINew {
         //Display the number of IP address ranges and
         //the number of IP addresses in the input box
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+        
+    }
+    
+    //List addresses button handler
+    private void listAddressesOnClick() {
+        
+        /*
+         * Reset outputs to blank at the start
+         * to ensure that incorrect information
+         * isn't reported, even if there is a crash
+         */
+        setOutputNumbers( 0 , 0 ) ;
+        outputTextArea.setText( "" ) ;
+        
+        //Toggle cancel button on & other buttons off
+        toggleUIRunningState() ;
+
+        workerThread = new javax.swing.SwingWorker<String, Object>() {
+            
+            /*
+             * Code to run in background
+             * Squash input and generate list
+             */
+            public String doInBackground() {
+                
+                IPv4range[] inputRanges = SquashIPRange.parseStringRanges( 
+                    SquashIPRange.splitStringRanges( inputTextArea.getText() ) 
+                    ) ;
+
+                inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
+
+                setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
+
+                if( quickRadioButton.isSelected() ) {
+                    returnedRanges = SquashIPRange.quickSquash( inputRanges ) ;
+                } else {
+                    returnedRanges = SquashIPRange.fullSquash( inputRanges ) ;
+                }
+
+                return SquashIPRange.getAllAddressesAllRangesAsString( 
+                        returnedRanges , 
+                        "," 
+                        ) ;
+            }
+            
+            //Update UI when squashing & listing done
+            protected void done() {
+                
+                if( !this.isCancelled() ) {
+
+                    //Write this to the output area
+                    try {
+                        outputTextArea.setText( this.get() ) ;
+                    }
+                    catch( java.util.concurrent.ExecutionException | InterruptedException e ) {
+                        outputTextArea.setText( "Operation cancelled" ) ;
+                    }
+
+                    //Reset the result, so it can't be used again by mistake
+                    returnedRanges = null ;
+                }
+                
+                //Finally, call method to toggle cancel off/other buttons back on
+                toggleUIRunningState() ;
+                
+            }
+            
+        } ;
+        
+        workerThread.execute() ;
         
     }
     
@@ -515,7 +583,7 @@ public class SquashIPRangeUINew {
         
         listButton.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed( java.awt.event.ActionEvent ae ) {
-                listOnClick() ;
+                listAddressesOnClick() ;
             }
         } ) ;
         
