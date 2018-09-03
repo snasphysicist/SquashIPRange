@@ -6,8 +6,6 @@
 *******************************************************************/
 package squashiprange;
 
-//import static squashiprange.SquashIPRange.appendToIPv4rangeArray;
-
 /**
  *
  * @author snasphysicist
@@ -44,6 +42,7 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -59,14 +58,18 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(900, 600));
-        setPreferredSize(new java.awt.Dimension(800, 550));
+        setMaximumSize(new java.awt.Dimension(1285, 550));
+        setPreferredSize(new java.awt.Dimension(1285, 550));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Squash IP Ranges v 1.0"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Squash IP Range"));
+        jPanel1.setRequestFocusEnabled(false);
 
         jLabel1.setText("Input IP Ranges:");
 
@@ -111,6 +114,8 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
+        jTextArea2.getAccessibleContext().setAccessibleName("Squash IP Range");
+        jTextArea2.getAccessibleContext().setAccessibleDescription("");
 
         jLabel3.setText("Ranges in:");
         jLabel3.setToolTipText("");
@@ -131,74 +136,12 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(60, 60, 60)
-                                .addComponent(jLabel5)
-                                .addGap(60, 60, 60)
-                                .addComponent(jLabel6))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(60, 60, 60)
-                                .addComponent(jLabel3)
-                                .addGap(60, 60, 60)
-                                .addComponent(jLabel4)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jButton4.setText("Close");
-        jButton4.setMaximumSize(new java.awt.Dimension(130, 27));
-        jButton4.setMinimumSize(new java.awt.Dimension(130, 27));
-        jButton4.setPreferredSize(new java.awt.Dimension(130, 27));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButton7.setText("To Clipboard");
+        jButton7.setMaximumSize(new java.awt.Dimension(130, 27));
+        jButton7.setMinimumSize(new java.awt.Dimension(130, 27));
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButton7ActionPerformed(evt);
             }
         });
 
@@ -212,32 +155,127 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setText("Close");
+        jButton4.setMaximumSize(new java.awt.Dimension(130, 27));
+        jButton4.setMinimumSize(new java.awt.Dimension(130, 27));
+        jButton4.setPreferredSize(new java.awt.Dimension(130, 27));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setSelected(true);
+        jRadioButton1.setText("Quick");
+
+        buttonGroup1.add(jRadioButton2);
+        jRadioButton2.setText("Full");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jRadioButton2)
+                                    .addComponent(jRadioButton1)))))
+                    .addComponent(jLabel1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(54, 54, 54)
+                        .addComponent(jLabel4)))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(54, 54, 54)
+                        .addComponent(jLabel6))
+                    .addComponent(jLabel2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addGap(10, 10, 10))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton2)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 451, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(10, 10, 10)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(31, 31, 31))
         );
+
+        jPanel1.getAccessibleContext().setAccessibleName("Squash IP Range v 1.0");
+        jPanel1.getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -250,35 +288,26 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         //isn't reported, even if there is a crash
         setOutputNumbers( 0 , 0 ) ;
         jTextArea2.setText( "" ) ;
-        
-        int i , j ;
-        String outputText = "" ;
+
+        //Converts the raw input into an array of IPv4ranges
         IPv4range[] inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
-        IPv4range overlappingAddresses ;
         
-        for( i=0 ; i<inputRanges.length ; i++ ) {
-            for( j=i+1 ; j<inputRanges.length ; j++ ) {
-                overlappingAddresses = inputRanges[i].findOverlap( inputRanges[j] ) ;
-                if( overlappingAddresses.getSizeOfRange() > 0 ) {
-                    outputText += "Overlap between " 
-                                + inputRanges[i].convertRangeHumanReadable( inputRanges[i] )
-                                + " and " 
-                                + inputRanges[j].convertRangeHumanReadable( inputRanges[j] )
-                                + " : "
-                                + overlappingAddresses.convertRangeHumanReadable( overlappingAddresses )
-                                + "\n" ;
-                }
-            }
-        }
-        
+        //Converts this array of IPv4ranges into a string
+        //detailing the overlap between those ranges
+        String outputText = SquashIPRange.findRangeSetOverlap( inputRanges ) ;
+                
         //If no overlap is found between any of the ranges
         //report this in the output text box
         if ( outputText.equals( "" ) ) {
             outputText = "No overlap found" ;
         }
         
+        //Otherwise write the details of
+        //the overlapping ranges to the output box
         jTextArea2.setText( outputText ) ;
         
+        //Display the number of IP address ranges and
+        //the number of IP addresses in the input box
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
         
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -295,122 +324,30 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
 
     //Squash button
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
-        //Debug
-        java.time.Instant time1 = java.time.Instant.now() ;
-        //
-        
+
         //Reset outputs to blank at the start
         //to ensure that incorrect information
         //isn't reported, even if there is a crash
         setOutputNumbers( 0 , 0 ) ;
         jTextArea2.setText( "" ) ;
         
-        int i , j ;
+        int i ;
         String outputText = "" ;
-        IPv4range[] inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
-        IPv4range concatenatedRange = new IPv4range() ;
+        IPv4range[] inputRanges ;
         IPv4range[] ipRangesOut ;
-       
+
+        inputRanges = SquashIPRange.parseStringRanges( SquashIPRange.splitStringRanges( jTextArea1.getText() ) ) ;
+        
         inputRanges = SquashIPRange.sortRangeArray( inputRanges ) ;
-        
-        //Debug
-        //for( i=0 ; i<inputRanges.length ; i++ ) {
-        //    System.out.println( inputRanges[i].getAllAddressesAsString() ) ;
-        //    System.out.println( inputRanges[i].convertRangeHumanReadable( inputRanges[i] ) ) ;
-        //}
-        //
-        
-        //Debug
-        java.time.Instant time2 = java.time.Instant.now() ;
-        System.out.println( "Initial parsing " + (time2.toEpochMilli() - time1.toEpochMilli()) );
-        //
         
         setInputNumbers( inputRanges.length , SquashIPRange.countAddresses( inputRanges ) ) ;
         
-        //Combine all input ranges into one range
-        concatenatedRange.concatenateWithRange( inputRanges[0] , false ) ;
-        for( i=1 ; i<inputRanges.length ; i++ ) {
-            if( concatenatedRange.getAddressFromRange( 0 ).getIPAsNumber() > inputRanges[i].getAddressFromRange( inputRanges[i].getSizeOfRange()-1 ).getIPAsNumber() ) {
-                concatenatedRange.concatenateWithRange( inputRanges[i] , true ) ;
-            } else {
-                concatenatedRange.concatenateWithRange( inputRanges[i] , false ) ;
-            }
+        // jRadioButton1 is the button with label "Quick"
+        if( jRadioButton1.isSelected() ) {
+            ipRangesOut = SquashIPRange.quickSquash( inputRanges ) ;
+        } else {
+            ipRangesOut = SquashIPRange.fullSquash( inputRanges ) ;
         }
-        
-        java.time.Instant time3 = java.time.Instant.now() ;
-        System.out.println( "Create whole range " + (time3.toEpochMilli() - time2.toEpochMilli()) );
-        
-        //Sort this range
-        concatenatedRange.sortRange() ;
-        
-        java.time.Instant time4 = java.time.Instant.now() ;
-        System.out.println( "Sort range " + (time4.toEpochMilli() - time3.toEpochMilli()) );
-        
-        //Split into contiguous subranges
-        ipRangesOut = concatenatedRange.getContiguousSubranges() ;
-        
-        //Debug
-        java.time.Instant time5 = java.time.Instant.now() ;
-        System.out.println( "Split ranges " + (time5.toEpochMilli() - time4.toEpochMilli()) );
-        //
-        
-        //Debug
-        //for( i=0 ; i<ipRangesOut.length ; i++ ) {
-        //    System.out.println( ipRangesOut[i].convertRangeHumanReadable( ipRangesOut[i] ) ) ;
-        //}
-        //
-        
-        //Concat and remove in one step
-        //Check for & concatenate adjacent ranges
-        for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            j = i + 1 ;
-            while( j < ipRangesOut.length ) {
-                //Debug
-                //System.out.println( i + " " + j + " " + ipRangesOut[i].getAddressFromRange(0).getIPAsString() + " " + ipRangesOut[j].getAddressFromRange(0).getIPAsString() ) ;
-                //
-                if( ipRangesOut[i].isAdjacentRange( ipRangesOut[j] ) == 1 ) {
-                    ipRangesOut[i].concatenateWithRange( ipRangesOut[j] , false );
-                    ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , j ) ;
-                    j-- ;
-                } else if ( ipRangesOut[i].isAdjacentRange( ipRangesOut[j] ) == -1 ) {
-                    ipRangesOut[i].concatenateWithRange( ipRangesOut[j] , true );
-                    ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , j ) ;
-                    j-- ;
-                }
-                j++ ;
-            }
-        }
-        
-        java.time.Instant time6 = java.time.Instant.now() ;
-        System.out.println( "Concat adjacent ranges " + (time6.toEpochMilli() - time5.toEpochMilli()) );
-        
-        //Remove overlapping IP addresses from ranges
-        for( i=0 ; i<ipRangesOut.length ; i++ ) {
-            for( j=i+1 ; j<ipRangesOut.length ; j++ ) {
-                if( ipRangesOut[i].getSizeOfRange() >= ipRangesOut[j].getSizeOfRange() ) {
-                    ipRangesOut[j].subtractRange( ipRangesOut[i] ) ;
-                } else {
-                    ipRangesOut[i].subtractRange( ipRangesOut[j] ) ;                
-                }
-            }
-        }
-        
-        java.time.Instant time7 = java.time.Instant.now() ;
-        System.out.println( "Remove overlap " + (time7.toEpochMilli() - time6.toEpochMilli()) );
-        
-        //Remove any ranges which have been emptied by the above operation
-        i = 0 ;
-        while( i<ipRangesOut.length ) {
-            if( ipRangesOut[i].getSizeOfRange() == 0 ) {
-                ipRangesOut = ipRangesOut[0].popFromIPv4rangeArray( ipRangesOut , i ) ;
-                i-- ;
-            }
-            i++ ;
-        }
-        
-        java.time.Instant time8 = java.time.Instant.now() ;
-        System.out.println( "Remove empty ranges " + (time8.toEpochMilli() - time7.toEpochMilli()) );
         
         //Get the resulting ranges in human readable format
         //and write them to a string to output
@@ -463,6 +400,14 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    //To Clipboard button
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        //Simply send the text into the output box to the
+        //system clipboard using the copyToClipboard method
+        //from SquashIPRange
+        SquashIPRange.copyToClipboard( jTextArea2.getText() ) ;
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -499,12 +444,14 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -512,6 +459,8 @@ public class SquashIPRangeUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;

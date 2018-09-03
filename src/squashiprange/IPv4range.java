@@ -188,7 +188,7 @@ public class IPv4range {
         IPv4address[] intmRange = new IPv4address[ this.addressArray.length + inipRange.getSizeOfRange() ] ;
         //The new addressArray will be the length of the current one
         //plus the extra elements
-        //It's crucial this is one after the subtraction above
+        //It's crucial this is done after the subtraction above
         //Otherwise the new array could be too large
         
         //this.addressArray = new IPv4address[ intmRange.getSizeOfRange() + inipRange.getSizeOfRange() ] ;
@@ -211,8 +211,8 @@ public class IPv4range {
                 //this.addressArray[ i + intmRange.getSizeOfRange() ] = inipRange.getAddressFromRange(i) ;
                 intmRange[ i + this.addressArray.length ] = inipRange.getAddressFromRange( i ) ;
             }
-            this.addressArray = intmRange ;
         }
+        this.addressArray = intmRange ;
     }
     
     //Returns all addresses in the range as an array of IPv4addresses
@@ -432,54 +432,113 @@ public class IPv4range {
         return isAdjacentToRange ;
     }
     
-    //Checks if the input range is "adjacent" to this one
-    //We count a range as adjacent if:
-    //  The set of fourth octets in the two ranges matches
-    //  The first and second octets in the two ranges match
-    //  And either:
-    //      The smallest third octet of the input range is one larger
-    //      than the largest third octet in this range
-    //  Or:
-    //      The largest third octet of the input range is one smaller
-    //      than the smallest third octet in this range
-    //This method will assume that the ranges are ordered from
-    //smallest numerical ip address to largest and that both 
-    //ranges are of the form a.b.c-d.e-f
-    //THESE CONDITIONS ARE NOT CURRENTLY CHECKED BY THE METHOD
-    //USE WITH CARE
-    //Returns 0 if the ranges are not adjacent
-    //Returns 1 if the input range is "above" this range
-    //Returns -1 if the input range is "below" this range
+    /*  
+        Checks if the input range is "adjacent" to this one
+        We count a range as adjacent if:
+        EITHER:
+        The sets of fourth octets in the two ranges match
+        The first and second octets in the two ranges match
+          AND EITHER:
+                The smallest third octet of the input range is one larger
+                than the largest third octet in this range
+            OR:
+                The largest third octet of the input range is one smaller
+                than the smallest third octet in this range
+        OR:
+        The first and second octets in the two ranges match
+        The sets of third octets in the two ranges match
+            AND either:
+                The smallest fourth octet of the input range is one larger
+                than the largest fourth octet in this range
+            OR:
+                The largest fourth octet of the input range is one smaller
+                than the smallest fourth octet in this range
+    
+        This method will assume that the ranges are ordered from
+        smallest numerical ip address to largest and that both 
+        ranges are of the form a.b.c-d.e-f
+        THESE CONDITIONS ARE NOT CURRENTLY CHECKED BY THE METHOD
+        USE WITH CARE!
+        Returns 0 if the ranges are not adjacent
+        Returns 1 if the input range is "above" this range
+        Returns -1 if the input range is "below" this range
+    */
     public int isAdjacentRange( IPv4range inipRange ) {
         
+        //Assume value is zero (not adjacent)
+        //unless we find otherwise
         int isAdjacent = 0 ;
         
+        //Minimum and maximum bounding third octets
+        //of this IPv4range
         Integer[] thisBoundingThirdOctet = new Integer[2] ;
+        //Minimum and maximum bounding third octets
+        //of the input IPv4range
         Integer[] inBoundingThirdOctet = new Integer[2] ;
         
+        //Minimum and maximum bounding fourth octets
+        //of this IPv4range
+        Integer[] thisBoundingFourthOctet = new Integer[2] ;
+        //Minimum and maximum bounding third octets
+        //of the input IPv4range
+        Integer[] inBoundingFourthOctet = new Integer[2] ;
+        
+        //Minimum third octet value for this IPv4range
         thisBoundingThirdOctet[0] = new Integer( this.addressArray[0].getSectorAsString(3) ) ;
+        //Maximum third octet value for this IPv4range
         thisBoundingThirdOctet[1] = new Integer( this.addressArray[this.addressArray.length-1].getSectorAsString(3) ) ;
-        
+
+        //Minimum third octet value for the input IPv4range
         inBoundingThirdOctet[0] = new Integer( inipRange.getAddressFromRange(0).getSectorAsString(3) ) ;
+        //Maximum third octet value for the input IPv4range
         inBoundingThirdOctet[1] = new Integer( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1).getSectorAsString(3) ) ;
-                
-        if(     this.addressArray[0].equalsFirstOctet( inipRange.getAddressFromRange(0) )
-                && this.addressArray[0].equalsSecondOctet( inipRange.getAddressFromRange(0) )
-                && this.addressArray[0].equalsFourthOctet(inipRange.getAddressFromRange(0))
-                && this.addressArray[this.addressArray.length-1].equalsFourthOctet( inipRange.getAddressFromRange(inipRange.getSizeOfRange()-1) ) ) {
+
+        //Minimum fourth octet value for this IPv4range
+        thisBoundingFourthOctet[0] = new Integer( this.addressArray[0].getSectorAsString(4) ) ;
+        //Maximum fourth octet value for this IPv4range
+        thisBoundingFourthOctet[1] = new Integer( this.addressArray[this.addressArray.length-1].getSectorAsString(4) ) ;
+
+        //Minimum fourth octet value for the input IPv4range
+        inBoundingFourthOctet[0] = new Integer( inipRange.getAddressFromRange(0).getSectorAsString(4) ) ;
+        //Maximum fourth octet value for the input IPv4range
+        inBoundingFourthOctet[1] = new Integer( inipRange.getAddressFromRange( inipRange.getSizeOfRange()-1 ).getSectorAsString(4) ) ;
+
+        //Check if first octets match, second octets match
+        if( this.addressArray[0].equalsFirstOctet( inipRange.getAddressFromRange(0) )
+            && this.addressArray[0].equalsSecondOctet( inipRange.getAddressFromRange(0) ) ) { //1
             
-            if( thisBoundingThirdOctet[0].equals( inBoundingThirdOctet[1] + 1 ) ) {
-                //Input range third octets < this range third octets
-                isAdjacent = -1 ;
-            }
-            if( inBoundingThirdOctet[0].equals( thisBoundingThirdOctet[1] + 1 ) ) {
-                //Input range third octets > this range third octets
-                isAdjacent = 1 ;
-            }
-        }
-        
+            //Check if the fourth octet bounds match
+            if( thisBoundingFourthOctet[0].equals( inBoundingFourthOctet[0] )
+                && thisBoundingFourthOctet[1].equals( inBoundingFourthOctet[1] ) ) { //2
+                
+                if( thisBoundingThirdOctet[0].equals( inBoundingThirdOctet[1] + 1 ) ) { //3
+                    //Input range third octets < this range third octets
+                    isAdjacent = -1 ;
+                } //3
+                if( inBoundingThirdOctet[0].equals( thisBoundingThirdOctet[1] + 1 ) ) { //4
+                    //Input range third octets > this range third octets
+                    isAdjacent = 1 ;
+                } //4
+                
+            } //2
+            
+            //Check if the third octet bounds match
+            if( thisBoundingThirdOctet[0].equals( inBoundingThirdOctet[0] )
+                && thisBoundingThirdOctet[1].equals( inBoundingThirdOctet[1] ) ) { //5
+                
+                if( thisBoundingFourthOctet[0].equals( inBoundingFourthOctet[1]+1 ) ) { //6
+                    //Input range fourth octets < this range fourth octets
+                    isAdjacent = -1 ;
+                } //6
+                if( inBoundingFourthOctet[0].equals( thisBoundingFourthOctet[1]+1 ) ) { //7
+                    //Input range fourth octets > this range fourth octets
+                    isAdjacent = 1 ;
+                } //7
+                
+            } //5
+        } //1
+
         return isAdjacent ;
-        
     }
     
     //Takes another IPv4range as an input and returns an IPv4range
@@ -520,13 +579,24 @@ public class IPv4range {
         }
     }
     
-    public String getAllAddressesAsString() {
+    /* 
+     * Returns a string containing a list
+     * of IP addresses in the range
+     * Accepts the delimiter between the
+     * addresses as input
+     */
+    public String getAllAddressesAsString( String delimiter ) {
         int i ;
         String intmString = "" ;
         for( i=0 ; i<addressArray.length ; i++ ) {
-            intmString += addressArray[i].getIPAsString() + " " ;
+            intmString += addressArray[i].getIPAsString() + delimiter ;
         }
         return intmString ;
+    }
+    
+    //Version of the above, but with space as default delimiter
+    public String getAllAddressesAsString() {
+        return this.getAllAddressesAsString( " " ) ;
     }
     
     //This method assumes that the input range contains a set

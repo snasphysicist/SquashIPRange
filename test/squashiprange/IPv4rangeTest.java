@@ -323,6 +323,504 @@ public class IPv4rangeTest {
         }
     }
     
+    /**
+     * Test of method parseAddStarNotation, in class IPv4range.
+     */
+    @Test
+    public void testParseAddStarNotation() {
+        System.out.println( "Basic Test --- IPv4range --- parseAddStarNotation" ) ;
+        int i ;
+        String starRange = "101.1.252.*" ;
+        IPv4range parseRange = new IPv4range() ;
+        parseRange.parseAddStarNotation( starRange ) ;
+        //Manually generate the same range by adding all 256 addresess
+        IPv4range controlRange = new IPv4range( new IPv4address( "101.1.252.0" ) ) ;
+        for( i=0 ; i<256 ; i++ ) {
+            controlRange.addAddressToRange( new IPv4address( controlRange.getAddressFromRange(0).getIPAsNumber() + i ) , false ) ;
+        }
+        //For the two ranges to match, we want each address
+        //in each range to be in the other range
+        //First check all addresses in the 
+        //control range are in the parsed range
+        for( i=0 ; i<controlRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , parseRange.isInRange( controlRange.getAddressFromRange(i) ) ) ;
+        }
+        //Secondly check that all addresses in the 
+        //parsed range are in the control range
+        for( i=0 ; i<parseRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , controlRange.isInRange( parseRange.getAddressFromRange(i) ) ) ;
+        }
+    }
+    
+    /**
+     * Test of method parseAddSlashNotation, in class IPv4range.
+     */
+    @Test
+    public void testParseAddSlashNotation() {
+        System.out.println( "Basic Test --- IPv4range --- parseAddSlashNotation" ) ;
+        int i ;
+        IPv4range parseRange = new IPv4range() ;
+        parseRange.parseAddSlashNotation( "195.138.54.167/25" ) ;
+        //Manually recreate the range by adding 
+        //addresses one at a time
+        IPv4range controlRange = new IPv4range( new IPv4address( "195.138.54.128" ) ) ;
+        for( i=0 ; i<128 ; i++ ) {
+            controlRange.addAddressToRange( new IPv4address( controlRange.getAddressFromRange(0).getIPAsNumber() + i ) , false ) ;
+        }
+        //The two ranges match if all addresses
+        //from each range can be found in the other
+        //First check that every address in the control range
+        //is also in the parsed range
+        for( i=0 ; i<controlRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , parseRange.isInRange( controlRange.getAddressFromRange(i) ) ) ;
+        }
+        //Then check that every address in the parsed range
+        //is also in the control range
+        for( i=0 ; i<parseRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , controlRange.isInRange( parseRange.getAddressFromRange(i) ) ) ;
+        }
+    }
+    
+    /**
+     * Test of method parseAddDashNotation, in class IPv4range.
+     */
+    @Test
+    public void testParseAddDashNotation() {
+        System.out.println( "Basic Test --- IPv4range --- parseAddDashNotation" ) ;
+        Integer i , j;
+        IPv4range parseRange = new IPv4range() ;
+        parseRange.parseAddDashNotation( "143.157.53-223.39-223" ) ;
+        //Manually build t0he range represented by the notation above
+        //By adding in the IP addresses one by one
+        IPv4range controlRange = new IPv4range() ;
+        for( i=53 ; i<224 ; i++ ) {
+            for( j=39 ; j<224 ; j++ ) {
+                controlRange.addAddressToRange( new IPv4address( "143.157." + i.toString() + "." + j.toString() ) , false ) ;
+            }
+        }
+        //Ranges are the same if each address from both ranges
+        //can be found in the other range
+        //First check that all ranges from the control range
+        //can be found in the parsed range
+        for( i=0 ; i<controlRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , parseRange.isInRange( controlRange.getAddressFromRange(i) ) ) ;
+        }
+        //Then check that each address in the parsed range
+        //can be found in the control range
+        for( i=0 ; i<parseRange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , controlRange.isInRange( parseRange.getAddressFromRange(i) ) ) ;
+        }        
+    }
+    
+    /**
+     * Test of method subtractRange, in class IPv4range.
+     */
+    @Test
+    public void testSubtractRange() {
+        System.out.println( "Basic Test --- IPv4range --- subtractRange" ) ;
+        int i ;
+        //Subtract from this
+        String textRange1 = "162.221.100.10-32" ;
+        //Subtract this
+        String textRange2 = "162.221.100.0-20" ;
+        //This range should result
+        String textRange3 = "162.221.100.21-32" ;
+        //Convert these three to ranges
+        IPv4range range1 = new IPv4range() ;
+        range1.parseAddDashNotation( textRange1 ) ;
+        IPv4range range2 = new IPv4range() ;
+        range2.parseAddDashNotation( textRange2 ) ;
+        IPv4range range3 = new IPv4range() ;
+        range3.parseAddDashNotation( textRange3 ) ;
+        //Subtract range2 from range1
+        //to create the differenced range
+        IPv4range diffrange = range1.createCopy() ;
+        diffrange.subtractRange( range2 ) ;
+        //Differenced range should be
+        //equivalent to range3
+        //This is true if for all addresses in diffrange
+        //the addresses are also in range3
+        for( i=0 ; i<diffrange.getSizeOfRange() ; i++ ) {
+            assertEquals( true , range3.isInRange( diffrange.getAddressFromRange(i) ) ) ;
+        }
+        //and vice versa
+        for( i=0 ; i<range3.getSizeOfRange() ; i++ ) {
+            assertEquals( true , diffrange.isInRange( range3.getAddressFromRange(i) ) ) ;
+        }
+    }
+
+    /**
+     * Test of method methodName, in class IPv4range.
+     */
+    @Test
+    public void testFindOverlap() {
+        System.out.println( "Basic Test --- IPv4range --- findOverlap" ) ;
+        int i ;
+        IPv4range range1 = new IPv4range() ;
+        range1.parseAddDashNotation( "238.122.193.13-50" ) ;
+        IPv4range range2 = new IPv4range() ;
+        range2.parseAddDashNotation( "238.122.193.0-12" ) ;
+        IPv4range range3 = new IPv4range() ;
+        range3.parseAddDashNotation( "238.122.193.40-90" ) ;
+        // This is overlap of range 1 with range 3
+        IPv4range knownOverlap = new IPv4range() ;
+        knownOverlap.parseAddDashNotation( "238.122.193.40-50" ) ;
+        //Overlap of range 1 with range 2
+        IPv4range foundOverlap1 = range1.findOverlap( range2 ) ;
+        //Overlap of range 1 with range 3
+        IPv4range foundOverlap2 = range1.findOverlap( range3 ) ;        
+        //We expect there to be no overlap between range 1 and range 2
+        assertEquals( true , foundOverlap1.getSizeOfRange() == 0 ) ;
+        //We expect all addresses in knownOverlap to be present
+        //in the overlap between range 2 and range 3
+        //and vice versa (i.e. knownOverlap == foundOverlap2)
+        for( i=0 ; i<knownOverlap.getSizeOfRange() ; i++ ) {
+            assertEquals( true , foundOverlap2.isInRange( knownOverlap.getAddressFromRange(i) ) ) ;
+        }
+        for( i=0 ; i<foundOverlap2.getSizeOfRange() ; i++ ) {
+            assertEquals( true , knownOverlap.isInRange( foundOverlap2.getAddressFromRange(i) ) ) ;
+        }
+    }
+    
+    /**
+     * Test of method createCopy, in class IPv4range.
+     */
+    @Test
+    public void testCreateCopy() {
+        int i , j ;
+        boolean foundPointer ;
+        System.out.println( "Basic Test --- IPv4range --- createCopy" ) ;
+        //Create some range and fill it with addresses
+        IPv4range range1 = new IPv4range() ;
+        range1.parseAddStarNotation("57.14.143.*");
+        //Create a copy in another range
+        IPv4range range2 = range1.createCopy() ;
+        //For this to be correct, the values of
+        //each address in each range should be present
+        //in the other range
+        for( i=0 ; i<range1.getSizeOfRange() ; i++ ) {
+            assertEquals( true , range2.isInRange( range1.getAddressFromRange(i) ) ) ;
+        }
+        for( i=0 ; i<range2.getSizeOfRange() ; i++ ) {
+            assertEquals( true , range1.isInRange( range2.getAddressFromRange(i) ) ) ;
+        }
+        //However the pointer for an address
+        //should not be able to be found
+        //in the other range
+        for( i=0 ; i<range1.getSizeOfRange() ; i++ ) {
+            foundPointer = false ;
+            for( j=0 ; j<range2.getSizeOfRange() ; j++ ) {
+                if( range1.getAddressFromRange(i) == range2.getAddressFromRange(j) ) {
+                    foundPointer = true ;
+                }
+            }
+            assertEquals( false , foundPointer ) ; 
+        }        
+    }
+    
+    /**
+     * Test of method isAdjacentRange, in class IPv4range.
+     */
+    @Test
+    public void testIsAdjacentRange() {
+        System.out.println( "Basic Test --- IPv4range --- isAdjacentRange" ) ;
+        
+        int i ;
+        
+        //This is a bit inelegant
+        //but it will do for now
+        String[] ranges1 = new String[]{"26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",        //5
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",  //11
+                                        "196.227.172.137",
+                                        "196.227.173.137",
+                                        "196.227.169.137",
+                                        "196.227.168.137",
+                                        "196.227.170.137",
+                                        "196.227.171.137",      //17
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",   //23
+                                        "26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",        //28
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",  //34
+                                        "196.227.172.137",
+                                        "196.227.173.137",
+                                        "196.227.169.137",
+                                        "196.227.168.137",
+                                        "196.227.170.137",
+                                        "196.227.171.137",      //40
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",   //46
+                                        "26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",
+                                        "26.131.49.199",        //51
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",  //57
+                                        "196.227.172.137",
+                                        "196.227.173.137",
+                                        "196.227.169.137",
+                                        "196.227.168.137",
+                                        "196.227.170.137",
+                                        "196.227.171.137",      //63
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",
+                                        "63.253.150-151.249",   //69
+                                        "26.131.49.199" ,
+                                        "26.131.49.199" ,
+                                        "26.131.49.199" ,
+                                        "26.131.49.199" ,
+                                        "26.131.49.199" ,       //74
+                                        "196.227.170-171.137" ,
+                                        "196.227.170-171.137" ,
+                                        "196.227.170-171.137" ,
+                                        "196.227.170-171.137" ,
+                                        "196.227.170-171.137" ,
+                                        "196.227.170-171.137" , //80
+                                        "196.227.172.137" ,
+                                        "196.227.173.137" ,
+                                        "196.227.169.137" ,
+                                        "196.227.168.137" ,
+                                        "196.227.170.137" ,
+                                        "196.227.171.137" ,     //86
+                                        "63.253.150-151.249" ,
+                                        "63.253.150-151.249" ,
+                                        "63.253.150-151.249" ,
+                                        "63.253.150-151.249" ,
+                                        "63.253.150-151.249" ,
+                                        "63.253.150-151.249"    //92
+                                    } ; 
+                    
+        String[] ranges2 = new String[]{"26.131.50.199",
+                                        "26.131.51.199",
+                                        "26.131.48.199",
+                                        "26.131.47.199",
+                                        "26.131.49.199",            //5
+                                        "196.227.172.137",
+                                        "196.227.173.137",
+                                        "196.227.169.137",
+                                        "196.227.168.137",
+                                        "196.227.170.137",
+                                        "196.227.171.137",          //11
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",
+                                        "196.227.170-171.137",      //17
+                                        "63.253.152-153.249",
+                                        "63.253.153-154.249",
+                                        "63.253.148-149.249",
+                                        "63.253.147-148.249",
+                                        "63.253.147-151.249",
+                                        "63.253.147-150.249",       //23
+                                        "26.131.50.22",
+                                        "26.131.51.22",
+                                        "26.131.48.22",
+                                        "26.131.47.22",
+                                        "26.131.49.22",             //28
+                                        "196.227.172.189",
+                                        "196.227.173.189",
+                                        "196.227.169.189",
+                                        "196.227.168.189",
+                                        "196.227.170.189",
+                                        "196.227.171.189",          //34
+                                        "196.227.170-171.4",
+                                        "196.227.170-171.4",
+                                        "196.227.170-171.4",
+                                        "196.227.170-171.4",
+                                        "196.227.170-171.4",
+                                        "196.227.170-171.4",        //40
+                                        "63.253.152-153.122",
+                                        "63.253.153-154.122",
+                                        "63.253.148-149.122",
+                                        "63.253.147-148.122",
+                                        "63.253.147-151.122",
+                                        "63.253.147-150.122",       //46
+                                        "26.23.50.199",
+                                        "26.23.51.199",
+                                        "26.23.48.199",
+                                        "26.23.47.199",
+                                        "26.23.49.199",             //51
+                                        "196.22.172.137",
+                                        "196.22.173.137",
+                                        "196.22.169.137",
+                                        "196.22.168.137",
+                                        "196.22.170.137",
+                                        "196.22.171.137",            //57
+                                        "196.22.170-171.137",
+                                        "196.22.170-171.137",
+                                        "196.22.170-171.137",
+                                        "196.22.170-171.137",
+                                        "196.22.170-171.137",
+                                        "196.22.170-171.137",       //63
+                                        "63.25.152-153.249",
+                                        "63.25.153-154.249",
+                                        "63.25.148-149.249",
+                                        "63.25.147-148.249",
+                                        "63.25.147-150.249",
+                                        "63.25.147-151.249",        //69
+                                        "2.131.50.199" ,
+                                        "2.131.51.199" ,
+                                        "2.131.48.199" ,
+                                        "2.131.47.199" ,
+                                        "2.131.49.199" ,            //74
+                                        "19.227.172.137" ,
+                                        "19.227.173.137" ,
+                                        "19.227.169.137" ,
+                                        "19.227.168.137" ,
+                                        "19.227.170.137" ,
+                                        "19.227.171.137" ,          //80
+                                        "19.227.170-171.137" ,
+                                        "19.227.170-171.137" ,
+                                        "19.227.170-171.137" ,
+                                        "19.227.170-171.137" ,
+                                        "19.227.170-171.137" ,
+                                        "19.227.170-171.137" ,      //86
+                                        "6.253.152-153.249" ,
+                                        "6.253.153-154.249" ,
+                                        "6.253.148-149.249" ,
+                                        "6.253.147-148.249" ,
+                                        "6.253.147-150.249" ,
+                                        "6.253.147-151.249"         //92
+                                    } ;        
+                                        
+        int[] expected = new int[]{1,0,-1,0,0,          //5
+                                   1,0,-1,0,0,0,        //11
+                                   -1,0,1,0,0,0,        //17
+                                   1,0,-1,0,0,0,        //23
+                                   0,0,0,0,0,           //28
+                                   0,0,0,0,0,0,         //34
+                                   0,0,0,0,0,0,         //40
+                                   0,0,0,0,0,0,         //46
+                                   0,0,0,0,0,           //51
+                                   0,0,0,0,0,0,         //57
+                                   0,0,0,0,0,0,         //63
+                                   0,0,0,0,0,0,         //69
+                                   0,0,0,0,0,           //74
+                                   0,0,0,0,0,0,         //80
+                                   0,0,0,0,0,0,         //86
+                                   0,0,0,0,0,0          //92
+                                } ;        
+        
+        //Simply test is adjacent range returns
+        //the expected value for each pair
+        for( i=0 ; i<ranges1.length ; i++ ) {
+            IPv4range range1 = new IPv4range() ;
+            IPv4range range2 = new IPv4range() ;
+            range1.parseAddDashNotation( ranges1[i] ) ;
+            range2.parseAddDashNotation( ranges2[i] ) ;
+            assertEquals( expected[i] , range1.isAdjacentRange( range2 ) ) ;
+        }
+        
+    }   
+
+    /**
+     * Test of method methodName, in class IPv4range.
+     */
+    @Test
+    public void testGetAllAddressesAsString() {
+        System.out.println( "Basic Test --- IPv4range --- getAllAddressesAsString" ) ;
+        //Case 1 - single address
+        IPv4range range1 = new IPv4range( new IPv4address("58.35.212.146") ) ;
+        String expected1 = "58.35.212.146 " ; 
+        //Case 2 - range of addresses
+        IPv4range range2 = new IPv4range() ;
+        range2.parseAddDashNotation( "219.145.101.126-131" ) ;
+        String expected2 = "219.145.101.126 219.145.101.127 219.145.101.128 "
+                    + "219.145.101.129 219.145.101.130 219.145.101.131 " ;
+        //Case 3 - non-contiguous addresses
+        IPv4range range3 = new IPv4range( new IPv4address("36.164.200.182") ) ;
+        range3.addAddressToRange( new IPv4address( "16.164.16.36" ) , false ) ;
+        range3.addAddressToRange( new IPv4address( "226.1.228.172" ) , false ) ;
+        String expected3 = "36.164.200.182 16.164.16.36 226.1.228.172 " ;
+        //Case 4 - supplying a delimiter argument
+        IPv4range range4 = new IPv4range() ;
+        range4.parseAddDashNotation( "36.227.93.11-157" ) ;
+        String expected4 = "" ;
+        Integer i ;
+        for( i=11 ; i<=157 ; i++) {
+            expected4 += "36.227.93." + i.toString() + "," ;
+        }
+        /*
+         * Check all three outputs
+         * match the expected strings
+         */
+        assertEquals( true , range1.getAllAddressesAsString().equals( expected1 ) ) ;
+        assertEquals( true , range2.getAllAddressesAsString().equals( expected2 ) ) ;
+        assertEquals( true , range3.getAllAddressesAsString().equals( expected3 ) ) ;
+        assertEquals( true , range4.getAllAddressesAsString( "," ).equals( expected4 ) ) ;
+    }
+
+    /**
+     * Test of method popFromIPv4rangeArray, in class IPv4range.
+     */
+    @Test
+    public void testPopFromIPv4rangeArray() {
+        System.out.println( "Basic Test --- IPv4range --- popFromIPv4rangeArray" ) ;
+        int i , j ;
+        //5 ranges
+        IPv4range range1 = new IPv4range() ;
+        IPv4range range2 = new IPv4range() ;
+        IPv4range range3 = new IPv4range() ;
+        IPv4range range4 = new IPv4range() ;
+        IPv4range range5 = new IPv4range() ; 
+        //Array of 5 ranges
+        IPv4range[] rangeArray = {range1, range2, range3, range4, range5} ;
+        //Order to pop elements
+        int[] toPop = {0, 1, 2, 1, 0} ;
+        //Expected contents after pop operations
+        IPv4range[][] expectedRangeArrays = { {range2, range3, range4, range5 } ,
+                                              {range2, range4, range5 } ,
+                                              {range2, range4} ,
+                                              {range2} , 
+                                              {} } ;
+        for( i=0 ; i<5 ; i++ ){
+            rangeArray = rangeArray[0].popFromIPv4rangeArray( rangeArray, toPop[i] ) ;
+            //Length should match expected length
+            assertEquals( expectedRangeArrays[i].length , rangeArray.length ) ;
+            for( j=0 ; j<rangeArray.length ; j++ ) {
+                /*
+                 * jth range's pointer from ith expected array 
+                 * should match jth range's pointer from actual array
+                 */
+                assertEquals( expectedRangeArrays[i][j], rangeArray[j] ) ;
+            }
+        }
+    }
+    
     //Template
     /*
     /**
