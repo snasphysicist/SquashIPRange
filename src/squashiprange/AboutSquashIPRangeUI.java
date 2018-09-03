@@ -14,7 +14,7 @@ public class AboutSquashIPRangeUI extends javax.swing.JDialog {
     
     String authorText = "Written by Scott Nicholas Allan Smith (snasphysicist)" ;
     String toolsText = "Written using Netbeans 8.1" ;
-    String versionText = "SquashIPRange Build " + "0" ;
+    String versionText = "SquashIPRange Build " + "v0.1.12" ;
     String releaseText = "Original release 08/12/2017" ;
     String gitText = "Source code at https://github.com/snasphysicist/SquashIPRange" ;
     String bugText = "For bug reports and feature requests, open an issue on GitHub" ;
